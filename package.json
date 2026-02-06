@@ -1,0 +1,11 @@
+{
+    "name": "circuit-simulator",
+    "version": "1.0.0",
+    "main": "main.js",
+    "devDependencies": {
+        "electron": "^40.2.1"
+    },
+    "scripts": {
+        "start": "electron ."
+    }
+}
