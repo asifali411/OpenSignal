@@ -1,0 +1,29 @@
+*,*::before,*::after{
+    box-sizing: border-box;
+}
+
+body{
+    margin: 0;
+    overflow: hidden;
+}
+
+.tool-bar{
+    width: 70%;
+    position: fixed;
+    left: 15%;
+    bottom: 5%;
+    padding: 1rem;
+    border-radius: 7px;
+    background-color: transparent;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(2px);
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+
+.tool-bar:hover{
+    left: 5%;
+    width: 90%;
+    padding-block: 1.3rem;
+}
