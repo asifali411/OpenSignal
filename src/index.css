@@ -8,22 +8,48 @@ body{
 }
 
 .tool-bar{
-    width: 70%;
+    width: auto;
     position: fixed;
-    left: 15%;
+    left: 50%;
     bottom: 5%;
-    padding: 1rem;
+    translate: -50%;
+    padding: 0.5rem 2rem;
     border-radius: 7px;
     background-color: transparent;
     border: 1px solid #ccc;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(2px);
-    transition: all 0.25s ease;
     cursor: pointer;
+    display: flex;
+    gap: 0.5rem;
 }
 
-.tool-bar:hover{
-    left: 5%;
-    width: 90%;
-    padding-block: 1.3rem;
+.tool-bar img{
+    width: 25px;
+    height: 25px;
+}
+
+.tool{
+    padding: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.tool:hover{
+    background-color: #ddf;
+}
+
+.mode{
+    position: relative;
+}
+
+.mode::after{
+    content: "";
+    position: absolute;
+    right: -0.25rem;
+    height: 60%;
+    width: 1px;
+    background-color: #ccc;
 }
