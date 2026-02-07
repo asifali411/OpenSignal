@@ -3,6 +3,9 @@ const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 const tileSize = 30;
 
+const PAN = "pan";
+const EDIT = "edit";
+
 const TOOLS = [
     {
         tool: "Source",
@@ -56,7 +59,23 @@ const TOOLS = [
         tool: "XNOR Gate",
         img: "../src/assets/xnorGate.png"
     }
-]
+];
+
+const WORLD = {
+    mode: EDIT,
+    camera: {
+        x: 0,
+        y: 0,
+        lastX: 0,
+        lastY: 0,
+        zoom: 1
+    }
+};
+
+const MOUSE = {
+    x: 0,
+    y: 0,
+}
 
 const resizeCanvas = () => {
     canvas.width = window.innerWidth;
@@ -66,13 +85,13 @@ const createGrid = () => {
     ctx.globalAlpha = 0.15;
     ctx.strokeStyle = '#444';
 
-    for(let x = 0; x < canvas.width + tileSize; x+=tileSize){
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
+    for(let x = -canvas.width * 10; x < canvas.width * 10; x+=tileSize){
+        ctx.moveTo(x, -canvas.height * 10);
+        ctx.lineTo(x, canvas.height * 10);
     }
-    for (let y = 0; y < canvas.height + tileSize; y += tileSize) {
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
+    for (let y = -canvas.height * 10; y < canvas.height * 10; y += tileSize) {
+        ctx.moveTo(-canvas.width * 10, y);
+        ctx.lineTo(canvas.width * 10, y);
     }
 
     ctx.stroke();
@@ -85,5 +104,11 @@ const createToolBar = () => {
             <img src="${TOOLS[i].img}">
             </div>
         `;
+    }
+}
+const toWorld = (x, y) => {
+    return {
+        x: (x - canvas.width/2) / WORLD.camera.zoom + WORLD.camera.x,
+        y: (y - canvas.height/2) / WORLD.camera.zoom + WORLD.camera.y,
     }
 }

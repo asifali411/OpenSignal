@@ -7,6 +7,10 @@ body{
     overflow: hidden;
 }
 
+canvas{
+    cursor: grab;
+}
+
 .tool-bar{
     width: auto;
     position: fixed;
@@ -38,7 +42,7 @@ body{
 }
 
 .tool:hover{
-    background-color: #ddf;
+    background-color: #ddddfe;
 }
 
 .mode{
