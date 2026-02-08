@@ -1,3 +1,8 @@
+
+/*==============================================================
+    ROOT 
+ ===============================================================*/
+
 *,*::before,*::after{
     box-sizing: border-box;
 }
@@ -11,21 +16,28 @@ canvas{
     cursor: grab;
 }
 
-.tool-bar{
-    width: auto;
+/*==============================================================
+    TOOL BAR 
+ ===============================================================*/
+
+.tool-bar, .zoom-in-out{
     position: fixed;
-    left: 50%;
     bottom: 5%;
-    translate: -50%;
-    padding: 0.5rem 2rem;
     border-radius: 7px;
     background-color: transparent;
     border: 1px solid #ccc;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(1px);
     cursor: pointer;
     display: flex;
     gap: 0.5rem;
+}
+
+.tool-bar{
+    width: auto;
+    left: 50%;
+    translate: -50%;
+    padding: 0.5rem 2rem;
 }
 
 .tool-bar img{
@@ -45,6 +57,14 @@ canvas{
     background-color: #ddddfe;
 }
 
+.tool:active, .zoom-in-out div:active{
+    scale: 0.95;
+}
+
+/*==============================================================
+    MODE 
+ ===============================================================*/
+
 .mode{
     position: relative;
 }
@@ -56,4 +76,38 @@ canvas{
     height: 60%;
     width: 1px;
     background-color: #ccc;
+}
+
+/*==============================================================
+    ZOOM IN OUT 
+ ===============================================================*/
+
+.zoom-in-out{
+    right: 3%;
+    padding: 0.5rem 0.4rem;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.zoom-in-out img{
+    width: 18px;
+    height: 18px;
+}
+
+.zoom-in-out div{
+    padding: 0.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    user-select: none;
+}
+
+.zoom-in-out div:hover{
+    background-color: #ddddfe;
+}
+
+.zoom-percentage{
+    font-size: 0.8rem;
+    text-align: center;
 }

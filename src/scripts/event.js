@@ -30,3 +30,7 @@ canvas.addEventListener('mousemove', (e) => {
         WORLD.camera.lastY = e.offsetY;
     }
 });
+window.addEventListener('keydown', (e) => {
+    if (e.key === "_" ) zoomOUT();
+    else if (e.key === "+") zoomIN();
+})
