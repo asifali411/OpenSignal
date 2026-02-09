@@ -33,4 +33,14 @@ canvas.addEventListener('mousemove', (e) => {
 window.addEventListener('keydown', (e) => {
     if (e.key === "_" ) zoomOUT();
     else if (e.key === "+") zoomIN();
+    else if (e.key === "Escape") {
+        if(WORLD.dialog.show){
+            closeDialog();
+        }
+    }
+});
+overlay.addEventListener('click', closeDialog);
+document.querySelector('.extra-tool-toggle-button').addEventListener('click', openExtraTools);
+window.addEventListener('resize', () => {
+    reRenderToolBar();
 })

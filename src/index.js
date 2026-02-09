@@ -1,4 +1,5 @@
 createToolBar();
+createExtraToolDialog();
 
 const update = () => {
     resizeCanvas();

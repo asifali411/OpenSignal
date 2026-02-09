@@ -1,10 +1,15 @@
 const toolBar = document.querySelector('.tool-bar');
+const extraToolDialog = document.querySelector('.extra-tools-dialog');
+const extraTools = document.querySelector('.extra-tools');
+const overlay = document.querySelector('.overlay');
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 const tileSize = 30;
 
 const PAN = "pan";
 const EDIT = "edit";
+
+const EXTRA_TOOLS = "extra tools";
 
 const TOOLS = [
     {
@@ -69,10 +74,14 @@ const WORLD = {
         lastX: 0,
         lastY: 0,
         zoom: 1
+    },
+    dialog: {
+        box: EXTRA_TOOLS,
+        show: false
     }
 };
 
 const MOUSE = {
     x: 0,
     y: 0,
-}
+};

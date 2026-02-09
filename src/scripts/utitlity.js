@@ -19,11 +19,46 @@ const createGrid = () => {
     ctx.globalAlpha = 1;
 }
 const createToolBar = () => {
-    for(let i = 0; i < TOOLS.length; i++){
+    let i = 1;
+    
+    for(; i < Math.min(Math.floor(toolBar.getBoundingClientRect().width / 50), TOOLS.length); i++){
         toolBar.innerHTML += `
-            <div class="tool" title="${TOOLS[i].tool}" idx="${i + 1}">
-            <img src="${TOOLS[i].img}">
-            </div>
+            <button class="tool" title="${TOOLS[i].tool}" idx="${i}">
+                <img src="${TOOLS[i].img}">
+            </button>
+        `;
+    }
+
+    toolBar.innerHTML += `
+        <button class="tool extra-tool-toggle-button" title="all components" idx="${++i}">
+            <img src="../src/assets/ellipsis.svg">
+        </button>
+    `;
+}
+const reRenderToolBar = () => {
+    const visibleTools = Array(...document.querySelectorAll(".tool-bar .tool"));
+    visibleTools.splice(visibleTools.length - 1, 1);
+    
+    visibleTools.forEach(tool => {
+        // remove event listener here.
+        tool.remove();
+    })
+    
+    for(let i = Math.min(Math.floor(toolBar.getBoundingClientRect().width / 60), TOOLS.length - 1); i > 0; i--){
+        toolBar.innerHTML = `
+            <button class="tool" title="${TOOLS[i].tool}" idx="${i}">
+                <img src="${TOOLS[i].img}">
+            </button>
+        ` + toolBar.innerHTML;
+    }
+    document.querySelector('.extra-tool-toggle-button').addEventListener('click', openExtraTools);
+}
+const createExtraToolDialog = () => {
+    for(let i = 0; i < TOOLS.length; i++){
+        extraTools.innerHTML += `
+            <button class="tool" title="${TOOLS[i].tool}" idx="${i}">
+                <img src="${TOOLS[i].img}">
+            </button>
         `;
     }
 }
@@ -47,3 +82,20 @@ const zoomOUT = () => {
     WORLD.camera.zoom -= 0.1;
     setZoomPercentage();
 }
+const closeDialog = () => {
+    WORLD.dialog.show = false;
+    overlay.classList.add('hidden');
+    switch(WORLD.dialog.box){
+        case EXTRA_TOOLS:
+            closeExtraTools();
+            break;
+        default:
+            throw new Error(`Invalid dialog box: ${WORLD.dialog.box}`);
+    }
+}
+const openExtraTools = () => {
+    extraToolDialog.classList.remove('hidden');
+    WORLD.dialog.show = true;
+    overlay.classList.remove('hidden');
+};
+const closeExtraTools = () => extraToolDialog.classList.add('hidden');
