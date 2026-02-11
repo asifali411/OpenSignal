@@ -40,7 +40,7 @@ window.addEventListener('keydown', (e) => {
     }
 });
 overlay.addEventListener('click', closeDialog);
-document.querySelector('.extra-tool-toggle-button').addEventListener('click', openExtraTools);
+document.querySelector('.extra-device-toggle-button').addEventListener('click', openExtraDevices);
 window.addEventListener('resize', () => {
-    reRenderToolBar();
+    reRenderDeviceBar();
 })

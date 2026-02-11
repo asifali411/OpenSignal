@@ -1,5 +1,5 @@
-createToolBar();
-createExtraToolDialog();
+createDeviceBar();
+createExtraDeviceDialog();
 
 const update = () => {
     resizeCanvas();

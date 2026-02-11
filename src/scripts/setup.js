@@ -1,6 +1,6 @@
-const toolBar = document.querySelector('.tool-bar');
-const extraToolDialog = document.querySelector('.extra-tools-dialog');
-const extraTools = document.querySelector('.extra-tools');
+const DeviceBar = document.querySelector('.device-bar');
+const extraDeviceDialog = document.querySelector('.extra-devices-dialog');
+const extraDevices = document.querySelector('.extra-devices');
 const overlay = document.querySelector('.overlay');
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
@@ -9,59 +9,59 @@ const tileSize = 30;
 const PAN = "pan";
 const EDIT = "edit";
 
-const EXTRA_TOOLS = "extra tools";
+const EXTRA_DEVICES = "extra Devices";
 
-const TOOLS = [
+const DEVICES = [
     {
-        tool: "Source",
+        device: "Source",
         img: "../src/assets/source.png"
     },
     {
-        tool: "Ground",
+        device: "Ground",
         img: "../src/assets/ground.png"
     },
     {
-        tool: "Bulb",
+        device: "Bulb",
         img: "../src/assets/bulb.png"
     },
     {
-        tool: "Cell",
+        Device: "Cell",
         img: "../src/assets/cell.png"
     },
     {
-        tool: "Switch",
+        device: "Switch",
         img: "../src/assets/switch.png"
     },
     {
-        tool: "Resistor",
+        device: "Resistor",
         img: "../src/assets/resistor.png"
     },
     {
-        tool: "AND Gate",
+        device: "AND Gate",
         img: "../src/assets/andGate.png"
     },
     {
-        tool: "OR Gate",
+        device: "OR Gate",
         img: "../src/assets/orGate.png"
     },
     {
-        tool: "NOT Gate",
+        device: "NOT Gate",
         img: "../src/assets/notGate.png"
     },
     {
-        tool: "XOR Gate",
+        device: "XOR Gate",
         img: "../src/assets/xorGate.png"
     },
     {
-        tool: "NAND Gate",
+        device: "NAND Gate",
         img: "../src/assets/nandGate.png"
     },
     {
-        tool: "NOR Gate",
+        device: "NOR Gate",
         img: "../src/assets/norGate.png"
     },
     {
-        tool: "XNOR Gate",
+        device: "XNOR Gate",
         img: "../src/assets/xnorGate.png"
     }
 ];
@@ -76,7 +76,7 @@ const WORLD = {
         zoom: 1
     },
     dialog: {
-        box: EXTRA_TOOLS,
+        box: EXTRA_DEVICES,
         show: false
     }
 };

@@ -18,46 +18,46 @@ const createGrid = () => {
     ctx.stroke();
     ctx.globalAlpha = 1;
 }
-const createToolBar = () => {
+const createDeviceBar = () => {
     let i = 1;
     
-    for(; i < Math.min(Math.floor(toolBar.getBoundingClientRect().width / 50), TOOLS.length); i++){
-        toolBar.innerHTML += `
-            <button class="tool" title="${TOOLS[i].tool}" idx="${i}">
-                <img src="${TOOLS[i].img}">
+    for(; i < Math.min(Math.floor(DeviceBar.getBoundingClientRect().width / 50), DEVICES.length); i++){
+        DeviceBar.innerHTML += `
+            <button class="device" title="${DEVICES[i].device}" idx="${i}">
+                <img src="${DEVICES[i].img}">
             </button>
         `;
     }
 
-    toolBar.innerHTML += `
-        <button class="tool extra-tool-toggle-button" title="all components" idx="${++i}">
+    DeviceBar.innerHTML += `
+        <button class="device extra-device-toggle-button" title="all components" idx="${++i}">
             <img src="../src/assets/ellipsis.svg">
         </button>
     `;
 }
-const reRenderToolBar = () => {
-    const visibleTools = Array(...document.querySelectorAll(".tool-bar .tool"));
-    visibleTools.splice(visibleTools.length - 1, 1);
+const reRenderDeviceBar = () => {
+    const visibleDevices = Array(...document.querySelectorAll(".device-bar .device"));
+    visibleDevices.splice(visibleDevices.length - 1, 1);
     
-    visibleTools.forEach(tool => {
+    visibleDevices.forEach(device => {
         // remove event listener here.
-        tool.remove();
+        device.remove();
     })
     
-    for(let i = Math.min(Math.floor(toolBar.getBoundingClientRect().width / 60), TOOLS.length - 1); i > 0; i--){
-        toolBar.innerHTML = `
-            <button class="tool" title="${TOOLS[i].tool}" idx="${i}">
-                <img src="${TOOLS[i].img}">
+    for(let i = Math.min(Math.floor(DeviceBar.getBoundingClientRect().width / 60), DEVICES.length - 1); i > 0; i--){
+        DeviceBar.innerHTML = `
+            <button class="device" title="${DEVICES[i].device}" idx="${i}">
+                <img src="${DEVICES[i].img}">
             </button>
-        ` + toolBar.innerHTML;
+        ` + DeviceBar.innerHTML;
     }
-    document.querySelector('.extra-tool-toggle-button').addEventListener('click', openExtraTools);
+    document.querySelector('.extra-device-toggle-button').addEventListener('click', openExtraDevices);
 }
-const createExtraToolDialog = () => {
-    for(let i = 0; i < TOOLS.length; i++){
-        extraTools.innerHTML += `
-            <button class="tool" title="${TOOLS[i].tool}" idx="${i}">
-                <img src="${TOOLS[i].img}">
+const createExtraDeviceDialog = () => {
+    for(let i = 0; i < DEVICES.length; i++){
+        extraDevices.innerHTML += `
+            <button class="device" title="${DEVICES[i].device}" idx="${i}">
+                <img src="${DEVICES[i].img}">
             </button>
         `;
     }
@@ -86,16 +86,16 @@ const closeDialog = () => {
     WORLD.dialog.show = false;
     overlay.classList.add('hidden');
     switch(WORLD.dialog.box){
-        case EXTRA_TOOLS:
-            closeExtraTools();
+        case EXTRA_DEVICES:
+            closeExtraDevices();
             break;
         default:
             throw new Error(`Invalid dialog box: ${WORLD.dialog.box}`);
     }
 }
-const openExtraTools = () => {
-    extraToolDialog.classList.remove('hidden');
+const openExtraDevices = () => {
+    extraDeviceDialog.classList.remove('hidden');
     WORLD.dialog.show = true;
     overlay.classList.remove('hidden');
 };
-const closeExtraTools = () => extraToolDialog.classList.add('hidden');
+const closeExtraDevices = () => extraDeviceDialog.classList.add('hidden');
