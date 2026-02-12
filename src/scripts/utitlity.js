@@ -19,39 +19,46 @@ const createGrid = () => {
     ctx.globalAlpha = 1;
 }
 const createDeviceBar = () => {
-    let i = 1;
-    
-    for(; i < Math.min(Math.floor(DeviceBar.getBoundingClientRect().width / 50), DEVICES.length); i++){
-        DeviceBar.innerHTML += `
-            <button class="device" title="${DEVICES[i].device}" idx="${i}">
-                <img src="${DEVICES[i].img}">
-            </button>
-        `;
+
+    for(let i = 0; i < Math.min(Math.floor(deviceBar.getBoundingClientRect().width / 60), DEVICES.length); i++){
+        const deviceBTN = document.createElement('button');
+        deviceBTN.classList.add("device");
+        deviceBTN.title = DEVICES[i].device;
+
+        const deviceIMG = document.createElement("img");
+        deviceIMG.src = DEVICES[i].img;
+
+        deviceBTN.append(deviceIMG);
+        deviceBar.append(deviceBTN);
+
+        deviceBTN.addEventListener('click', () => {
+            DEVICES[i].click();
+        });
     }
 
-    DeviceBar.innerHTML += `
-        <button class="device extra-device-toggle-button" title="all components" idx="${++i}">
-            <img src="../src/assets/ellipsis.svg">
-        </button>
-    `;
+    const deviceBTN = document.createElement('button');
+    deviceBTN.classList.add("device");
+    deviceBTN.classList.add("extra-device-toggle-button");
+    deviceBTN.title = "All components";
+
+    const deviceIMG = document.createElement("img");
+    deviceIMG.src = "../src/assets/ellipsis.svg";
+
+    deviceBTN.append(deviceIMG);
+    deviceBar.append(deviceBTN);
+
+    deviceBTN.addEventListener('click', () => {
+        openExtraDevices();
+    });
 }
 const reRenderDeviceBar = () => {
     const visibleDevices = Array(...document.querySelectorAll(".device-bar .device"));
-    visibleDevices.splice(visibleDevices.length - 1, 1);
     
     visibleDevices.forEach(device => {
-        // remove event listener here.
         device.remove();
     })
     
-    for(let i = Math.min(Math.floor(DeviceBar.getBoundingClientRect().width / 60), DEVICES.length - 1); i > 0; i--){
-        DeviceBar.innerHTML = `
-            <button class="device" title="${DEVICES[i].device}" idx="${i}">
-                <img src="${DEVICES[i].img}">
-            </button>
-        ` + DeviceBar.innerHTML;
-    }
-    document.querySelector('.extra-device-toggle-button').addEventListener('click', openExtraDevices);
+    createDeviceBar();
 }
 const createExtraDeviceDialog = () => {
     for(let i = 0; i < DEVICES.length; i++){
@@ -97,5 +104,5 @@ const openExtraDevices = () => {
     extraDeviceDialog.classList.remove('hidden');
     WORLD.dialog.show = true;
     overlay.classList.remove('hidden');
-};
+}
 const closeExtraDevices = () => extraDeviceDialog.classList.add('hidden');

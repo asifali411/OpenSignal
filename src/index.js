@@ -15,6 +15,11 @@ const update = () => {
 
     createGrid();
 
+    // render components
+    CIRCUIT.devices.forEach(device => {
+        device.draw();
+    })
+
     ctx.restore();
     requestAnimationFrame(update);
 }

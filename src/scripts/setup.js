@@ -1,31 +1,39 @@
-const DeviceBar = document.querySelector('.device-bar');
+const deviceBar = document.querySelector('.device-bar');
 const extraDeviceDialog = document.querySelector('.extra-devices-dialog');
 const extraDevices = document.querySelector('.extra-devices');
 const overlay = document.querySelector('.overlay');
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 const tileSize = 30;
+const deviceSize = 50;
 
 const PAN = "pan";
 const EDIT = "edit";
+const MOVE = "move";
 
 const EXTRA_DEVICES = "extra Devices";
 
 const DEVICES = [
     {
         device: "Source",
-        img: "../src/assets/source.png"
+        img: "../src/assets/source.png",
+        click: () => {
+            CIRCUIT.devices.push(new Source(WORLD.camera.x, WORLD.camera.y));
+        } 
     },
     {
         device: "Ground",
-        img: "../src/assets/ground.png"
+        img: "../src/assets/ground.png",
+        click: () => {
+            CIRCUIT.devices.push(new Ground(WORLD.camera.x, WORLD.camera.y));
+        } 
     },
     {
         device: "Bulb",
         img: "../src/assets/bulb.png"
     },
     {
-        Device: "Cell",
+        device: "Cell",
         img: "../src/assets/cell.png"
     },
     {
@@ -68,12 +76,14 @@ const DEVICES = [
 
 const WORLD = {
     mode: EDIT,
+    movingDevice: null,
     camera: {
         x: 0,
         y: 0,
         lastX: 0,
         lastY: 0,
-        zoom: 1
+        zoom: 1,
+        isDragging: false
     },
     dialog: {
         box: EXTRA_DEVICES,
@@ -84,4 +94,24 @@ const WORLD = {
 const MOUSE = {
     x: 0,
     y: 0,
+};
+
+
+/*
+    CIRCUIT
+        devices: ARR
+            device: OBJ
+            
+        connections: OBJ
+            from: OBJ
+                id: STR
+
+            to: OBJ
+        history: ARR(OBJ)
+
+*/
+const CIRCUIT = {
+    devices: [],
+    connection: {},
+    history: []
 };
