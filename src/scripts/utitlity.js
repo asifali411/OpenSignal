@@ -106,3 +106,16 @@ const openExtraDevices = () => {
     overlay.classList.remove('hidden');
 }
 const closeExtraDevices = () => extraDeviceDialog.classList.add('hidden');
+const renderUndoRedoBtn = () => {
+    if (HISTORY.undoStack.length <= 1) {
+        undoBtn.disabled = true;
+    } else {
+        undoBtn.disabled = false;
+    }
+
+    if (HISTORY.redoStack.length === 0) {
+        redoBtn.disabled = true;
+    } else {
+        redoBtn.disabled = false;
+    }
+}

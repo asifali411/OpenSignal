@@ -1,22 +1,12 @@
 class __DEVICE__ {
-    constructor(x, y, device) {
+    constructor(x, y, name) {
         this.x = x;
         this.y = y;
-        this.device = device;
-        
+        this.name = name;
+
         this.offsetX = 0;
         this.offsetY = 0;
         this.isDragging = false;
-
-        CIRCUIT.devices.push(this);
-    }
-
-    draw() {
-        ctx.drawImage(SPRITES[this.device], this.x, this.y, deviceSize, deviceSize);
-    }
-
-    isHovering(){
-        return (MOUSE.x >= this.x && MOUSE.x <= this.x + deviceSize && MOUSE.y >= this.y && MOUSE.y <= this.y + deviceSize);
     }
 }
 
@@ -26,3 +16,22 @@ DEVICES.forEach(device => {
     SPRITES[device.device] = new Image();
     SPRITES[device.device].src = device.img;
 });
+
+const isHovering = (device) => {
+    return (MOUSE.x >= device.x && MOUSE.x <= device.x + deviceSize && MOUSE.y >= device.y && MOUSE.y <= device.y + deviceSize);
+}
+
+const drawDEVICES = () => {
+    CIRCUIT.devices.forEach(device => {
+        switch(device.name){
+            case 'Source':
+                drawSOURCE(device);
+                break;
+            case 'Ground':
+                drawGROUND(device);
+                break;
+            default:
+                break;
+        }
+    });
+}

@@ -1,6 +1,8 @@
 const deviceBar = document.querySelector('.device-bar');
 const extraDeviceDialog = document.querySelector('.extra-devices-dialog');
 const extraDevices = document.querySelector('.extra-devices');
+const undoBtn = document.querySelector('.undo');
+const redoBtn = document.querySelector('.redo');
 const overlay = document.querySelector('.overlay');
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
@@ -18,14 +20,14 @@ const DEVICES = [
         device: "Source",
         img: "../src/assets/source.png",
         click: () => {
-            const source = new Source(WORLD.camera.x, WORLD.camera.y, this.device);
+            createSOURCE();
         } 
     },
     {
         device: "Ground",
         img: "../src/assets/ground.png",
         click: () => {
-            const ground = new Ground(WORLD.camera.x, WORLD.camera.y, this.device);
+            createGROUND();
         } 
     },
     {
@@ -96,7 +98,10 @@ const MOUSE = {
     y: 0,
 };
 
-const CIRCUIT = {
+let CIRCUIT = {
     devices: [],
     connection: {}
 };
+
+const HISTORY = new History();
+HISTORY.saveState();

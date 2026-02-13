@@ -1,5 +1,6 @@
 createDeviceBar();
 createExtraDeviceDialog();
+renderUndoRedoBtn();
 
 const update = () => {
     resizeCanvas();
@@ -16,9 +17,7 @@ const update = () => {
     createGrid();
 
     // render components
-    CIRCUIT.devices.forEach(device => {
-        device.draw();
-    })
+    drawDEVICES();
 
     ctx.restore();
     requestAnimationFrame(update);

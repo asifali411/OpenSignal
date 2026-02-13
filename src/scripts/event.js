@@ -10,7 +10,7 @@ canvas.addEventListener('mousedown', (e) => {
         let isMovingCamera = true;
 
         CIRCUIT.devices.forEach(device => {
-            if(device.isHovering()){
+            if(isHovering(device)){
                 isMovingCamera = false;
                 WORLD.movingDevice = device;
                 WORLD.mode = MOVE;
@@ -35,7 +35,10 @@ canvas.addEventListener('mouseup', () => {
     WORLD.mode = EDIT;
     canvas.style.cursor = "grab";
     WORLD.camera.isDragging = false;
-    if (WORLD.movingDevice) WORLD.movingDevice.isDragging = false;
+    if (WORLD.movingDevice) {
+        WORLD.movingDevice.isDragging = false;
+        HISTORY.saveState();
+    }
     WORLD.movingDevice = null;
 });
 canvas.addEventListener('mouseleave', () => {
@@ -70,10 +73,18 @@ window.addEventListener('keydown', (e) => {
         }
     } else if (e.key === "z" && e.ctrlKey){
         HISTORY.undo();
+    } else if (e.key === "y" && e.ctrlKey) {
+        HISTORY.redo();
     }
 });
 overlay.addEventListener('click', closeDialog);
 document.querySelector('.extra-device-toggle-button').addEventListener('click', openExtraDevices);
+undoBtn.addEventListener('click', () => {
+    HISTORY.undo();
+});
+redoBtn.addEventListener('click', () => {
+    HISTORY.redo();
+});
 window.addEventListener('resize', () => {
     reRenderDeviceBar();
 });
@@ -83,5 +94,6 @@ window.addEventListener('keydown', (e) => {
     if(e.ctrlKey && e.key === "/"){
         //DEBUG
         console.log(HISTORY);
+        console.log(CIRCUIT);
     }
 });
