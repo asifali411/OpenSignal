@@ -1,6 +1,6 @@
 class Ground extends __DEVICE__ {
     constructor(x, y){
-        super(x, y, SPRITES["Ground"]);
+        super(x, y, "Ground");
     }
 
     draw(){

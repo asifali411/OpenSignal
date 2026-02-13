@@ -18,14 +18,14 @@ const DEVICES = [
         device: "Source",
         img: "../src/assets/source.png",
         click: () => {
-            CIRCUIT.devices.push(new Source(WORLD.camera.x, WORLD.camera.y));
+            const source = new Source(WORLD.camera.x, WORLD.camera.y, this.device);
         } 
     },
     {
         device: "Ground",
         img: "../src/assets/ground.png",
         click: () => {
-            CIRCUIT.devices.push(new Ground(WORLD.camera.x, WORLD.camera.y));
+            const ground = new Ground(WORLD.camera.x, WORLD.camera.y, this.device);
         } 
     },
     {
@@ -96,22 +96,7 @@ const MOUSE = {
     y: 0,
 };
 
-
-/*
-    CIRCUIT
-        devices: ARR
-            device: OBJ
-            
-        connections: OBJ
-            from: OBJ
-                id: STR
-
-            to: OBJ
-        history: ARR(OBJ)
-
-*/
 const CIRCUIT = {
     devices: [],
-    connection: {},
-    history: []
+    connection: {}
 };

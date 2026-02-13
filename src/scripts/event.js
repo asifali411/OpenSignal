@@ -38,6 +38,13 @@ canvas.addEventListener('mouseup', () => {
     if (WORLD.movingDevice) WORLD.movingDevice.isDragging = false;
     WORLD.movingDevice = null;
 });
+canvas.addEventListener('mouseleave', () => {
+    WORLD.mode = EDIT;
+    canvas.style.cursor = "grab";
+    WORLD.camera.isDragging = false;
+    if (WORLD.movingDevice) WORLD.movingDevice.isDragging = false;
+    WORLD.movingDevice = null;
+});
 canvas.addEventListener('mousemove', (e) => {
     MOUSE.x = toWorld(e.offsetX, e.offsetY).x;
     MOUSE.y = toWorld(e.offsetX, e.offsetY).y;
@@ -61,6 +68,8 @@ window.addEventListener('keydown', (e) => {
         if(WORLD.dialog.show){
             closeDialog();
         }
+    } else if (e.key === "z" && e.ctrlKey){
+        HISTORY.undo();
     }
 });
 overlay.addEventListener('click', closeDialog);
@@ -72,6 +81,7 @@ window.addEventListener('resize', () => {
 //DEBUG   Ctrl + '/'
 window.addEventListener('keydown', (e) => {
     if(e.ctrlKey && e.key === "/"){
-        console.log("working");
+        //DEBUG
+        console.log(HISTORY);
     }
 });

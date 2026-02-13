@@ -20,11 +20,15 @@ button{
     cursor: pointer;
 }
 
+button:active{
+    scale: 0.95;
+}
+
 /*==============================================================
     DEVICE BAR 
  ===============================================================*/
 
-.device-bar, .zoom-in-out{
+.device-bar, .zoom-in-out, .undo-redo{
     position: fixed;
     bottom: 5%;
     border-radius: 7px;
@@ -64,10 +68,6 @@ button{
     background-color: #ddddfe;
 }
 
-.device:active, .zoom-in-out div:active{
-    scale: 0.95;
-}
-
 /*==============================================================
     ZOOM IN OUT 
  ===============================================================*/
@@ -104,8 +104,44 @@ button{
     text-align: center;
 }
 
+
 /*==============================================================
-    Dialog
+    UNDO REDO
+ ===============================================================*/
+
+ .undo-redo{
+    left: 3%;
+    padding: 0.5rem 0.4rem;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.undo-redo img{
+    width: 18px;
+    height: 18px;
+}
+
+.undo-redo button{
+    padding: 0.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    user-select: none;
+    border: none;
+    background-color: transparent;
+}
+
+.undo-redo button:hover{
+    background-color: #ddddfe;
+}
+
+.redo img{
+    transform: scaleX(-1);
+}
+
+/*==============================================================
+    DIALOG
  ===============================================================*/
 
 .dialog{
