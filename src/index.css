@@ -28,9 +28,12 @@ button:active{
     DEVICE BAR 
  ===============================================================*/
 
-.device-bar, .zoom-in-out, .undo-redo{
+.device-bar, .zoom-in-out, .tools-left{
     position: fixed;
     bottom: 5%;
+}
+
+.device-bar, .zoom-in-out, .undo-redo, .mode{
     border-radius: 7px;
     background-color: transparent;
     border: 1px solid #ccc;
@@ -41,7 +44,7 @@ button:active{
 }
 
 .device-bar{
-    width: 70%;
+    width: 60%;
     left: 50%;
     translate: -50%;
     padding: 0.5rem 2rem;
@@ -69,22 +72,96 @@ button:active{
 }
 
 /*==============================================================
+    LEFT TOOL BAR
+ ===============================================================*/
+
+ .tools-left{
+    left: 3%;
+    flex-direction: column;
+    gap: 0.3rem;
+ }
+
+ .tools-left img {
+    width: 18px;
+    height: 18px;
+ }
+
+ .tools-left button {
+    padding: 0.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    user-select: none;
+    border: none;
+    background-color: transparent;
+ }
+
+ .tools-left button:hover {
+    background-color: #ddddfe;
+ }
+
+ .tools-left button:disabled {
+    opacity: 0.5;
+ }
+
+/*==============================================================
+    UNDO REDO
+ ===============================================================*/
+
+.undo-redo{
+    flex-direction: column;
+    gap: 0.3rem;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 7px;
+    padding: 0.5rem 0.4rem;
+}
+
+
+.redo img{
+    transform: scaleX(-1);
+}
+
+/*==============================================================
+    MODE
+ ===============================================================*/
+
+.mode{
+    flex-direction: column;
+    gap: 0.3rem;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 7px;
+    padding: 0.5rem 0.4rem;
+    margin-bottom: 1rem;
+}
+
+.mode button{
+    opacity: 0.5;
+}
+
+.mode button.selected{
+    opacity: 1;
+}
+
+/*==============================================================
     ZOOM IN OUT 
  ===============================================================*/
 
-.zoom-in-out{
+.zoom-in-out {
     right: 3%;
     padding: 0.5rem 0.4rem;
     flex-direction: column;
     gap: 0.3rem;
 }
 
-.zoom-in-out img{
+.zoom-in-out img {
     width: 18px;
     height: 18px;
 }
 
-.zoom-in-out button{
+.zoom-in-out button {
     padding: 0.6rem;
     display: flex;
     justify-content: center;
@@ -95,53 +172,13 @@ button:active{
     background-color: transparent;
 }
 
-.zoom-in-out button:hover{
+.zoom-in-out button:hover {
     background-color: #ddddfe;
 }
 
-.zoom-percentage{
+.zoom-percentage {
     font-size: 0.8rem;
     text-align: center;
-}
-
-
-/*==============================================================
-    UNDO REDO
- ===============================================================*/
-
- .undo-redo{
-    left: 3%;
-    padding: 0.5rem 0.4rem;
-    flex-direction: column;
-    gap: 0.3rem;
-}
-
-.undo-redo img{
-    width: 18px;
-    height: 18px;
-}
-
-.undo-redo button{
-    padding: 0.6rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 5px;
-    user-select: none;
-    border: none;
-    background-color: transparent;
-}
-
-.undo-redo button:hover{
-    background-color: #ddddfe;
-}
-
-.redo img{
-    transform: scaleX(-1);
-}
-
-.undo-redo button:disabled {
-    opacity: 0.5;
 }
 
 /*==============================================================

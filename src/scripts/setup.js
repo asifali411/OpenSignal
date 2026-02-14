@@ -11,7 +11,6 @@ const deviceSize = 50;
 
 const PAN = "pan";
 const EDIT = "edit";
-const MOVE = "move";
 
 const EXTRA_DEVICES = "extra Devices";
 
@@ -77,7 +76,7 @@ const DEVICES = [
 ];
 
 const WORLD = {
-    mode: EDIT,
+    mode: PAN,
     movingDevice: null,
     camera: {
         x: 0,
@@ -96,12 +95,23 @@ const WORLD = {
 const MOUSE = {
     x: 0,
     y: 0,
+    isClicking: {
+        right: false,
+        left: false
+    }
 };
 
 let CIRCUIT = {
     devices: [],
     connection: {}
 };
+
+const BUTTONS = {
+    undo: document.querySelector('.undo'),
+    redo: document.querySelector('.redo'),
+    pan: document.querySelector('.pan'),
+    edit: document.querySelector('.edit')
+}
 
 const HISTORY = new History();
 HISTORY.saveState();

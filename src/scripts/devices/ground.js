@@ -13,6 +13,11 @@ const createGROUND = () => {
     HISTORY.saveState();
 }
 
-const drawGROUND = (device) => {
-    ctx.drawImage(SPRITES["Ground"], device.x, device.y, deviceSize, deviceSize);
+const drawGROUND = (ground) => {
+    ctx.drawImage(SPRITES["Ground"], ground.x, ground.y, deviceSize, deviceSize);
+
+    ctx.fillStyle = "#000";
+    ctx.beginPath();
+    ctx.arc(ground.x + deviceSize/2, ground.y, 5, 0, Math.PI * 2);
+    ctx.fill();
 }

@@ -19,6 +19,8 @@ const update = () => {
     // render components
     drawDEVICES();
 
+    renderModeBtn();
+
     ctx.restore();
     requestAnimationFrame(update);
 }

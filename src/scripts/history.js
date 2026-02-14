@@ -34,3 +34,29 @@ class History {
         renderUndoRedoBtn();
     }
 }
+
+const renderUndoRedoBtn = () => {
+    if (HISTORY.undoStack.length <= 1) {
+        undoBtn.disabled = true;
+    } else {
+        undoBtn.disabled = false;
+    }
+
+    if (HISTORY.redoStack.length === 0) {
+        redoBtn.disabled = true;
+    } else {
+        redoBtn.disabled = false;
+    }
+}
+const renderModeBtn = () => {
+    
+    document.querySelectorAll('.mode button').forEach(tool => {
+        tool.classList.remove('selected');
+    });
+
+    if (WORLD.mode === PAN) {
+        BUTTONS.pan.classList.add('selected');
+    } else if (WORLD.mode === EDIT) {
+        BUTTONS.edit.classList.add('selected');
+    }
+}

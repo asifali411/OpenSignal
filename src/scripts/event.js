@@ -5,22 +5,20 @@ canvas.addEventListener('mousedown', (e) => {
     MOUSE.x = toWorld(e.offsetX, e.offsetY).x;
     MOUSE.y = toWorld(e.offsetX, e.offsetY).y;
 
-    if(e.button === 0){
-
+    if(e.button === 0 && WORLD.mode === PAN){
+        MOUSE.isClicking.left = true;
         let isMovingCamera = true;
 
         CIRCUIT.devices.forEach(device => {
             if(isHovering(device)){
                 isMovingCamera = false;
                 WORLD.movingDevice = device;
-                WORLD.mode = MOVE;
             }
         });
 
         canvas.style.cursor = "grabbing";
         
         if(isMovingCamera){
-            WORLD.mode = PAN;
             WORLD.camera.lastX = e.offsetX;
             WORLD.camera.lastY = e.offsetY;
             WORLD.camera.isDragging = true;
@@ -30,10 +28,22 @@ canvas.addEventListener('mousedown', (e) => {
             WORLD.movingDevice.offsetY = MOUSE.y - WORLD.movingDevice.y;
         }
     }
+
+    else if (e.button === 2) {
+        MOUSE.isClicking.right = true;
+        CIRCUIT.devices.forEach(device => {
+            if(isHovering(device)){
+                if (device.name === "Source") {
+                    toggleSOURCE(device);
+                }
+            }
+        });
+    }
 });
 canvas.addEventListener('mouseup', () => {
-    WORLD.mode = EDIT;
-    canvas.style.cursor = "grab";
+    MOUSE.isClicking.left = false;
+    MOUSE.isClicking.right = false;
+    if (WORLD.mode === PAN) canvas.style.cursor = "grab";
     WORLD.camera.isDragging = false;
     if (WORLD.movingDevice) {
         WORLD.movingDevice.isDragging = false;
@@ -42,8 +52,9 @@ canvas.addEventListener('mouseup', () => {
     WORLD.movingDevice = null;
 });
 canvas.addEventListener('mouseleave', () => {
-    WORLD.mode = EDIT;
-    canvas.style.cursor = "grab";
+    MOUSE.isClicking.left = false;
+    MOUSE.isClicking.right = false;
+    if (WORLD.mode === PAN) canvas.style.cursor = "grab";
     WORLD.camera.isDragging = false;
     if (WORLD.movingDevice) WORLD.movingDevice.isDragging = false;
     WORLD.movingDevice = null;
@@ -52,16 +63,18 @@ canvas.addEventListener('mousemove', (e) => {
     MOUSE.x = toWorld(e.offsetX, e.offsetY).x;
     MOUSE.y = toWorld(e.offsetX, e.offsetY).y;
 
-    if(WORLD.mode === PAN){
-        const dx = (e.offsetX - WORLD.camera.lastX) / WORLD.camera.zoom;
-        const dy = (e.offsetY - WORLD.camera.lastY) / WORLD.camera.zoom;
-        WORLD.camera.x -= dx;
-        WORLD.camera.y -= dy;
-        WORLD.camera.lastX = e.offsetX;
-        WORLD.camera.lastY = e.offsetY;
-    } else if (WORLD.mode === MOVE){
-        WORLD.movingDevice.x = MOUSE.x - WORLD.movingDevice.offsetX;
-        WORLD.movingDevice.y = MOUSE.y - WORLD.movingDevice.offsetY;
+    if (WORLD.mode === PAN && MOUSE.isClicking.left) {
+        if (WORLD.movingDevice == null) {
+            const dx = (e.offsetX - WORLD.camera.lastX) / WORLD.camera.zoom;
+            const dy = (e.offsetY - WORLD.camera.lastY) / WORLD.camera.zoom;
+            WORLD.camera.x -= dx;
+            WORLD.camera.y -= dy;
+            WORLD.camera.lastX = e.offsetX;
+            WORLD.camera.lastY = e.offsetY;
+        } else {
+            WORLD.movingDevice.x = MOUSE.x - WORLD.movingDevice.offsetX;
+            WORLD.movingDevice.y = MOUSE.y - WORLD.movingDevice.offsetY;
+        }
     }
 });
 window.addEventListener('keydown', (e) => {
@@ -87,6 +100,15 @@ redoBtn.addEventListener('click', () => {
 });
 window.addEventListener('resize', () => {
     reRenderDeviceBar();
+});
+
+BUTTONS.pan.addEventListener('click', () => {
+    WORLD.mode = PAN;
+    canvas.style.cursor = 'grab';
+});
+BUTTONS.edit.addEventListener('click', () => {
+    WORLD.mode = EDIT;
+    canvas.style.cursor = 'pointer';
 });
 
 //DEBUG   Ctrl + '/'

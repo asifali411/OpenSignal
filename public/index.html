@@ -21,14 +21,28 @@
 <body>
     <canvas></canvas>
 
-    <div class="undo-redo">
-        <button class="undo" disabled>
-            <img src="../src/assets/undo.svg" alt="undo">
-        </button>
-        <button class="redo" disabled>
-            <img src="../src/assets/undo.svg" alt="redo">
-        </button>
+    <div class="tools-left">
+
+        <div class="mode">
+            <button class="pan selected" title="Pan">
+                <img src="../src/assets/pan.svg" alt="pan">
+            </button>
+            <button class="edit" title="Edit">
+                <img src="../src/assets/wire.svg" alt="edit">
+            </button>
+        </div>
+
+
+        <div class="undo-redo">
+            <button class="undo" disabled>
+                <img src="../src/assets/undo.svg" alt="undo">
+            </button>
+            <button class="redo" disabled>
+                <img src="../src/assets/undo.svg" alt="redo">
+            </button>
+        </div>
     </div>
+
 
     <div class="device-bar"></div>
     
