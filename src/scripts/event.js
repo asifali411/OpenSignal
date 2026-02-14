@@ -78,24 +78,39 @@ canvas.addEventListener('mousemove', (e) => {
     }
 });
 window.addEventListener('keydown', (e) => {
-    if (e.key === "_" ) zoomOUT();
-    else if (e.key === "+") zoomIN();
-    else if (e.key === "Escape") {
-        if(WORLD.dialog.show){
-            closeDialog();
-        }
-    } else if (e.key === "z" && e.ctrlKey){
-        HISTORY.undo();
-    } else if (e.key === "y" && e.ctrlKey) {
-        HISTORY.redo();
+
+    switch (e.key) {
+        case "_":
+            zoomOUT();
+            break;
+        case "+":
+            zoomIN();
+            break;
+        case "Escape":
+            if (WORLD.dialog.show) closeDialog();
+            break;
+        case "z":
+            if (e.ctrlKey) HISTORY.undo();
+            break;
+        case "y":
+            if (e.ctrlKey) HISTORY.undo();
+            break;
+        case ",":
+        case ".":
+        case "ArrowLeft":
+        case "ArrowRight":
+            if (e.ctrlKey) changeMode();
+            break;
     }
 });
 overlay.addEventListener('click', closeDialog);
+
 document.querySelector('.extra-device-toggle-button').addEventListener('click', openExtraDevices);
-undoBtn.addEventListener('click', () => {
+
+BUTTONS.undo.addEventListener('click', () => {
     HISTORY.undo();
 });
-redoBtn.addEventListener('click', () => {
+BUTTONS.redo.addEventListener('click', () => {
     HISTORY.redo();
 });
 window.addEventListener('resize', () => {

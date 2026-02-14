@@ -37,15 +37,15 @@ class History {
 
 const renderUndoRedoBtn = () => {
     if (HISTORY.undoStack.length <= 1) {
-        undoBtn.disabled = true;
+        BUTTONS.undo.disabled = true;
     } else {
-        undoBtn.disabled = false;
+        BUTTONS.undo.disabled = false;
     }
 
     if (HISTORY.redoStack.length === 0) {
-        redoBtn.disabled = true;
+        BUTTONS.redo.disabled = true;
     } else {
-        redoBtn.disabled = false;
+        BUTTONS.redo.disabled = false;
     }
 }
 const renderModeBtn = () => {

@@ -106,3 +106,14 @@ const openExtraDevices = () => {
     overlay.classList.remove('hidden');
 }
 const closeExtraDevices = () => extraDeviceDialog.classList.add('hidden');
+
+const changeMode = () => {
+
+    if (WORLD.mode === PAN) {
+        WORLD.mode = EDIT;
+        canvas.style.cursor = 'pointer';
+    } else if (WORLD.mode === EDIT) {
+        WORLD.mode = PAN;
+        canvas.style.cursor = 'grab';
+    }
+}

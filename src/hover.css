@@ -1,0 +1,72 @@
+.pan,
+.edit,
+.undo,
+.redo,
+.zoom-in,
+.zoom-out {
+    position: relative;
+}
+
+.pan img,
+.edit img,
+.undo img,
+.redo img,
+.zoom-in img,
+.zoom-out img {
+    transition: all 0.25s ease;
+}
+
+.pan:hover img,
+.edit:hover img,
+.undo:hover img,
+.zoom-in:hover img,
+.zoom-out:hover img {
+    transform: translateY(0.5rem);
+}
+
+.pan::after,
+.edit::after,
+.undo::after,
+.redo::after,
+.zoom-in::after,
+.zoom-out::after {
+    position: absolute;
+    top: 0;
+    height: 0;
+    opacity: 0;
+    transition: all 0.25s ease;
+    font-size: 0.6rem;
+    white-space: nowrap;
+    color: grey;
+}
+
+.pan::after {
+    content: "Pan";
+}
+.edit::after {
+    content: "Edit";
+}
+.undo::after {
+    content: "Undo";
+}
+.redo::after {
+    content: "Redo";
+}
+.zoom-in::after {
+    content: "Zoom in";
+    font-size: 0.55rem;
+}
+.zoom-out::after {
+    content: "Zoom out";
+    font-size: 0.55rem;
+}
+
+.pan:hover::after,
+.edit:hover::after,
+.undo:hover::after,
+.redo:hover::after,
+.zoom-in:hover::after,
+.zoom-out:hover::after {
+    height: 0.5rem;
+    opacity: 1;
+}
