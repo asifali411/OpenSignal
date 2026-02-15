@@ -27,5 +27,5 @@ const update = () => {
 
 update();
 
-document.querySelector('.zoom-in').addEventListener('click', zoomIN);
-document.querySelector('.zoom-out').addEventListener('click', zoomOUT);
+document.querySelector('.zoom-in')!.addEventListener('click', zoomIN);
+document.querySelector('.zoom-out')!.addEventListener('click', zoomOUT);

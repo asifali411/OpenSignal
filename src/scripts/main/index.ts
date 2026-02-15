@@ -1,29 +1,12 @@
-const resizeCanvas = () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-const createGrid = () => {
-    ctx.globalAlpha = 0.15;
-    ctx.strokeStyle = '#444';
 
-    for(let x = -canvas.width * 10; x < canvas.width * 10; x+=tileSize){
-        ctx.moveTo(x, -canvas.height * 10);
-        ctx.lineTo(x, canvas.height * 10);
-    }
-    for (let y = -canvas.height * 10; y < canvas.height * 10; y += tileSize) {
-        ctx.moveTo(-canvas.width * 10, y);
-        ctx.lineTo(canvas.width * 10, y);
-    }
+//========================= DEVICE BAR ========================//
 
-    ctx.stroke();
-    ctx.globalAlpha = 1;
-}
-const createDeviceBar = () => {
-
+const createDeviceBar = (): void => {
+    
     for(let i = 0; i < Math.min(Math.floor(deviceBar.getBoundingClientRect().width / 60), DEVICES.length); i++){
         const deviceBTN = document.createElement('button');
         deviceBTN.classList.add("device");
-        deviceBTN.title = DEVICES[i].device;
+        deviceBTN.title = DEVICES[i].name;
 
         const deviceIMG = document.createElement("img");
         deviceIMG.src = DEVICES[i].img;
@@ -51,7 +34,7 @@ const createDeviceBar = () => {
         openExtraDevices();
     });
 }
-const reRenderDeviceBar = () => {
+const reRenderDeviceBar = (): void => {
     const visibleDevices = Array(...document.querySelectorAll(".device-bar .device"));
     
     visibleDevices.forEach(device => {
@@ -63,21 +46,18 @@ const reRenderDeviceBar = () => {
 const createExtraDeviceDialog = () => {
     for(let i = 0; i < DEVICES.length; i++){
         extraDevices.innerHTML += `
-            <button class="device" title="${DEVICES[i].device}" idx="${i}">
+            <button class="device" title="${DEVICES[i].name}" idx="${i}">
                 <img src="${DEVICES[i].img}">
             </button>
         `;
     }
 }
-const toWorld = (x, y) => {
-    return {
-        x: (x - canvas.width/2) / WORLD.camera.zoom + WORLD.camera.x,
-        y: (y - canvas.height/2) / WORLD.camera.zoom + WORLD.camera.y,
-    }
-}
+
+//========================= ZOOM IN OUT ========================//
+
 const setZoomPercentage = () => {
     const percentage = Math.round(WORLD.camera.zoom * 100);
-    document.querySelector('.zoom-percentage').textContent = `${percentage}%`;
+    document.querySelector('.zoom-percentage')!.textContent = `${percentage}%`;
 }
 const zoomIN = () => {
     if(WORLD.camera.zoom >= 4) return;
@@ -89,16 +69,13 @@ const zoomOUT = () => {
     WORLD.camera.zoom -= 0.1;
     setZoomPercentage();
 }
+
+//========================= DIALOG BOX ========================//
+
 const closeDialog = () => {
     WORLD.dialog.show = false;
     overlay.classList.add('hidden');
-    switch(WORLD.dialog.box){
-        case EXTRA_DEVICES:
-            closeExtraDevices();
-            break;
-        default:
-            throw new Error(`Invalid dialog box: ${WORLD.dialog.box}`);
-    }
+    closeExtraDevices();
 }
 const openExtraDevices = () => {
     extraDeviceDialog.classList.remove('hidden');
@@ -107,13 +84,14 @@ const openExtraDevices = () => {
 }
 const closeExtraDevices = () => extraDeviceDialog.classList.add('hidden');
 
-const changeMode = () => {
+//========================= MODE ========================//
 
-    if (WORLD.mode === PAN) {
-        WORLD.mode = EDIT;
+const changeMode = () => {
+    if (WORLD.mode === MODE.PAN) {
+        WORLD.mode = MODE.EDIT;
         canvas.style.cursor = 'pointer';
-    } else if (WORLD.mode === EDIT) {
-        WORLD.mode = PAN;
+    } else if (WORLD.mode === MODE.EDIT) {
+        WORLD.mode = MODE.PAN;
         canvas.style.cursor = 'grab';
     }
 }

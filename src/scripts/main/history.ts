@@ -1,4 +1,10 @@
-class History {
+class HistoryManager {
+
+    public undoStack: any;
+    public redoStack: any;
+    private limit: number;
+
+
     constructor(limit = 20) {
         this.undoStack = [];
         this.redoStack = [];
@@ -54,9 +60,9 @@ const renderModeBtn = () => {
         tool.classList.remove('selected');
     });
 
-    if (WORLD.mode === PAN) {
+    if (WORLD.mode === MODE.PAN) {
         BUTTONS.pan.classList.add('selected');
-    } else if (WORLD.mode === EDIT) {
+    } else if (WORLD.mode === MODE.EDIT) {
         BUTTONS.edit.classList.add('selected');
     }
 }

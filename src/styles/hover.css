@@ -43,19 +43,24 @@
 .pan::after {
     content: "Pan";
 }
+
 .edit::after {
     content: "Edit";
 }
+
 .undo::after {
     content: "Undo";
 }
+
 .redo::after {
     content: "Redo";
 }
+
 .zoom-in::after {
     content: "Zoom in";
     font-size: 0.55rem;
 }
+
 .zoom-out::after {
     content: "Zoom out";
     font-size: 0.55rem;

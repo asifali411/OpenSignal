@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Circuit Simulator</title>
+
+  <link rel="stylesheet" href="./src/styles/styles.css">
+  <link rel="stylesheet" href="./src/styles/hover.css">
+
+  <script src="./src/scripts/main/history.ts" defer></script>
+  <script src="./src/scripts/main/setup.ts" defer></script>
+
+  <script src="./src/scripts/devices/draw.ts" defer></script>
+  <script src="./src/scripts/devices/device.ts" defer></script>
+  <script src="./src/scripts/devices/source.ts" defer></script>
+  <script src="./src/scripts/devices/ground.ts" defer></script>
+
+  <script src="./src/scripts/main/util.ts" defer></script>
+  <script src="./src/scripts/main/index.ts" defer></script>
+  <script src="./src/main.ts" defer></script>
+  <script src="../src/scripts/main/event.js" defer></script>
+</head>
+
+<body>
+  <canvas></canvas>
+
+  <div class="tools-left">
+
+    <div class="mode">
+      <button class="pan selected" title="Pan">
+        <img src="./src/assets/pan.svg" alt="pan">
+      </button>
+      <button class="edit" title="Edit">
+        <img src="./src/assets/wire.svg" alt="edit">
+      </button>
+    </div>
+
+
+    <div class="undo-redo">
+      <button class="undo" disabled>
+        <img src="./src/assets/undo.svg" alt="undo">
+      </button>
+      <button class="redo" disabled>
+        <img src="./src/assets/undo.svg" alt="redo">
+      </button>
+    </div>
+  </div>
+
+
+  <div class="device-bar"></div>
+
+  <div class="zoom-in-out">
+    <span class="zoom-percentage">100%</span>
+    <button class="zoom-in">
+      <img src="./src/assets/zoom-in.svg" alt="zoom in" title="Shift + Plus">
+    </button>
+    <button class="zoom-out">
+      <img src="./src/assets/zoom-out.svg" alt="zoom out" title="Shift + Minus">
+    </button>
+  </div>
+
+  <div class="overlay hidden"></div>
+  <div class="dialog extra-devices-dialog hidden">
+    <h3>Devices</h3>
+    <div class="extra-devices"></div>
+  </div>
+
+</body>
+
+</html>
