@@ -1,6 +1,9 @@
+import { canvas, ctx } from "./reference";
+import { tileSize, deviceSize, WORLD, MOUSE } from "./setup";
+
 const resizeCanvas = () => {
-    canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
 }
 
 const createGrid = () => {
@@ -20,11 +23,11 @@ const createGrid = () => {
     ctx.globalAlpha = 1;
 }
 
-type Point = {
+type POINT = {
     x: number,
     y: number
 }
-const toWorld = (x: number, y: number): Point => {
+const toWorld = (x: number, y: number): POINT => {
     return {
         x: (x - canvas.width / 2) / WORLD.camera.zoom + WORLD.camera.x,
         y: (y - canvas.height / 2) / WORLD.camera.zoom + WORLD.camera.y
@@ -33,4 +36,11 @@ const toWorld = (x: number, y: number): Point => {
 
 const isHovering = (device: any): boolean => {
     return (MOUSE.x >= device.x && MOUSE.x <= device.x + deviceSize && MOUSE.y >= device.y && MOUSE.y <= device.y + deviceSize);
+}
+
+export {
+    resizeCanvas,
+    createGrid,
+    toWorld,
+    isHovering
 }

@@ -1,8 +1,14 @@
+import { canvas, ctx } from "./scripts/main/reference";
+import { WORLD } from "./scripts/main/setup";
+import { resizeCanvas, createGrid } from "./scripts/main/util";
+import { createDeviceBar,createExtraDeviceDialog, drawDevices, renderUndoRedoBtn } from "./scripts/main/script";
+import './scripts/main/event';
+
 createDeviceBar();
 createExtraDeviceDialog();
-renderUndoRedoBtn();
 
-const update = () => {
+const render = () => {
+    
     resizeCanvas();
     ctx.save();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -17,15 +23,13 @@ const update = () => {
     createGrid();
 
     // render components
-    drawDEVICES();
+    drawDevices();
 
-    renderModeBtn();
+    renderUndoRedoBtn(); // TODO: do not render this at every frame. instead render the component on change.
 
     ctx.restore();
-    requestAnimationFrame(update);
+    
+    requestAnimationFrame(render);
 }
 
-update();
-
-document.querySelector('.zoom-in')!.addEventListener('click', zoomIN);
-document.querySelector('.zoom-out')!.addEventListener('click', zoomOUT);
+render();

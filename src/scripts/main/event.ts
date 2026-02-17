@@ -1,6 +1,16 @@
-canvas.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-});
+import { canvas, buttons, overlay } from "./reference";
+import { MOUSE, WORLD, MODE, HISTORY, CIRCUIT } from "./setup";
+import { toWorld, isHovering } from "./util";
+import {
+    closeDialog,
+    openExtraDevices,
+    reRenderDeviceBar,
+    zoomIN, zoomOUT,
+    renderModeBtn,
+    changeMode
+} from "./script";
+
+canvas.addEventListener('contextmenu', (e) => { e.preventDefault() });
 
 //========================= MOUSE ========================//
 
@@ -8,12 +18,14 @@ canvas.addEventListener('mousedown', (e) => {
     MOUSE.x = toWorld(e.offsetX, e.offsetY).x;
     MOUSE.y = toWorld(e.offsetX, e.offsetY).y;
 
-    if(e.button === 0 && WORLD.mode === MODE.PAN){
+    // left click + pan --> move canvas
+    if (e.button === 0 && WORLD.mode === MODE.PAN) {
         MOUSE.isClicking.left = true;
         let isMovingCamera = true;
 
+        // if is hovering over device --> move device instead
         CIRCUIT.devices.forEach((device: any) => {
-            if(isHovering(device)){
+            if (isHovering(device)) {
                 isMovingCamera = false;
                 WORLD.movingDevice = device;
             }
@@ -21,7 +33,7 @@ canvas.addEventListener('mousedown', (e) => {
 
         canvas.style.cursor = "grabbing";
         
-        if(isMovingCamera){
+        if (isMovingCamera) {
             WORLD.camera.lastX = e.offsetX;
             WORLD.camera.lastY = e.offsetY;
             WORLD.camera.isDragging = true;
@@ -34,12 +46,17 @@ canvas.addEventListener('mousedown', (e) => {
         }
     }
 
+    // if right click --> interact with devices
+    // this is meant to be a shortcut way to handle simulation mode without actually toggling to simulation mode
+    // however this logic needs to be discussed later  
     else if (e.button === 2) {
         MOUSE.isClicking.right = true;
         CIRCUIT.devices.forEach((device: any) => {
-            if(isHovering(device)){
-                if (device.name === "Source") {
-                    toggleSOURCE(device);
+            if (isHovering(device)) {
+                switch (device.name) {
+                    case "Source":
+                        // TODO: handle toggle source here
+                        break;
                 }
             }
         });
@@ -49,16 +66,21 @@ canvas.addEventListener('mouseup', () => {
     MOUSE.isClicking.left = false;
     MOUSE.isClicking.right = false;
     if (WORLD.mode === MODE.PAN) canvas.style.cursor = "grab";
+
+    // disable dragging and panning effect on mouse up
     WORLD.camera.isDragging = false;
     if (WORLD.movingDevice) {
         WORLD.movingDevice.isDragging = false;
-        HISTORY.saveState();
+        HISTORY.save(CIRCUIT);
+        // TODO: render undo-redo button here
     }
     WORLD.movingDevice = null;
 });
 canvas.addEventListener('mouseleave', () => {
     MOUSE.isClicking.left = false;
     MOUSE.isClicking.right = false;
+
+    // disable dragging and panning effect on mouse leave
     if (WORLD.mode === MODE.PAN) canvas.style.cursor = "grab";
     WORLD.camera.isDragging = false;
     if (WORLD.movingDevice) WORLD.movingDevice.isDragging = false;
@@ -85,25 +107,29 @@ canvas.addEventListener('mousemove', (e) => {
 
 //========================= BUTTONS ========================//
 
-BUTTONS.undo.addEventListener('click', () => {
-    HISTORY.undo();
+buttons.undo.addEventListener('click', () => {
+    Object.assign(CIRCUIT, HISTORY.undo());
 });
-BUTTONS.redo.addEventListener('click', () => {
-    HISTORY.redo();
+buttons.redo.addEventListener('click', () => {
+    Object.assign(CIRCUIT, HISTORY.redo());
 });
-BUTTONS.pan.addEventListener('click', () => {
+buttons.pan.addEventListener('click', () => {
     WORLD.mode = MODE.PAN;
     canvas.style.cursor = 'grab';
+    renderModeBtn();
 });
-BUTTONS.edit.addEventListener('click', () => {
+buttons.edit.addEventListener('click', () => {
     WORLD.mode = MODE.EDIT;
     canvas.style.cursor = 'pointer';
+    renderModeBtn();
 });
+buttons.zoomIn.addEventListener('click', zoomIN);
+buttons.zoomOut.addEventListener('click', zoomOUT);
 
 //========================= WINDOW & DIALOG ========================//
 
 overlay.addEventListener('click', closeDialog);
-document.querySelector('.extra-device-toggle-button')!.addEventListener('click', openExtraDevices);
+document.querySelector('.extra-device-toggle-button')?.addEventListener('click', openExtraDevices);
 window.addEventListener('keydown', (e) => {
 
     switch (e.key) {
@@ -117,28 +143,21 @@ window.addEventListener('keydown', (e) => {
             if (WORLD.dialog.show) closeDialog();
             break;
         case "z":
-            if (e.ctrlKey) HISTORY.undo();
+            if (e.ctrlKey) Object.assign(CIRCUIT, HISTORY.undo());
             break;
         case "y":
-            if (e.ctrlKey) HISTORY.redo();
+            if (e.ctrlKey) Object.assign(CIRCUIT, HISTORY.redo());
             break;
-        case ",":
-        case ".":
-        case "ArrowLeft":
-        case "ArrowRight":
-            if (e.ctrlKey) changeMode();
+        case ',':
+        case 'ArrowLeft':
+            if (e.ctrlKey) changeMode(-1);
+            break;
+        case '.':
+        case 'ArrowRight':
+            if (e.ctrlKey) changeMode(1);
             break;
     }
 });
 window.addEventListener('resize', () => {
     reRenderDeviceBar();
-});
-
-//========================= DEBUG   Ctrl + "/" ========================//
-window.addEventListener('keydown', (e) => {
-    if(e.ctrlKey && e.key === "/"){
-        //DEBUG
-        // console.debug(HISTORY);
-        console.debug(CIRCUIT);
-    }
 });

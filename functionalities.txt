@@ -1,0 +1,32 @@
+    CANVAS
+===============
+    -> drag:
+        on right mouse click + mouse move + on World mode = pan
+
+    -> zoom in:
+        on clicking zoom in button / Shift + Plus
+
+    -> zoom out:
+        on clicking zoom out button / Shift + Minus
+
+    -> undo:
+        on clicking undo button / Ctrl + z
+
+    -> redo on clicking redo button / Ctrl + y
+
+
+    MODE
+==============
+    -> pan:
+        used to move canvas or devices on screen
+    
+    -> edit:
+        used to modify the config of a device / to create connections between devices
+
+    DEVICES
+==============
+    -> create:
+        spawn an element on the screen by clicking the corresponding button
+    
+    -> draw:
+        render a particular device on the screen

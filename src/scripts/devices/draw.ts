@@ -1,4 +1,10 @@
-class Draw {    
+import { ctx } from "../main/reference";
+import { SPRITES, deviceSize } from "../main/setup";
+
+import Source from "./source";
+import Ground from "./ground";
+
+class Draw {
     source(device: Source) {
         ctx.drawImage(SPRITES["Source"], device.x, device.y, deviceSize, deviceSize);
         if (device.out.voltage <= 0.2) {
@@ -26,3 +32,6 @@ class Draw {
         ctx.fill();
     }
 }
+
+
+export default Draw;
