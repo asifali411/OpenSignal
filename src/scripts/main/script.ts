@@ -1,8 +1,8 @@
 import { deviceBar, extraDevices, buttons, canvas, extraDeviceDialog, overlay } from "./reference";
 import { DEVICES, WORLD, MODE, CIRCUIT, HISTORY } from "./setup";
 
-import Draw from "../devices/draw";
-import Create from "../devices/create";
+import Draw from "../devices/functions/draw";
+import Create from "../devices/functions/create";
 
 //========================= DEVICES ========================//
 
@@ -34,8 +34,10 @@ const handleDeviceElementClick = (deviceName: string): void => {
             break;
         default:
             console.error(`Device name not recognized: ${deviceName}`);
-            break;
+            return;
     }
+
+    HISTORY.save(CIRCUIT);
 }
 const createDeviceBar = (): void => {
     const maxSize = Math.min(Math.floor(deviceBar.getBoundingClientRect().width / 60), DEVICES.length);
@@ -70,7 +72,7 @@ const createDeviceBar = (): void => {
     deviceBar.append(deviceBTN);
 
     deviceBTN.addEventListener('click', () => {
-        // openExtraDevices();
+        openExtraDevices();
     });
 }
 const reRenderDeviceBar = (): void => {
@@ -130,14 +132,21 @@ const renderModeBtn = (): void => {
         tool.classList.remove('selected');
     });
 
-    if (WORLD.mode === MODE.PAN) {
-        buttons.pan.classList.add('selected');
-    } else if (WORLD.mode === MODE.EDIT) {
-        buttons.edit.classList.add('selected');
+
+    switch (WORLD.mode) {
+        case MODE.PAN:
+            buttons.pan.classList.add('selected');
+            break;
+        case MODE.EDIT:
+            buttons.edit.classList.add('selected');
+            break;
+        case MODE.SIMULATE:
+            buttons.simulate.classList.add('selected');
+            break;
     }
 }
 const changeMode = (idx: number): void => {
-    const modes = [MODE.PAN, MODE.EDIT];
+    const modes = [MODE.PAN, MODE.EDIT, MODE.SIMULATE];
 
     const currentIndex = modes.indexOf(WORLD.mode);
     const newIndex = (currentIndex + idx + modes.length) % modes.length;

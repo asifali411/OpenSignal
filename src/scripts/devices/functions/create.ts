@@ -1,7 +1,7 @@
-import { CIRCUIT, WORLD } from "../main/setup";
+import { CIRCUIT, WORLD } from "../../main/setup";
 
-import Source from "./source";
-import Ground from "./ground";
+import Source from "../source";
+import Ground from "../ground";
 
 class Create {
     source() {

@@ -9,6 +9,7 @@ const buttons = {
     undo: document.querySelector<HTMLButtonElement>('.undo')!,
     redo: document.querySelector<HTMLButtonElement>('.redo')!,
     pan: document.querySelector<HTMLButtonElement>('.pan')!,
+    simulate: document.querySelector<HTMLButtonElement>('.simulate')!,
     edit: document.querySelector<HTMLButtonElement>('.edit')!,
     zoomIn: document.querySelector<HTMLButtonElement>('.zoom-in')!,
     zoomOut: document.querySelector<HTMLButtonElement>('.zoom-out')!

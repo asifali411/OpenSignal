@@ -1,5 +1,6 @@
 .pan,
 .edit,
+.simulate,
 .undo,
 .redo,
 .zoom-in,
@@ -9,6 +10,7 @@
 
 .pan img,
 .edit img,
+.simulate img,
 .undo img,
 .redo img,
 .zoom-in img,
@@ -18,6 +20,7 @@
 
 .pan:hover img,
 .edit:hover img,
+.simulate:hover img,
 .undo:hover img,
 .zoom-in:hover img,
 .zoom-out:hover img {
@@ -26,6 +29,7 @@
 
 .pan::after,
 .edit::after,
+.simulate::after,
 .undo::after,
 .redo::after,
 .zoom-in::after,
@@ -48,6 +52,10 @@
     content: "Edit";
 }
 
+.simulate::after{
+    content: "Simulate";
+}
+
 .undo::after {
     content: "Undo";
 }
@@ -68,6 +76,7 @@
 
 .pan:hover::after,
 .edit:hover::after,
+.simulate:hover::after,
 .undo:hover::after,
 .redo:hover::after,
 .zoom-in:hover::after,

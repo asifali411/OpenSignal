@@ -8,6 +8,15 @@
   box-sizing: border-box;
 }
 
+:root{
+  --color-bg: #fff;
+  --color-text: #000;
+  --color-border: #ccc;
+  --color-box-shadow: rgba(0, 0, 0, 0.2);
+  
+  --border-radius: 7px;
+}
+
 body {
   margin: 0;
   overflow: hidden;
@@ -40,10 +49,10 @@ button:active {
 .zoom-in-out,
 .undo-redo,
 .mode {
-  border-radius: 7px;
+  border-radius: var(--border-radius);
   background-color: transparent;
-  border: 1px solid #ccc;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 0 5px var(--color-box-shadow);
   backdrop-filter: blur(1px);
   -webkit-backdrop-filter: blur(1px);
   display: flex;
@@ -119,8 +128,8 @@ button:active {
 .undo-redo {
   flex-direction: column;
   gap: 0.3rem;
-  border: 1px solid #ccc;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 0 5px var(--color-box-shadow);
   border-radius: 7px;
   padding: 0.5rem 0.4rem;
 }
@@ -141,8 +150,8 @@ button:active {
 .mode {
   flex-direction: column;
   gap: 0.3rem;
-  border: 1px solid #ccc;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 0 5px var(--color-box-shadow);
   border-radius: 7px;
   padding: 0.5rem 0.4rem;
   margin-bottom: 1rem;
@@ -202,9 +211,11 @@ button:active {
   top: 50%;
   translate: -50% -50%;
   padding: 1rem;
-  background-color: #fff;
+  background-color: var(--color-bg);
   border-radius: 7px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 5px var(--color-box-shadow);
+
+  z-index: 999;
 }
 
 .overlay {
@@ -213,7 +224,9 @@ button:active {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: var(--color-box-shadow);
+
+  z-index: 998;
 }
 
 .hidden {
@@ -263,3 +276,45 @@ button:active {
   width: 40px;
   height: 40px;
 }
+
+/*==============================================================
+    DEVICE INFO
+ ===============================================================*/
+
+/* .device-info{
+  position: fixed;
+  top: 3%;
+  right: 3%;
+  padding: 1rem;
+  background-color: #fff;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 0 5px var(--color-box-shadow);
+  border-radius: var(--border-radius);
+
+  display: flex;
+  flex-direction: column;
+
+  width: min(320px, 90%);
+
+  z-index: 899;
+}
+
+.device-info h4, .description{
+  margin: 0;
+  text-align: center;
+}
+
+.device-info hr{
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-border);
+}
+
+.device-info p{
+  color: #555;
+}
+
+.description{
+  font-size: 0.9rem;
+  color: var(--color-border);
+} */

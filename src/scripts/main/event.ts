@@ -46,6 +46,15 @@ canvas.addEventListener('mousedown', (e) => {
         }
     }
 
+    // left click + edit --> select device
+    else if (e.button === 0 && WORLD.mode === MODE.EDIT) {
+        CIRCUIT.devices.forEach((device: any) => {
+            if (isHovering(device)) {
+                device.selected = !device.selected;
+            }
+        });
+    }
+
     // if right click --> interact with devices
     // this is meant to be a shortcut way to handle simulation mode without actually toggling to simulation mode
     // however this logic needs to be discussed later  
@@ -123,6 +132,11 @@ buttons.edit.addEventListener('click', () => {
     canvas.style.cursor = 'pointer';
     renderModeBtn();
 });
+buttons.simulate.addEventListener('click', () => {
+    WORLD.mode = MODE.SIMULATE;
+    canvas.style.cursor = 'pointer';
+    renderModeBtn();
+});
 buttons.zoomIn.addEventListener('click', zoomIN);
 buttons.zoomOut.addEventListener('click', zoomOUT);
 
@@ -132,30 +146,37 @@ overlay.addEventListener('click', closeDialog);
 document.querySelector('.extra-device-toggle-button')?.addEventListener('click', openExtraDevices);
 window.addEventListener('keydown', (e) => {
 
-    switch (e.key) {
-        case "_":
-            zoomOUT();
-            break;
-        case "+":
-            zoomIN();
-            break;
-        case "Escape":
-            if (WORLD.dialog.show) closeDialog();
-            break;
-        case "z":
-            if (e.ctrlKey) Object.assign(CIRCUIT, HISTORY.undo());
-            break;
-        case "y":
-            if (e.ctrlKey) Object.assign(CIRCUIT, HISTORY.redo());
-            break;
-        case ',':
-        case 'ArrowLeft':
-            if (e.ctrlKey) changeMode(-1);
-            break;
-        case '.':
-        case 'ArrowRight':
-            if (e.ctrlKey) changeMode(1);
-            break;
+    if (e.key === "Escape") {
+        if (WORLD.dialog.show) closeDialog();
+    }
+
+    if (e.ctrlKey) {
+        switch (e.key) {
+            case "-":
+                zoomOUT();
+                break;
+            case "=":
+                zoomIN();
+                break;
+            
+            case "z":
+            case "Z":
+                Object.assign(CIRCUIT, HISTORY.undo());
+                break;
+            case "y":
+            case "Y":
+                Object.assign(CIRCUIT, HISTORY.redo());
+                break;
+            
+            case ",":
+            case "ArrowLeft":
+                changeMode(-1);
+                break;
+            case ".":
+            case "ArrowRight":
+                changeMode(1);
+                break;
+        }
     }
 });
 window.addEventListener('resize', () => {
