@@ -2,61 +2,108 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Circuit Simulator</title>
 
-  <link rel="stylesheet" href="./src/styles/styles.css">
-  <link rel="stylesheet" href="./src/styles/hover.css">
+  <link rel="stylesheet" href="./src/styles/styles.css" />
+  <link rel="stylesheet" href="./src/styles/hover.css" />
 
-  <script type="module" src="./src/main.ts"></script>
+  <script type="module" src="./src/main.ts" defer></script>
 </head>
 
 <body>
-  <canvas></canvas>
 
-  <div class="tools-left">
+  <!-- Main Application -->
+  <main aria-label="Circuit Simulator Workspace">
 
-    <div class="mode">
-      <button class="pan selected" title="Pan">
-        <img src="./src/assets/pan.svg" alt="pan">
+    <!-- Canvas Area -->
+    <canvas role="application" aria-label="Circuit drawing canvas" tabindex="0">
+    </canvas>
+
+    <!-- Left Toolbar -->
+    <aside class="tools-left" aria-label="Main Tools">
+
+      <!-- Mode Selection -->
+      <div class="mode" role="group" aria-label="Mode Selection">
+        <button class="pan selected icon-button" aria-pressed="true" title="Pan Mode (P)">
+          <img src="./src/assets/pan.svg" alt="" aria-hidden="true">
+          <span class="sr-only">Pan Mode</span>
+        </button>
+
+        <button class="edit icon-button" aria-pressed="false" title="Edit Mode (E)">
+          <img src="./src/assets/wire.svg" alt="" aria-hidden="true">
+          <span class="sr-only">Edit Mode</span>
+        </button>
+
+        <button class="simulate icon-button" aria-pressed="false" title="Simulate (S)">
+          <img src="./src/assets/simulate.svg" alt="" aria-hidden="true">
+          <span class="sr-only">Simulate</span>
+        </button>
+      </div>
+
+      <!-- Undo / Redo -->
+      <div class="undo-redo" role="group" aria-label="History Controls">
+        <button class="undo icon-button" disabled aria-label="Undo (Ctrl + Z)">
+          <img src="./src/assets/undo.svg" alt="" aria-hidden="true">
+        </button>
+
+        <button class="redo icon-button" disabled aria-label="Redo (Ctrl + Y)">
+          <img src="./src/assets/undo.svg" alt="" aria-hidden="true">
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- Device Bar -->
+    <nav class="device-bar" aria-label="Available Devices">
+    </nav>
+
+    <!-- Right Toolbar -->
+    <aside class="tools-right" aria-label="View Controls">
+
+      <!-- Snap to Grid -->
+      <button class="snap-to-grid icon-button selected" aria-pressed="true" aria-label="Toggle Snap to Grid">
+        <img src="./src/assets/snap.svg" alt="" aria-hidden="true">
       </button>
-      <button class="edit" title="Edit">
-        <img src="./src/assets/wire.svg" alt="edit">
-      </button>
-      <button class="simulate" title="Simulate">
-        <img src="./src/assets/simulate.svg" alt="simulate">
-      </button>
+
+      <!-- Zoom Controls -->
+      <div class="zoom-in-out" role="group" aria-label="Zoom Controls">
+
+        <output class="zoom-percentage" aria-live="polite">
+          100%
+        </output>
+
+        <button class="zoom-in icon-button" aria-label="Zoom In (Shift + Plus)">
+          <img src="./src/assets/zoom-in.svg" alt="" aria-hidden="true">
+        </button>
+
+        <button class="zoom-out icon-button" aria-label="Zoom Out (Shift + Minus)">
+          <img src="./src/assets/zoom-out.svg" alt="" aria-hidden="true">
+        </button>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- Dialog Overlay -->
+  <div class="overlay hidden" aria-hidden="true"></div>
+
+  <!-- Devices Dialog -->
+  <div class="dialog extra-devices-dialog hidden" role="dialog" aria-modal="true"
+    aria-labelledby="devices-dialog-title">
+
+    <h2 id="devices-dialog-title">Devices</h2>
+
+    <div class="extra-devices" role="list">
     </div>
 
-
-    <div class="undo-redo">
-      <button class="undo" disabled>
-        <img src="./src/assets/undo.svg" alt="undo">
-      </button>
-      <button class="redo" disabled>
-        <img src="./src/assets/undo.svg" alt="redo">
-      </button>
-    </div>
   </div>
 
-
-  <div class="device-bar"></div>
-
-  <div class="zoom-in-out">
-    <span class="zoom-percentage">100%</span>
-    <button class="zoom-in">
-      <img src="./src/assets/zoom-in.svg" alt="zoom in" title="Shift + Plus">
-    </button>
-    <button class="zoom-out">
-      <img src="./src/assets/zoom-out.svg" alt="zoom out" title="Shift + Minus">
-    </button>
-  </div>
-
-  <div class="overlay hidden"></div>
-  <div class="dialog extra-devices-dialog hidden">
-    <h3>Devices</h3>
-    <div class="extra-devices"></div>
+  <!-- Debug Info -->
+  <div class="info-bar" aria-live="polite">
+    FPS: <span class="fps">12</span>
   </div>
 
 </body>

@@ -20,6 +20,10 @@ interface World {
 
 //=================== DECLARATIONS ===================//
 
+const SETTINGS = {
+    snapToGrid: true
+}
+
 const DEVICES = [
     {
         name: "Source",
@@ -123,5 +127,6 @@ export {
     HISTORY,
     tileSize,
     deviceSize,
-    SPRITES
+    SPRITES,
+    SETTINGS
 };

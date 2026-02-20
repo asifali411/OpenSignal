@@ -1,13 +1,32 @@
-import { canvas, ctx } from "./scripts/main/reference";
+import { canvas, ctx, fpsText } from "./scripts/main/reference";
 import { WORLD } from "./scripts/main/setup";
 import { resizeCanvas, createGrid } from "./scripts/main/util";
-import { createDeviceBar,createExtraDeviceDialog, drawDevices, renderUndoRedoBtn } from "./scripts/main/script";
+import {
+    createDeviceBar,
+    createExtraDeviceDialog,
+    drawDevices,
+    renderUndoRedoBtn
+} from "./scripts/main/script";
 import './scripts/main/event';
 
 createDeviceBar();
 createExtraDeviceDialog();
 
+let lastTime = performance.now();
+let fps = 60;
+const fpsSmoothing = 0.9;
+
 const render = () => {
+
+    // show fps
+    const dt = performance.now() - lastTime;
+    if(dt !== 0){
+        const currentFps = Math.round(1000/dt);
+        fps = fps * fpsSmoothing + currentFps * (1 - fpsSmoothing);
+
+        fpsText.textContent = String(Math.round(fps));
+    }
+
     
     resizeCanvas();
     ctx.save();
@@ -28,7 +47,7 @@ const render = () => {
     renderUndoRedoBtn(); // TODO: do not render this at every frame. instead render the component on change.
 
     ctx.restore();
-    
+    lastTime = performance.now();
     requestAnimationFrame(render);
 }
 

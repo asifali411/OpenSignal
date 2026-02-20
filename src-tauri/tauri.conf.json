@@ -13,9 +13,9 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "circuit-simulator",
-        "width": 800,
-        "height": 600
+        "title": "Circuit Simulator",
+        "width": 1024,
+        "height": 576
       }
     ],
     "security": {

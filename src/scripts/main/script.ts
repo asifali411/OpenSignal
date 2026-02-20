@@ -1,5 +1,5 @@
 import { deviceBar, extraDevices, buttons, canvas, extraDeviceDialog, overlay } from "./reference";
-import { DEVICES, WORLD, MODE, CIRCUIT, HISTORY } from "./setup";
+import { DEVICES, WORLD, MODE, CIRCUIT, HISTORY, tileSize, SETTINGS } from "./setup";
 
 import Draw from "../devices/functions/draw";
 import Create from "../devices/functions/create";
@@ -182,6 +182,25 @@ const renderUndoRedoBtn = () => {
     }
 }
 
+//========================= SNAP TO GRID ====================//
+
+const snapToGrid = () => {
+    CIRCUIT.devices.forEach((device: any) => {
+        const newX = Math.round(device.x / (tileSize / 2)) * (tileSize / 2);
+        const newY = Math.round(device.y / (tileSize / 2)) * (tileSize / 2);
+
+        device.x = Math.floor(newX);
+        device.y = Math.floor(newY);
+    });
+}
+const renderSnapToGridBtn = () => {
+    if (SETTINGS.snapToGrid) {
+        buttons.snapToGrid.classList.add('selected');
+    } else {
+        buttons.snapToGrid.classList.remove('selected');
+    }
+}
+
 export {
     createDeviceBar,
     reRenderDeviceBar,
@@ -198,5 +217,8 @@ export {
 
     drawDevices,
 
-    renderUndoRedoBtn
+    renderUndoRedoBtn,
+
+    snapToGrid,
+    renderSnapToGridBtn
 };

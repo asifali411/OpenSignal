@@ -1,5 +1,5 @@
 import { canvas, buttons, overlay } from "./reference";
-import { MOUSE, WORLD, MODE, HISTORY, CIRCUIT } from "./setup";
+import { MOUSE, WORLD, MODE, HISTORY, CIRCUIT, SETTINGS } from "./setup";
 import { toWorld, isHovering } from "./util";
 import {
     closeDialog,
@@ -7,7 +7,9 @@ import {
     reRenderDeviceBar,
     zoomIN, zoomOUT,
     renderModeBtn,
-    changeMode
+    changeMode,
+    snapToGrid,
+    renderSnapToGridBtn
 } from "./script";
 
 canvas.addEventListener('contextmenu', (e) => { e.preventDefault() });
@@ -80,6 +82,7 @@ canvas.addEventListener('mouseup', () => {
     WORLD.camera.isDragging = false;
     if (WORLD.movingDevice) {
         WORLD.movingDevice.isDragging = false;
+        if(SETTINGS.snapToGrid) snapToGrid();
         HISTORY.save(CIRCUIT);
         // TODO: render undo-redo button here
     }
@@ -88,11 +91,16 @@ canvas.addEventListener('mouseup', () => {
 canvas.addEventListener('mouseleave', () => {
     MOUSE.isClicking.left = false;
     MOUSE.isClicking.right = false;
+    if (WORLD.mode === MODE.PAN) canvas.style.cursor = "grab";
 
     // disable dragging and panning effect on mouse leave
-    if (WORLD.mode === MODE.PAN) canvas.style.cursor = "grab";
     WORLD.camera.isDragging = false;
-    if (WORLD.movingDevice) WORLD.movingDevice.isDragging = false;
+    if (WORLD.movingDevice) {
+        WORLD.movingDevice.isDragging = false;
+        if(SETTINGS.snapToGrid) snapToGrid();
+        HISTORY.save(CIRCUIT);
+        // TODO: render undo-redo button here
+    }
     WORLD.movingDevice = null;
 });
 canvas.addEventListener('mousemove', (e) => {
@@ -118,6 +126,7 @@ canvas.addEventListener('mousemove', (e) => {
 
 buttons.undo.addEventListener('click', () => {
     Object.assign(CIRCUIT, HISTORY.undo());
+    // buttons.undo.
 });
 buttons.redo.addEventListener('click', () => {
     Object.assign(CIRCUIT, HISTORY.redo());
@@ -139,6 +148,11 @@ buttons.simulate.addEventListener('click', () => {
 });
 buttons.zoomIn.addEventListener('click', zoomIN);
 buttons.zoomOut.addEventListener('click', zoomOUT);
+buttons.snapToGrid.addEventListener('click', () => {
+    SETTINGS.snapToGrid = !SETTINGS.snapToGrid;
+    renderSnapToGridBtn();
+    if (SETTINGS.snapToGrid) snapToGrid();
+})
 
 //========================= WINDOW & DIALOG ========================//
 
