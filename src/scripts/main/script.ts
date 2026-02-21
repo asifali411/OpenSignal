@@ -37,6 +37,7 @@ const handleDeviceElementClick = (deviceName: string): void => {
             return;
     }
 
+    if (SETTINGS.snapToGrid) snapToGrid();
     HISTORY.save(CIRCUIT);
 }
 const createDeviceBar = (): void => {
@@ -165,6 +166,34 @@ const changeMode = (idx: number): void => {
 
     renderModeBtn();
 }
+const handleModeButtonSelection = (mode: MODE): void => {
+
+    buttons.pan.setAttribute("aria-pressed", "false");
+    buttons.edit.setAttribute("aria-pressed", "false");
+    buttons.simulate.setAttribute("aria-pressed", "false");
+
+    switch (mode) {
+        case MODE.PAN:
+            WORLD.mode = MODE.PAN;
+            canvas.style.cursor = 'grab';
+
+            buttons.pan.setAttribute("aria-pressed", "true");
+            break;
+        case MODE.EDIT:
+            WORLD.mode = MODE.EDIT;
+            canvas.style.cursor = 'pointer';
+
+            buttons.edit.setAttribute("aria-pressed", "true");
+            break;
+        case MODE.SIMULATE:
+            WORLD.mode = MODE.SIMULATE;
+            canvas.style.cursor = 'pointer';
+
+            buttons.simulate.setAttribute("aria-pressed", "true");
+            break;
+    }
+    renderModeBtn();
+}
 
 //========================= UNDO REDO ========================//
 
@@ -214,6 +243,7 @@ export {
 
     renderModeBtn,
     changeMode,
+    handleModeButtonSelection,
 
     drawDevices,
 

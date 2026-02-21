@@ -6,11 +6,12 @@ import {
     openExtraDevices,
     reRenderDeviceBar,
     zoomIN, zoomOUT,
-    renderModeBtn,
     changeMode,
     snapToGrid,
-    renderSnapToGridBtn
+    renderSnapToGridBtn,
+    handleModeButtonSelection
 } from "./script";
+import { clearSettings, getAllSettings, saveSettings, setSetting } from "../../settings";
 
 canvas.addEventListener('contextmenu', (e) => { e.preventDefault() });
 
@@ -126,25 +127,18 @@ canvas.addEventListener('mousemove', (e) => {
 
 buttons.undo.addEventListener('click', () => {
     Object.assign(CIRCUIT, HISTORY.undo());
-    // buttons.undo.
 });
 buttons.redo.addEventListener('click', () => {
     Object.assign(CIRCUIT, HISTORY.redo());
 });
 buttons.pan.addEventListener('click', () => {
-    WORLD.mode = MODE.PAN;
-    canvas.style.cursor = 'grab';
-    renderModeBtn();
+    handleModeButtonSelection(MODE.PAN);
 });
 buttons.edit.addEventListener('click', () => {
-    WORLD.mode = MODE.EDIT;
-    canvas.style.cursor = 'pointer';
-    renderModeBtn();
+    handleModeButtonSelection(MODE.EDIT);
 });
 buttons.simulate.addEventListener('click', () => {
-    WORLD.mode = MODE.SIMULATE;
-    canvas.style.cursor = 'pointer';
-    renderModeBtn();
+    handleModeButtonSelection(MODE.SIMULATE);
 });
 buttons.zoomIn.addEventListener('click', zoomIN);
 buttons.zoomOut.addEventListener('click', zoomOUT);
@@ -152,6 +146,8 @@ buttons.snapToGrid.addEventListener('click', () => {
     SETTINGS.snapToGrid = !SETTINGS.snapToGrid;
     renderSnapToGridBtn();
     if (SETTINGS.snapToGrid) snapToGrid();
+    setSetting("snapToGrid", SETTINGS.snapToGrid);
+    saveSettings(SETTINGS);
 })
 
 //========================= WINDOW & DIALOG ========================//
@@ -159,6 +155,26 @@ buttons.snapToGrid.addEventListener('click', () => {
 overlay.addEventListener('click', closeDialog);
 document.querySelector('.extra-device-toggle-button')?.addEventListener('click', openExtraDevices);
 window.addEventListener('keydown', (e) => {
+
+    if (!e.ctrlKey && !e.shiftKey) {
+        switch (e.key) {
+            case "Escape":
+                if (WORLD.dialog.show) closeDialog();
+                break;
+            case "P":
+            case "p":
+                handleModeButtonSelection(MODE.PAN);
+                break;
+            case "e":
+            case "E":
+                handleModeButtonSelection(MODE.EDIT);
+                break;
+            case "s":
+            case "S":
+                handleModeButtonSelection(MODE.SIMULATE);
+                break;
+        }
+    }
 
     if (e.key === "Escape") {
         if (WORLD.dialog.show) closeDialog();
@@ -195,4 +211,18 @@ window.addEventListener('keydown', (e) => {
 });
 window.addEventListener('resize', () => {
     reRenderDeviceBar();
+});
+
+//========================= DEBUG ========================//
+
+window.addEventListener('keydown', (e) => {
+    if (!(e.ctrlKey && e.key === "/")) return;
+
+    console.log(getAllSettings());
+});
+
+window.addEventListener('keydown', (e) => {
+    if (!(e.ctrlKey && e.key === "1")) return;
+
+    console.log(clearSettings());
 });

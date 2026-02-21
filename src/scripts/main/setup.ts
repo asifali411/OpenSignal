@@ -1,3 +1,6 @@
+import { initSettings, getAllSettings } from "../../settings";
+await initSettings();
+
 import HistoryManager from "./history";
 
 const tileSize: number = 30;
@@ -20,9 +23,7 @@ interface World {
 
 //=================== DECLARATIONS ===================//
 
-const SETTINGS = {
-    snapToGrid: true
-}
+let SETTINGS = await getAllSettings();
 
 const DEVICES = [
     {

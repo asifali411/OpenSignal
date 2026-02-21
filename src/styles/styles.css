@@ -177,6 +177,10 @@ canvas:active {
   opacity: 0.5;
 }
 
+.mode button.selected{
+  opacity: 1;
+}
+
 .selected {
   opacity: 1;
 }
@@ -248,6 +252,11 @@ canvas:active {
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-panel);
   z-index: 999;
+}
+
+#devices-dialog-title{
+  text-align: center;
+  margin: 0.2rem;
 }
 
 /*==============================================================

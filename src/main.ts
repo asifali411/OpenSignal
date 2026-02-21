@@ -5,12 +5,14 @@ import {
     createDeviceBar,
     createExtraDeviceDialog,
     drawDevices,
+    renderSnapToGridBtn,
     renderUndoRedoBtn
 } from "./scripts/main/script";
 import './scripts/main/event';
 
 createDeviceBar();
 createExtraDeviceDialog();
+renderSnapToGridBtn();
 
 let lastTime = performance.now();
 let fps = 60;
