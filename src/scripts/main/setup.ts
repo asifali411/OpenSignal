@@ -1,4 +1,6 @@
 import { initSettings, getAllSettings } from "../../settings";
+import Device from "../devices/device";
+import Pin from "../devices/functions/pin";
 await initSettings();
 
 import HistoryManager from "./history";
@@ -16,9 +18,19 @@ enum MODE {
 
 interface World {
     mode: MODE,
-    movingDevice: any;
-    camera: any,
-    dialog: any
+    movingDevice: Device | null,
+    selectedPin: Pin | null,
+    camera: {
+        x: number,
+        y: number,
+        lastX: number,
+        lastY: number,
+        zoom: number,
+        isDragging: boolean
+    },
+    dialog: {
+        show: boolean
+    }
 }
 
 //=================== DECLARATIONS ===================//
@@ -83,6 +95,7 @@ const DEVICES = [
 const WORLD:World = {
     mode: MODE.PAN,
     movingDevice: null,
+    selectedPin: null,
     camera: {
         x: 0,
         y: 0,

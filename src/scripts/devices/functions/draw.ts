@@ -1,32 +1,88 @@
 import { ctx } from "../../main/reference";
-import { SPRITES, deviceSize } from "../../main/setup";
+import { MODE, SPRITES, WORLD, deviceSize } from "../../main/setup";
+import { isHovering, isHoveringPin } from "../../main/util";
 
+import Pin from "./pin";
 import Source from "../source";
 import Ground from "../ground";
 
 class Draw {
 
     private handleDeviceSelection(device: any) {
-        if (device.selected) {
-            ctx.save();
-            ctx.globalAlpha = 0.7;
-            ctx.fillStyle = "#ddddfe";
-            ctx.strokeStyle = "#ddddfe";
 
-            ctx.fillRect(device.x, device.y, deviceSize, deviceSize);
-            
-            ctx.globalAlpha = 1;
-            ctx.lineWidth = 2;
-            ctx.strokeRect(device.x, device.y, deviceSize, deviceSize);
+        if (!device.selected) return;
 
-            ctx.restore();
-        }
+        ctx.globalAlpha = 0.7;
+        ctx.fillStyle = "#ddddfe";
+        ctx.strokeStyle = "#ddddfe";
+
+        ctx.fillRect(device.x, device.y, deviceSize, deviceSize);
+        
+        ctx.globalAlpha = 1;
+        ctx.lineWidth = 2;
+        ctx.strokeRect(device.x, device.y, deviceSize, deviceSize);
     }
 
-    source(device: Source) {
-        
-        this.handleDeviceSelection(device);
+    private handleDeviceHovering(device: any) {
 
+        if (!isHovering(device)) return;
+        if (!(WORLD.mode === MODE.EDIT)) return;
+
+        ctx.beginPath();
+
+        ctx.globalAlpha = 0.3;
+        ctx.fillStyle = "#ddddfe";
+        ctx.strokeStyle = "#ddddfe";
+
+        ctx.roundRect(device.x, device.y, deviceSize, deviceSize, 5);
+        ctx.fill();
+        
+        ctx.globalAlpha = 1;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    private handlePinHovering = (pin: Pin) => {
+
+        if (!isHoveringPin(pin)) return;
+        if (!(WORLD.mode === MODE.EDIT)) return;
+
+        ctx.beginPath();
+
+        ctx.globalAlpha = 0.3;
+        ctx.fillStyle = "#ddddfe";
+        ctx.strokeStyle = "#ddddfe";
+
+        ctx.roundRect(pin.x - 10, pin.y - 10, 20, 20, 5);
+        ctx.fill();
+        
+        ctx.globalAlpha = 1;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    private drawPins(device: any) {
+        device.outputPins.forEach((pin: Pin) => {
+            ctx.fillStyle = "#000";
+            ctx.beginPath();
+            ctx.arc(pin.x, pin.y, 5, 0, Math.PI * 2);
+            ctx.fill();
+            this.handlePinHovering(pin);
+        });
+
+        device.inputPins.forEach((pin: Pin) => {
+            ctx.fillStyle = "#000";
+            ctx.beginPath();
+            ctx.arc(pin.x, pin.y, 5, 0, Math.PI * 2);
+            ctx.fill();
+            this.handlePinHovering(pin);
+        });
+    }
+
+    //============================================================================//
+
+    source(device: Source) {
+       
         ctx.drawImage(SPRITES["Source"], device.x, device.y, deviceSize, deviceSize);
         if (device.out.voltage <= 0.2) {
             ctx.fillStyle = 'tomato';
@@ -38,22 +94,19 @@ class Draw {
         ctx.arc(device.x + deviceSize / 2, device.y + deviceSize / 2, deviceSize / 3.1, 0, Math.PI * 2);
         ctx.fill();
         
-        ctx.fillStyle = "#000";
-        ctx.beginPath();
-        ctx.arc(device.x + deviceSize + 5, device.y + deviceSize / 2, 5, 0, Math.PI * 2);
-        ctx.fill();
+        this.handleDeviceSelection(device);
+        this.handleDeviceHovering(device);
+        this.drawPins(device);
     }
 
     ground(device: Ground) {
 
         this.handleDeviceSelection(device);
+        this.handleDeviceHovering(device);
 
         ctx.drawImage(SPRITES["Ground"], device.x, device.y, deviceSize, deviceSize);
 
-        ctx.fillStyle = "#000";
-        ctx.beginPath();
-        ctx.arc(device.x + deviceSize/2, device.y, 5, 0, Math.PI * 2);
-        ctx.fill();
+        this.drawPins(device);
     }
 }
 

@@ -29,7 +29,7 @@ interface SettingsAdapter {
    Browser Adapter
 ========================= */
 
-const BROWSER_STORAGE_KEY = "app_settings";
+const BROWSER_STORAGE_KEY = "circuit_simulator_settings";
 
 class BrowserSettingsAdapter implements SettingsAdapter {
   private read(): Partial<AppSettings> {
@@ -102,7 +102,7 @@ export async function initSettings() {
     await appAdapter.init();
     adapter = appAdapter;
   } else {
-    console.log("Running in browser mode: Using localStorage");
+    console.log("Running in browser mode\nDatabase: localStorage");
     adapter = new BrowserSettingsAdapter();
   }
 }

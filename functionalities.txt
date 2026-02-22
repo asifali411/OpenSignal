@@ -12,7 +12,10 @@
     -> undo:
         on clicking undo button / Ctrl + z
 
-    -> redo on clicking redo button / Ctrl + y
+    -> redo:
+        on clicking redo button / Ctrl + y
+
+    -> snap to grid
 
 
     MODE

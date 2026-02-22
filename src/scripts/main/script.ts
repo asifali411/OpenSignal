@@ -1,8 +1,10 @@
 import { deviceBar, extraDevices, buttons, canvas, extraDeviceDialog, overlay } from "./reference";
 import { DEVICES, WORLD, MODE, CIRCUIT, HISTORY, tileSize, SETTINGS } from "./setup";
+import Pin from "../devices/functions/pin";
 
 import Draw from "../devices/functions/draw";
 import Create from "../devices/functions/create";
+import Device from "../devices/device";
 
 //========================= DEVICES ========================//
 
@@ -11,13 +13,15 @@ const CREATE = new Create();
 
 const drawDevices = () => {
     CIRCUIT.devices.forEach((device: any) => {
-        switch (device.name) {
-            case "Source":
-                DRAW.source(device);
-                break;
-            case "Ground":
-                DRAW.ground(device);
-                break;
+        if (!isOutOfCanvas(device)) {
+            switch (device.name) {
+                case "Source":
+                    DRAW.source(device);
+                    break;
+                case "Ground":
+                    DRAW.ground(device);
+                    break;
+            }
         }
     });
 }
@@ -181,7 +185,7 @@ const handleModeButtonSelection = (mode: MODE): void => {
             break;
         case MODE.EDIT:
             WORLD.mode = MODE.EDIT;
-            canvas.style.cursor = 'pointer';
+            canvas.style.cursor = 'default';
 
             buttons.edit.setAttribute("aria-pressed", "true");
             break;
@@ -220,6 +224,16 @@ const snapToGrid = () => {
 
         device.x = Math.floor(newX);
         device.y = Math.floor(newY);
+
+        
+        device.outputPins.forEach((pin: Pin) => {
+            pin.x = device.x + pin.offsetX;
+            pin.y = device.y + pin.offsetY;
+        });
+        device.inputPins.forEach((pin: Pin) => {
+            pin.x = device.x + pin.offsetX;
+            pin.y = device.y + pin.offsetY;
+        });
     });
 }
 const renderSnapToGridBtn = () => {
@@ -230,10 +244,22 @@ const renderSnapToGridBtn = () => {
     }
 }
 
+const isOutOfCanvas = (device: Device) => {
+    const startX = Math.floor((WORLD.camera.x - canvas.width * (1/WORLD.camera.zoom)));
+    const endX = Math.floor((WORLD.camera.x + canvas.width * (1 / WORLD.camera.zoom)));
+
+    const startY = Math.floor((WORLD.camera.y - canvas.height * (1 / WORLD.camera.zoom)));
+    const endY = Math.floor((WORLD.camera.y + canvas.height * (1 / WORLD.camera.zoom)));
+
+    return !(device.x >= startX && device.x <= endX && device.y >= startY && device.y <= endY);
+}
+
 export {
     createDeviceBar,
     reRenderDeviceBar,
     createExtraDeviceDialog,
+
+    handleDeviceElementClick, // debug
 
     zoomIN,
     zoomOUT,
@@ -250,5 +276,7 @@ export {
     renderUndoRedoBtn,
 
     snapToGrid,
-    renderSnapToGridBtn
+    renderSnapToGridBtn,
+
+    isOutOfCanvas
 };

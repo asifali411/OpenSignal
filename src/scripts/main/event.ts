@@ -12,6 +12,7 @@ import {
     handleModeButtonSelection
 } from "./script";
 import { clearSettings, getAllSettings, saveSettings, setSetting } from "../../settings";
+import Pin from "../devices/functions/pin";
 
 canvas.addEventListener('contextmenu', (e) => { e.preventDefault() });
 
@@ -119,6 +120,17 @@ canvas.addEventListener('mousemove', (e) => {
         } else {
             WORLD.movingDevice.x = MOUSE.x - WORLD.movingDevice.offsetX;
             WORLD.movingDevice.y = MOUSE.y - WORLD.movingDevice.offsetY;
+
+            const device = WORLD.movingDevice;
+
+            WORLD.movingDevice.outputPins.forEach((pin: Pin) => {
+                pin.x = device.x + pin.offsetX;
+                pin.y = device.y + pin.offsetY;
+            });
+            WORLD.movingDevice.inputPins.forEach((pin: Pin) => {
+                pin.x = device.x + pin.offsetX;
+                pin.y = device.y + pin.offsetY;
+            });
         }
     }
 });
