@@ -1,3 +1,4 @@
+import { DEVICE } from "../main/setup";
 import Pin from "./functions/pin";
 class Device {
     public offsetX = 0;
@@ -6,11 +7,12 @@ class Device {
     public selected = false;
     public outputPins: Pin[] = [];
     public inputPins: Pin[] = [];
+    public id = Date.now() + Math.floor(Math.random() * 1000);
 
     constructor(
         public x: number,
         public y: number,
-        public name: string
+        public name: DEVICE
     ) {}
 }
 

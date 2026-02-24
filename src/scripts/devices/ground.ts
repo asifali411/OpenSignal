@@ -1,19 +1,10 @@
 import Device from "./device";
-import { WORLD } from "../main/setup";
-
-interface Out {
-    voltage: number
-}
+import { DEVICE, WORLD } from "../main/setup";
 
 class Ground extends Device{
 
-    public out: Out;
-
     constructor() {
-        super(WORLD.camera.x, WORLD.camera.y, "Ground");
-        this.out = {
-            voltage: 0
-        }
+        super(WORLD.camera.x, WORLD.camera.y, DEVICE.GROUND);
     }
 }
 

@@ -5,6 +5,7 @@ import {
     createDeviceBar,
     createExtraDeviceDialog,
     drawDevices,
+    drawWire,
     renderSnapToGridBtn,
     renderUndoRedoBtn
 } from "./scripts/main/script";
@@ -42,6 +43,8 @@ const render = () => {
     ctx.translate(-WORLD.camera.x, -WORLD.camera.y);
 
     createGrid();
+
+    drawWire(ctx);
 
     // render components
     drawDevices();

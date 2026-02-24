@@ -16,10 +16,26 @@ enum MODE {
     SIMULATE
 }
 
+enum DEVICE {
+    SOURCE = "Source",
+    GROUND = "Ground",
+    BULB = "Bulb",
+    SWITCH = "Switch",
+    AND = "And Gate",
+    OR = "Or Gate",
+    NOT = "Not Gate",
+    XOR = "Xor Gate",
+    NAND = "Nand Gate",
+    NOR = "Nor Gate",
+    XNOR = "Xnor Gate"
+}
+
 interface World {
     mode: MODE,
     movingDevice: Device | null,
-    selectedPin: Pin | null,
+    pin: {
+        selected: Pin | null
+    }
     camera: {
         x: number,
         y: number,
@@ -33,61 +49,58 @@ interface World {
     }
 }
 
+interface Circuit {
+    devices: Device[],
+    connections: any[]
+}
+
 //=================== DECLARATIONS ===================//
 
 let SETTINGS = await getAllSettings();
 
 const DEVICES = [
     {
-        name: "Source",
+        name: DEVICE.SOURCE,
         img: "./src/assets/source.png",
     },
     {
-        name: "Ground",
+        name: DEVICE.GROUND,
         img: "./src/assets/ground.png",
     },
     {
-        name: "Bulb",
+        name: DEVICE.BULB,
         img: "../src/assets/bulb.png",
     },
     {
-        name: "Cell",
-        img: "../src/assets/cell.png",
-    },
-    {
-        name: "Switch",
+        name: DEVICE.SWITCH,
         img: "../src/assets/switch.png",
     },
     {
-        name: "Resistor",
-        img: "../src/assets/resistor.png",
-    },
-    {
-        name: "AND Gate",
+        name: DEVICE.AND,
         img: "../src/assets/andGate.png",
     },
     {
-        name: "OR Gate",
+        name: DEVICE.OR,
         img: "../src/assets/orGate.png",
     },
     {
-        name: "NOT Gate",
+        name: DEVICE.NOT,
         img: "../src/assets/notGate.png",
     },
     {
-        name: "XOR Gate",
+        name: DEVICE.XOR,
         img: "../src/assets/xorGate.png",
     },
     {
-        name: "NAND Gate",
+        name: DEVICE.NAND,
         img: "../src/assets/nandGate.png",
     },
     {
-        name: "NOR Gate",
+        name: DEVICE.NOR,
         img: "../src/assets/norGate.png",
     },
     {
-        name: "XNOR Gate",
+        name: DEVICE.XNOR,
         img: "../src/assets/xnorGate.png",
     }
 ];
@@ -95,7 +108,9 @@ const DEVICES = [
 const WORLD:World = {
     mode: MODE.PAN,
     movingDevice: null,
-    selectedPin: null,
+    pin: {
+        selected: null
+    },
     camera: {
         x: 0,
         y: 0,
@@ -118,9 +133,9 @@ const MOUSE = {
     }
 };
 
-let CIRCUIT: any = {
+let CIRCUIT: Circuit = {
     devices: [],
-    connection: []
+    connections: []
 };
 
 const SPRITES: any = {};
@@ -133,14 +148,15 @@ const HISTORY = new HistoryManager();
 HISTORY.save(CIRCUIT);
 
 export {
+    deviceSize,
+    tileSize,
     MODE,
     DEVICES,
     WORLD,
     MOUSE,
     CIRCUIT,
     HISTORY,
-    tileSize,
-    deviceSize,
     SPRITES,
-    SETTINGS
+    SETTINGS,
+    DEVICE
 };

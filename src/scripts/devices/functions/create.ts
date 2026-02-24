@@ -1,7 +1,7 @@
 import { CIRCUIT, WORLD, deviceSize } from "../../main/setup";
 import Pin from "./pin";
 
-import Source from "../source";
+import { Source } from "../source";
 import Ground from "../ground";
 
 class Create {

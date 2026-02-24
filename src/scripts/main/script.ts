@@ -1,10 +1,12 @@
 import { deviceBar, extraDevices, buttons, canvas, extraDeviceDialog, overlay } from "./reference";
-import { DEVICES, WORLD, MODE, CIRCUIT, HISTORY, tileSize, SETTINGS } from "./setup";
+import { DEVICES, WORLD, MODE, CIRCUIT, HISTORY, tileSize, SETTINGS, DEVICE } from "./setup";
 import Pin from "../devices/functions/pin";
 
 import Draw from "../devices/functions/draw";
 import Create from "../devices/functions/create";
 import Device from "../devices/device";
+import Connection from "../devices/functions/connection";
+import { isHoveringPin } from "./util";
 
 //========================= DEVICES ========================//
 
@@ -12,13 +14,13 @@ const DRAW = new Draw();
 const CREATE = new Create();
 
 const drawDevices = () => {
-    CIRCUIT.devices.forEach((device: any) => {
+    CIRCUIT.devices.forEach((device: Device) => {
         if (!isOutOfCanvas(device)) {
             switch (device.name) {
-                case "Source":
+                case DEVICE.SOURCE:
                     DRAW.source(device);
                     break;
-                case "Ground":
+                case DEVICE.GROUND:
                     DRAW.ground(device);
                     break;
             }
@@ -28,12 +30,12 @@ const drawDevices = () => {
 
 //========================= DEVICE BAR ========================//
 
-const handleDeviceElementClick = (deviceName: string): void => {
+const handleDeviceElementClick = (deviceName: DEVICE): void => {
     switch (deviceName) {
-        case "Source":
+        case DEVICE.SOURCE:
             CREATE.source();
             break;
-        case "Ground":
+        case DEVICE.GROUND:
             CREATE.ground();
             break;
         default:
@@ -253,6 +255,42 @@ const isOutOfCanvas = (device: Device) => {
 
     return !(device.x >= startX && device.x <= endX && device.y >= startY && device.y <= endY);
 }
+const drawWire = (ctx: any) => {
+    ctx.beginPath();
+
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 3;
+
+    CIRCUIT.connections.forEach((connection: Connection) => {
+        ctx.moveTo(connection.FROM.x, connection.FROM.y);
+        ctx.lineTo(connection.TO.x, connection.TO.y);
+        ctx.stroke();
+    });
+}
+const handlePinSelection = (pins: Pin[]) => {
+    for (let j = 0; j < pins.length; j++){
+        const pin = pins[j];
+
+        if (isHoveringPin(pin)) {
+
+            if (WORLD.pin.selected) {
+                if (WORLD.pin.selected === pin) {
+                    WORLD.pin.selected.selected = false;
+                    WORLD.pin.selected = null;
+                    break;
+                };
+                CIRCUIT.connections.push(new Connection(WORLD.pin.selected!, pin));
+                WORLD.pin.selected!.selected = false;
+                pin.selected = false;
+                WORLD.pin.selected = null;
+                break;
+            }
+
+            pin.selected = !pin.selected;
+            WORLD.pin.selected = pin.selected ? pin : null;
+        }
+    }
+}
 
 export {
     createDeviceBar,
@@ -278,5 +316,7 @@ export {
     snapToGrid,
     renderSnapToGridBtn,
 
-    isOutOfCanvas
+    isOutOfCanvas,
+    drawWire,
+    handlePinSelection
 };

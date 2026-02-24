@@ -3,14 +3,16 @@ import Device from "../device";
 class Pin {
     public name: string;
     public id: number;
+    public deviceID: number;
 
     public x: number;
     public y: number;
     
     public offsetX = 0;
     public offsetY = 0;
+
+    public value = 0;
     
-    public hovering = false;
     public selected = false;
 
     constructor(device: Device, offsetX: number, offsetY: number, name: string = "pin") {
@@ -22,6 +24,8 @@ class Pin {
         
         this.id = Date.now() + Math.floor(Math.random() * 1000);
         this.name = name;
+
+        this.deviceID = device.id;
     }
 }
 

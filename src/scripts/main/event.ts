@@ -1,5 +1,5 @@
 import { canvas, buttons, overlay } from "./reference";
-import { MOUSE, WORLD, MODE, HISTORY, CIRCUIT, SETTINGS } from "./setup";
+import { MOUSE, WORLD, MODE, HISTORY, CIRCUIT, SETTINGS, DEVICE } from "./setup";
 import { toWorld, isHovering } from "./util";
 import {
     closeDialog,
@@ -9,10 +9,13 @@ import {
     changeMode,
     snapToGrid,
     renderSnapToGridBtn,
-    handleModeButtonSelection
+    handleModeButtonSelection,
+    handlePinSelection
 } from "./script";
-import { clearSettings, getAllSettings, saveSettings, setSetting } from "../../settings";
+import { clearSettings, saveSettings, setSetting } from "../../settings";
 import Pin from "../devices/functions/pin";
+import Device from "../devices/device";
+import { toggleSource } from "../devices/source";
 
 canvas.addEventListener('contextmenu', (e) => { e.preventDefault() });
 
@@ -22,9 +25,11 @@ canvas.addEventListener('mousedown', (e) => {
     MOUSE.x = toWorld(e.offsetX, e.offsetY).x;
     MOUSE.y = toWorld(e.offsetX, e.offsetY).y;
 
+    if (e.button === 0) MOUSE.isClicking.left = true;
+    if (e.button === 2) MOUSE.isClicking.right = true;
+
     // left click + pan --> move canvas
     if (e.button === 0 && WORLD.mode === MODE.PAN) {
-        MOUSE.isClicking.left = true;
         let isMovingCamera = true;
 
         // if is hovering over device --> move device instead
@@ -52,22 +57,43 @@ canvas.addEventListener('mousedown', (e) => {
 
     // left click + edit --> select device
     else if (e.button === 0 && WORLD.mode === MODE.EDIT) {
-        CIRCUIT.devices.forEach((device: any) => {
+
+        for (let i = 0; i < CIRCUIT.devices.length; i++){
+            const device: Device = CIRCUIT.devices[i];
+
             if (isHovering(device)) {
                 device.selected = !device.selected;
+                break;
+            } else {
+                handlePinSelection(device.inputPins);
+                handlePinSelection(device.outputPins);
             }
-        });
+        }
     }
+        
+    // left click + simulate --> interact with devices
+    else if ( e.button === 0 && WORLD.mode === MODE.SIMULATE) {
+        for (let i = 0; i < CIRCUIT.devices.length; i++){
+            const device: Device = CIRCUIT.devices[i];
+
+            if (isHovering(device)) {
+                switch (device.name) {
+                    case DEVICE.SOURCE:
+                        toggleSource(device);
+                        break;
+                }
+            }
+        }
+    }    
 
     // if right click --> interact with devices
     // this is meant to be a shortcut way to handle simulation mode without actually toggling to simulation mode
     // however this logic needs to be discussed later  
     else if (e.button === 2) {
-        MOUSE.isClicking.right = true;
         CIRCUIT.devices.forEach((device: any) => {
             if (isHovering(device)) {
                 switch (device.name) {
-                    case "Source":
+                    case DEVICE.SOURCE:
                         // TODO: handle toggle source here
                         break;
                 }
@@ -230,7 +256,7 @@ window.addEventListener('resize', () => {
 window.addEventListener('keydown', (e) => {
     if (!(e.ctrlKey && e.key === "/")) return;
 
-    console.log(getAllSettings());
+    console.log(CIRCUIT);
 });
 
 window.addEventListener('keydown', (e) => {

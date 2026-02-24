@@ -1,20 +1,15 @@
 import Device from "./device";
-import { WORLD } from "../main/setup";
-
-interface Out {
-    voltage: number
-}
+import { DEVICE, WORLD } from "../main/setup";
 
 class Source extends Device {
-    
-    public out: Out;
 
     constructor() {
-        super(WORLD.camera.x, WORLD.camera.y, "Source");
-        this.out = {
-            voltage: 0
-        }
+        super(WORLD.camera.x, WORLD.camera.y, DEVICE.SOURCE);
     }
 }
 
-export default Source;
+const toggleSource = (source: Source) => {
+    source.outputPins[0].value = source.outputPins[0].value === 0 ? 1 : 0;
+}
+
+export { Source, toggleSource };
