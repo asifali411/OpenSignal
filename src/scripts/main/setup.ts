@@ -18,7 +18,6 @@ enum MODE {
 
 enum DEVICE {
     SOURCE = "Source",
-    GROUND = "Ground",
     BULB = "Bulb",
     SWITCH = "Switch",
     AND = "And Gate",
@@ -64,16 +63,12 @@ const DEVICES = [
         img: "./src/assets/source.png",
     },
     {
-        name: DEVICE.GROUND,
-        img: "./src/assets/ground.png",
+        name: DEVICE.SWITCH,
+        img: "../src/assets/switch.png",
     },
     {
         name: DEVICE.BULB,
         img: "../src/assets/bulb.png",
-    },
-    {
-        name: DEVICE.SWITCH,
-        img: "../src/assets/switch.png",
     },
     {
         name: DEVICE.AND,

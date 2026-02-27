@@ -4,7 +4,7 @@ import { isHovering, isHoveringPin } from "../../main/util";
 
 import Pin from "./pin";
 import { Source } from "../source";
-import Ground from "../ground";
+import Bulb from "../bulb";
 
 class Draw {
 
@@ -90,6 +90,8 @@ class Draw {
             ctx.fill();
             this.handlePinHovering(pin);
             this.handlePinSelection(pin);
+
+            ctx.fillText(String(pin.value), pin.x, pin.y - 5); //DEBUG
         });
 
         device.inputPins.forEach((pin: Pin) => {
@@ -99,6 +101,8 @@ class Draw {
             ctx.fill();
             this.handlePinHovering(pin);
             this.handlePinSelection(pin);
+
+            ctx.fillText(String(pin.value), pin.x, pin.y - 5); //DEBUG
         });
     }
 
@@ -122,13 +126,11 @@ class Draw {
         this.drawPins(device);
     }
 
-    ground(device: Ground) {
+    bulb(device: Bulb) {
+        ctx.drawImage(SPRITES[DEVICE.BULB], device.x, device.y, deviceSize, deviceSize);
 
         this.handleDeviceSelection(device);
         this.handleDeviceHovering(device);
-
-        ctx.drawImage(SPRITES[DEVICE.GROUND], device.x, device.y, deviceSize, deviceSize);
-
         this.drawPins(device);
     }
 }

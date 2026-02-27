@@ -1,14 +1,12 @@
-import { CIRCUIT, WORLD, deviceSize } from "../../main/setup";
+import { CIRCUIT, deviceSize } from "../../main/setup";
 import Pin from "./pin";
 
 import { Source } from "../source";
-import Ground from "../ground";
+import Bulb from "../bulb";
 
 class Create {
     source() {
         const s: Source = new Source();
-        s.x = WORLD.camera.x;
-        s.y = WORLD.camera.y;
 
         const outputPin = new Pin(s, deviceSize + 5, deviceSize / 2);
 
@@ -17,16 +15,14 @@ class Create {
         CIRCUIT.devices.push(s);
     }
 
-    ground() {
-        const g: Ground = new Ground();
-        g.x = WORLD.camera.x;
-        g.y = WORLD.camera.y;
+    bulb() {
+        const b: Bulb = new Bulb();
 
-        const outputPin = new Pin(g, deviceSize / 2, -5);
+        const inputPin = new Pin(b, 0, deviceSize / 2);
 
-        g.outputPins.push(outputPin);
+        b.inputPins.push(inputPin);
 
-        CIRCUIT.devices.push(g);
+        CIRCUIT.devices.push(b);
     }
 }
 

@@ -20,8 +20,8 @@ const drawDevices = () => {
                 case DEVICE.SOURCE:
                     DRAW.source(device);
                     break;
-                case DEVICE.GROUND:
-                    DRAW.ground(device);
+                case DEVICE.BULB:
+                    DRAW.bulb(device);
                     break;
             }
         }
@@ -35,8 +35,8 @@ const handleDeviceElementClick = (deviceName: DEVICE): void => {
         case DEVICE.SOURCE:
             CREATE.source();
             break;
-        case DEVICE.GROUND:
-            CREATE.ground();
+        case DEVICE.BULB:
+            CREATE.bulb();
             break;
         default:
             console.error(`Device name not recognized: ${deviceName}`);
