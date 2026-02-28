@@ -1,12 +1,12 @@
 import { deviceBar, extraDevices, buttons, canvas, extraDeviceDialog, overlay } from "./reference";
 import { DEVICES, WORLD, MODE, CIRCUIT, HISTORY, tileSize, SETTINGS, DEVICE } from "./setup";
-import Pin from "../devices/functions/pin";
 
 import Draw from "../devices/functions/draw";
 import Create from "../devices/functions/create";
 import Device from "../devices/device";
 import Connection from "../devices/functions/connection";
-import { isHoveringPin } from "./util";
+import { getPin, getPinX, getPinY, isHoveringPin } from "./util";
+import Pin from "../devices/functions/pin";
 
 //========================= DEVICES ========================//
 
@@ -226,16 +226,6 @@ const snapToGrid = () => {
 
         device.x = Math.floor(newX);
         device.y = Math.floor(newY);
-
-        
-        device.outputPins.forEach((pin: Pin) => {
-            pin.x = device.x + pin.offsetX;
-            pin.y = device.y + pin.offsetY;
-        });
-        device.inputPins.forEach((pin: Pin) => {
-            pin.x = device.x + pin.offsetX;
-            pin.y = device.y + pin.offsetY;
-        });
     });
 }
 const renderSnapToGridBtn = () => {
@@ -262,32 +252,88 @@ const drawWire = (ctx: any) => {
     ctx.lineWidth = 3;
 
     CIRCUIT.connections.forEach((connection: Connection) => {
-        ctx.moveTo(connection.FROM.x, connection.FROM.y);
-        ctx.lineTo(connection.TO.x, connection.TO.y);
+        const FROM = getPin(connection.FROM);
+        const TO = getPin(connection.TO);
+        ctx.moveTo(getPinX(FROM), getPinY(FROM));
+        ctx.lineTo(getPinX(TO), getPinY(TO));
         ctx.stroke();
     });
 }
-const handlePinSelection = (pins: Pin[]) => {
-    for (let j = 0; j < pins.length; j++){
-        const pin = pins[j];
+const drawPinHovering = (pin: Pin, ctx: any) => {
+    if (!isHoveringPin(pin)) return;
+    if (!(WORLD.mode === MODE.EDIT)) return;
+
+    ctx.beginPath();
+
+    ctx.globalAlpha = 0.3;
+    ctx.fillStyle = "#ddddfe";
+    ctx.strokeStyle = "#ddddfe";
+
+    ctx.roundRect(getPinX(pin) - 10, getPinY(pin) - 10, 20, 20, 5);
+    ctx.fill();
+    
+    ctx.globalAlpha = 1;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+}
+const drawPinSelection = (pin: Pin, ctx: any) => {
+    if (!pin.selected) return;
+
+    ctx.beginPath();
+
+    ctx.globalAlpha = 0.3;
+    ctx.fillStyle = "#ddddfe";
+    ctx.strokeStyle = "#ddddfe";
+
+    ctx.roundRect(getPinX(pin) - 10, getPinY(pin) - 10, 20, 20, 5);
+    ctx.fill();
+    
+    ctx.globalAlpha = 1;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+}
+const drawPins = (ctx: any) => {
+
+    for (const [, pin] of CIRCUIT.pins) {
+        ctx.fillStyle = "#000";
+        ctx.beginPath();
+        ctx.arc(getPinX(pin), getPinY(pin), 5, 0, Math.PI * 2);
+        ctx.fill();
+        drawPinHovering(pin, ctx);
+        drawPinSelection(pin, ctx);
+
+        ctx.fillText(String(pin.value), getPinX(pin), getPinY(pin) - 5); //DEBUG
+    }
+}
+const handlePinSelection = (pins: number[]) => {
+    for (let i = 0; i < pins.length; i++){
+        const pin = getPin(pins[i]);
 
         if (isHoveringPin(pin)) {
 
-            if (WORLD.pin.selected) {
-                if (WORLD.pin.selected === pin) {
-                    WORLD.pin.selected.selected = false;
+            // check explicitly against null since pin IDs start at 0
+            if (WORLD.pin.selected !== null) {
+                if (WORLD.pin.selected === pins[i]) {
+                    // clicked the same pin again, cancel selection
+                    getPin(WORLD.pin.selected).selected = false;
                     WORLD.pin.selected = null;
                     break;
-                };
-                CIRCUIT.connections.push(new Connection(WORLD.pin.selected!, pin));
-                WORLD.pin.selected!.selected = false;
+                }
+
+                // create a connection between previously selected pin and current pin
+                CIRCUIT.connections.push(new Connection(WORLD.pin.selected, pin.id));
+                HISTORY.save(CIRCUIT); // save state right after adding connection
+
+                getPin(WORLD.pin.selected).selected = false;
                 pin.selected = false;
                 WORLD.pin.selected = null;
                 break;
             }
 
+            // no pin selected yet, toggle this one
             pin.selected = !pin.selected;
-            WORLD.pin.selected = pin.selected ? pin : null;
+            WORLD.pin.selected = pin.selected ? pin.id : null;
+            HISTORY.save(CIRCUIT); // record selection change
         }
     }
 }
@@ -318,5 +364,6 @@ export {
 
     isOutOfCanvas,
     drawWire,
-    handlePinSelection
+    handlePinSelection,
+    drawPins
 };

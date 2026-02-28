@@ -1,31 +1,34 @@
-import Device from "../device";
+import { PIN_TYPE } from "../../main/setup";
 
+let pinID = 0;
 class Pin {
-    public name: string;
-    public id: number;
-    public deviceID: number;
+    public readonly id: number;
+    public readonly deviceID: number;
 
-    public x: number;
-    public y: number;
-    
-    public offsetX = 0;
-    public offsetY = 0;
+    public readonly offsetX: number;
+    public readonly offsetY: number;
+
+    public readonly type: PIN_TYPE;
+    public name: string;
 
     public value = 0;
-    
     public selected = false;
 
-    constructor(device: Device, offsetX: number, offsetY: number, name: string = "pin") {
-        this.x = device.x + offsetX;
-        this.y = device.y + offsetY;
+    constructor(
+        deviceID: number,
+        offsetX: number,
+        offsetY: number,
+        type: PIN_TYPE,
+        name = "pin"
+    ) {
+        this.id = pinID++;
+        this.deviceID = deviceID;
 
         this.offsetX = offsetX;
         this.offsetY = offsetY;
-        
-        this.id = Date.now() + Math.floor(Math.random() * 1000);
-        this.name = name;
 
-        this.deviceID = device.id;
+        this.type = type;
+        this.name = name;
     }
 }
 

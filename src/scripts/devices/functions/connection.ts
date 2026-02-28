@@ -1,10 +1,9 @@
-import Pin from "./pin";
 
 class Connection {
-    public FROM: Pin;
-    public TO: Pin;
+    public FROM: number;
+    public TO: number;
 
-    constructor(FROM: Pin, TO: Pin) {
+    constructor(FROM: number, TO: number) {
         this.FROM = FROM;
         this.TO = TO;
     }

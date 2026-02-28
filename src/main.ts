@@ -5,6 +5,7 @@ import {
     createDeviceBar,
     createExtraDeviceDialog,
     drawDevices,
+    drawPins,
     drawWire,
     renderSnapToGridBtn,
     renderUndoRedoBtn
@@ -48,6 +49,7 @@ const render = () => {
 
     // render components
     drawDevices();
+    drawPins(ctx);
 
     renderUndoRedoBtn(); // TODO: do not render this at every frame. instead render the component on change.
 

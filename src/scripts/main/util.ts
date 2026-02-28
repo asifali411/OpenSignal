@@ -1,7 +1,7 @@
 import Device from "../devices/device";
 import Pin from "../devices/functions/pin";
 import { canvas, ctx } from "./reference";
-import { tileSize, deviceSize, WORLD, MOUSE } from "./setup";
+import { tileSize, deviceSize, WORLD, MOUSE, CIRCUIT } from "./setup";
 
 const resizeCanvas = () => {
     canvas.height = window.innerHeight;
@@ -41,10 +41,26 @@ const isHovering = (device: Device): boolean => {
 }
 
 const isHoveringPin = (pin: Pin): boolean => {
-    const dx = MOUSE.x - pin.x;
-    const dy = MOUSE.y - pin.y;
+    const device = getDevice(pin.deviceID);
+    const dx = MOUSE.x - (pin.offsetX + device.x);
+    const dy = MOUSE.y - (pin.offsetY + device.y);
 
     return Math.hypot(dx, dy) <= 5;
+}
+
+const getPin = (pinID: number): Pin => {
+    return CIRCUIT.pins.get(pinID)!;
+}
+
+const getDevice = (deviceID: number): Device => {
+    return CIRCUIT.devices.get(deviceID)!;
+}
+
+const getPinX = (pin: Pin): number => {
+    return (getDevice(pin.deviceID).x + pin.offsetX);
+}
+const getPinY = (pin: Pin): number => {
+    return (getDevice(pin.deviceID).y + pin.offsetY);
 }
 
 export {
@@ -52,5 +68,9 @@ export {
     createGrid,
     toWorld,
     isHovering,
-    isHoveringPin
+    isHoveringPin,
+    getPin,
+    getDevice,
+    getPinX,
+    getPinY
 }

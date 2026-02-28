@@ -1,4 +1,5 @@
 import { initSettings, getAllSettings } from "../../settings";
+import Solver from "../../solver/solver";
 import Device from "../devices/device";
 import Pin from "../devices/functions/pin";
 await initSettings();
@@ -14,6 +15,11 @@ enum MODE {
     PAN,
     EDIT,
     SIMULATE
+}
+
+enum PIN_TYPE {
+    INPUT,
+    OUTPUT
 }
 
 enum DEVICE {
@@ -33,7 +39,7 @@ interface World {
     mode: MODE,
     movingDevice: Device | null,
     pin: {
-        selected: Pin | null
+        selected: number | null
     }
     camera: {
         x: number,
@@ -49,8 +55,9 @@ interface World {
 }
 
 interface Circuit {
-    devices: Device[],
-    connections: any[]
+    devices: Map<number, Device>,
+    connections: any[],
+    pins: Map<number, Pin>
 }
 
 //=================== DECLARATIONS ===================//
@@ -129,8 +136,9 @@ const MOUSE = {
 };
 
 let CIRCUIT: Circuit = {
-    devices: [],
-    connections: []
+    devices: new Map(),
+    connections: [],
+    pins: new Map()
 };
 
 const SPRITES: any = {};
@@ -142,10 +150,13 @@ DEVICES.forEach(device => {
 const HISTORY = new HistoryManager();
 HISTORY.save(CIRCUIT);
 
+const SOLVER = new Solver();
+
 export {
     deviceSize,
     tileSize,
     MODE,
+    PIN_TYPE,
     DEVICES,
     WORLD,
     MOUSE,
@@ -153,5 +164,6 @@ export {
     HISTORY,
     SPRITES,
     SETTINGS,
-    DEVICE
+    DEVICE,
+    SOLVER
 };

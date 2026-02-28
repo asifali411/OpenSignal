@@ -1,6 +1,6 @@
 import { canvas, buttons, overlay } from "./reference";
 import { MOUSE, WORLD, MODE, HISTORY, CIRCUIT, SETTINGS, DEVICE } from "./setup";
-import { toWorld, isHovering } from "./util";
+import { toWorld, isHovering, isHoveringPin, getPin } from "./util";
 import {
     closeDialog,
     openExtraDevices,
@@ -12,9 +12,7 @@ import {
     handleModeButtonSelection,
     handlePinSelection
 } from "./script";
-import { clearSettings, saveSettings, setSetting } from "../../settings";
-import Pin from "../devices/functions/pin";
-import Device from "../devices/device";
+import { saveSettings, setSetting } from "../../settings";
 import { toggleSource } from "../devices/source";
 
 canvas.addEventListener('contextmenu', (e) => { e.preventDefault() });
@@ -55,27 +53,49 @@ canvas.addEventListener('mousedown', (e) => {
         }
     }
 
-    // left click + edit --> select device
+    // left click + edit --> select device or pin
     else if (e.button === 0 && WORLD.mode === MODE.EDIT) {
-
-        for (let i = 0; i < CIRCUIT.devices.length; i++){
-            const device: Device = CIRCUIT.devices[i];
-
-            if (isHovering(device)) {
-                device.selected = !device.selected;
-                break;
-            } else {
+        
+        let pinHovered = false;
+        
+        // check if hovering over any pin
+        for (const [, device] of CIRCUIT.devices) {
+            for (const pinId of device.inputPins) {
+                if (isHoveringPin(getPin(pinId))) {
+                    pinHovered = true;
+                    break;
+                }
+            }
+            for (const pinId of device.outputPins) {
+                if (isHoveringPin(getPin(pinId))) {
+                    pinHovered = true;
+                    break;
+                }
+            }
+            if (pinHovered) break;
+        }
+        
+        if (pinHovered) {
+            // Handle pin selection for all devices
+            for (const [, device] of CIRCUIT.devices) {
                 handlePinSelection(device.inputPins);
                 handlePinSelection(device.outputPins);
+            }
+        } else {
+            // Handle device selection only if no pin is hovered
+            for (const [, device] of CIRCUIT.devices) {
+                if (isHovering(device)) {
+                    device.selected = !device.selected;
+                    break;
+                }
             }
         }
     }
         
     // left click + simulate --> interact with devices
-    else if ( e.button === 0 && WORLD.mode === MODE.SIMULATE) {
-        for (let i = 0; i < CIRCUIT.devices.length; i++){
-            const device: Device = CIRCUIT.devices[i];
-
+    else if (e.button === 0 && WORLD.mode === MODE.SIMULATE) {
+        
+        for (const [, device] of CIRCUIT.devices) {
             if (isHovering(device)) {
                 switch (device.name) {
                     case DEVICE.SOURCE:
@@ -146,17 +166,6 @@ canvas.addEventListener('mousemove', (e) => {
         } else {
             WORLD.movingDevice.x = MOUSE.x - WORLD.movingDevice.offsetX;
             WORLD.movingDevice.y = MOUSE.y - WORLD.movingDevice.offsetY;
-
-            const device = WORLD.movingDevice;
-
-            WORLD.movingDevice.outputPins.forEach((pin: Pin) => {
-                pin.x = device.x + pin.offsetX;
-                pin.y = device.y + pin.offsetY;
-            });
-            WORLD.movingDevice.inputPins.forEach((pin: Pin) => {
-                pin.x = device.x + pin.offsetX;
-                pin.y = device.y + pin.offsetY;
-            });
         }
     }
 });
@@ -256,11 +265,11 @@ window.addEventListener('resize', () => {
 window.addEventListener('keydown', (e) => {
     if (!(e.ctrlKey && e.key === "/")) return;
 
-    console.log(CIRCUIT);
+    console.log(HISTORY);
 });
 
 window.addEventListener('keydown', (e) => {
     if (!(e.ctrlKey && e.key === "1")) return;
 
-    console.log(clearSettings());
+    console.log(CIRCUIT);
 });

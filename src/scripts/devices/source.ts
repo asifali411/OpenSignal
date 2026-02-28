@@ -1,5 +1,5 @@
 import Device from "./device";
-import { DEVICE, WORLD } from "../main/setup";
+import { CIRCUIT, DEVICE, WORLD } from "../main/setup";
 
 class Source extends Device {
 
@@ -9,7 +9,7 @@ class Source extends Device {
 }
 
 const toggleSource = (source: Source) => {
-    source.outputPins[0].value = source.outputPins[0].value === 0 ? 1 : 0;
+    CIRCUIT.pins.get(source.outputPins[0])!.value = CIRCUIT.pins.get(source.outputPins[0])!.value === 0 ? 1 : 0;
 }
 
 export { Source, toggleSource };

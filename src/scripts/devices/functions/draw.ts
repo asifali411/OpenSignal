@@ -1,8 +1,7 @@
 import { ctx } from "../../main/reference";
-import { DEVICE, MODE, SPRITES, WORLD, deviceSize } from "../../main/setup";
-import { isHovering, isHoveringPin } from "../../main/util";
+import { CIRCUIT, DEVICE, MODE, SPRITES, WORLD, deviceSize } from "../../main/setup";
+import { isHovering } from "../../main/util";
 
-import Pin from "./pin";
 import { Source } from "../source";
 import Bulb from "../bulb";
 
@@ -45,73 +44,10 @@ class Draw {
         ctx.stroke();
     }
 
-    private handlePinHovering(pin: Pin) {
-
-        if (!isHoveringPin(pin)) return;
-        if (!(WORLD.mode === MODE.EDIT)) return;
-
-        ctx.beginPath();
-
-        ctx.globalAlpha = 0.3;
-        ctx.fillStyle = "#ddddfe";
-        ctx.strokeStyle = "#ddddfe";
-
-        ctx.roundRect(pin.x - 10, pin.y - 10, 20, 20, 5);
-        ctx.fill();
-        
-        ctx.globalAlpha = 1;
-        ctx.lineWidth = 2;
-        ctx.stroke();
-    }
-
-    private handlePinSelection (pin: Pin) {
-        
-        if (!pin.selected) return;
-
-        ctx.beginPath();
-
-        ctx.globalAlpha = 0.3;
-        ctx.fillStyle = "#ddddfe";
-        ctx.strokeStyle = "#ddddfe";
-
-        ctx.roundRect(pin.x - 10, pin.y - 10, 20, 20, 5);
-        ctx.fill();
-        
-        ctx.globalAlpha = 1;
-        ctx.lineWidth = 2;
-        ctx.stroke();
-    }
-
-    private drawPins(device: any) {
-        device.outputPins.forEach((pin: Pin) => {
-            ctx.fillStyle = "#000";
-            ctx.beginPath();
-            ctx.arc(pin.x, pin.y, 5, 0, Math.PI * 2);
-            ctx.fill();
-            this.handlePinHovering(pin);
-            this.handlePinSelection(pin);
-
-            ctx.fillText(String(pin.value), pin.x, pin.y - 5); //DEBUG
-        });
-
-        device.inputPins.forEach((pin: Pin) => {
-            ctx.fillStyle = "#000";
-            ctx.beginPath();
-            ctx.arc(pin.x, pin.y, 5, 0, Math.PI * 2);
-            ctx.fill();
-            this.handlePinHovering(pin);
-            this.handlePinSelection(pin);
-
-            ctx.fillText(String(pin.value), pin.x, pin.y - 5); //DEBUG
-        });
-    }
-
-    //============================================================================//
-
     source(device: Source) {
        
         ctx.drawImage(SPRITES[DEVICE.SOURCE], device.x, device.y, deviceSize, deviceSize);
-        if (device.outputPins[0].value === 0) {
+        if (CIRCUIT.pins.get(device.outputPins[0])?.value === 0) {
             ctx.fillStyle = 'tomato';
         } else {
             ctx.fillStyle = 'yellowgreen';
@@ -123,7 +59,6 @@ class Draw {
         
         this.handleDeviceSelection(device);
         this.handleDeviceHovering(device);
-        this.drawPins(device);
     }
 
     bulb(device: Bulb) {
@@ -131,7 +66,6 @@ class Draw {
 
         this.handleDeviceSelection(device);
         this.handleDeviceHovering(device);
-        this.drawPins(device);
     }
 }
 
