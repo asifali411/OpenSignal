@@ -1,4 +1,5 @@
 import { initSettings, getAllSettings } from "../../settings";
+import { Net } from "../../solver/net";
 import Solver from "../../solver/solver";
 import Device from "../devices/device";
 import Pin from "../devices/functions/pin";
@@ -19,7 +20,15 @@ enum MODE {
 
 enum PIN_TYPE {
     INPUT,
-    OUTPUT
+    OUTPUT,
+    INOUT
+}
+
+enum VALUE {
+    LOW,
+    HIGH,
+    Z,
+    X
 }
 
 enum DEVICE {
@@ -57,7 +66,8 @@ interface World {
 interface Circuit {
     devices: Map<number, Device>,
     connections: any[],
-    pins: Map<number, Pin>
+    pins: Map<number, Pin>,
+    nets: Map<number, Net>
 }
 
 //=================== DECLARATIONS ===================//
@@ -138,7 +148,8 @@ const MOUSE = {
 let CIRCUIT: Circuit = {
     devices: new Map(),
     connections: [],
-    pins: new Map()
+    pins: new Map(),
+    nets: new Map()
 };
 
 const SPRITES: any = {};
@@ -165,5 +176,6 @@ export {
     SPRITES,
     SETTINGS,
     DEVICE,
-    SOLVER
+    SOLVER,
+    VALUE
 };

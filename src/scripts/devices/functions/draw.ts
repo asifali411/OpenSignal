@@ -1,6 +1,6 @@
 import { ctx } from "../../main/reference";
-import { CIRCUIT, DEVICE, MODE, SPRITES, WORLD, deviceSize } from "../../main/setup";
-import { isHovering } from "../../main/util";
+import { CIRCUIT, DEVICE, MODE, SPRITES, VALUE, WORLD, deviceSize } from "../../main/setup";
+import { getPin, isHovering } from "../../main/util";
 
 import { Source } from "../source";
 import Bulb from "../bulb";
@@ -47,10 +47,10 @@ class Draw {
     source(device: Source) {
        
         ctx.drawImage(SPRITES[DEVICE.SOURCE], device.x, device.y, deviceSize, deviceSize);
-        if (CIRCUIT.pins.get(device.outputPins[0])?.value === 0) {
-            ctx.fillStyle = 'tomato';
-        } else {
+        if (CIRCUIT.pins.get(device.outputPins[0])?.value === VALUE.HIGH) {
             ctx.fillStyle = 'yellowgreen';
+        } else {
+            ctx.fillStyle = 'tomato';
         }
         
         ctx.beginPath();
@@ -63,6 +63,13 @@ class Draw {
 
     bulb(device: Bulb) {
         ctx.drawImage(SPRITES[DEVICE.BULB], device.x, device.y, deviceSize, deviceSize);
+
+        if (getPin(device.inputPins[0]).value === VALUE.HIGH) {
+            ctx.fillStyle = 'orange';
+            ctx.beginPath();
+            ctx.arc(device.x + deviceSize / 2, device.y + deviceSize / 2, deviceSize / 3.1, 0, Math.PI * 2);
+            ctx.fill();
+        }
 
         this.handleDeviceSelection(device);
         this.handleDeviceHovering(device);

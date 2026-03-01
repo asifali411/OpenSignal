@@ -1,5 +1,6 @@
 import Device from "./device";
-import { CIRCUIT, DEVICE, WORLD } from "../main/setup";
+import { CIRCUIT, DEVICE, SOLVER, VALUE, WORLD } from "../main/setup";
+import { getPin } from "../main/util";
 
 class Source extends Device {
 
@@ -9,7 +10,10 @@ class Source extends Device {
 }
 
 const toggleSource = (source: Source) => {
-    CIRCUIT.pins.get(source.outputPins[0])!.value = CIRCUIT.pins.get(source.outputPins[0])!.value === 0 ? 1 : 0;
+    CIRCUIT.pins.get(source.outputPins[0])!.value = CIRCUIT.pins.get(source.outputPins[0])!.value === VALUE.HIGH ? VALUE.Z : VALUE.HIGH;
+    const pin = getPin(source.outputPins[0]);
+    if (pin.netID == null) return;
+    SOLVER.Solve(CIRCUIT.nets.get(pin.netID)!);
 }
 
 export { Source, toggleSource };

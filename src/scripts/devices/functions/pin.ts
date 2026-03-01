@@ -1,9 +1,10 @@
-import { PIN_TYPE } from "../../main/setup";
+import { PIN_TYPE, VALUE } from "../../main/setup";
 
 let pinID = 0;
 class Pin {
     public readonly id: number;
     public readonly deviceID: number;
+    public netID: number | null;
 
     public readonly offsetX: number;
     public readonly offsetY: number;
@@ -11,7 +12,7 @@ class Pin {
     public readonly type: PIN_TYPE;
     public name: string;
 
-    public value = 0;
+    public value = VALUE.Z;
     public selected = false;
 
     constructor(
@@ -29,6 +30,8 @@ class Pin {
 
         this.type = type;
         this.name = name;
+
+        this.netID = null;
     }
 }
 

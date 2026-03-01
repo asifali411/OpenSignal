@@ -7,6 +7,7 @@ import Device from "../devices/device";
 import Connection from "../devices/functions/connection";
 import { getPin, getPinX, getPinY, isHoveringPin } from "./util";
 import Pin from "../devices/functions/pin";
+import { addToNet, combineNets, Net } from "../../solver/net";
 
 //========================= DEVICES ========================//
 
@@ -313,6 +314,7 @@ const handlePinSelection = (pins: number[]) => {
 
             // check explicitly against null since pin IDs start at 0
             if (WORLD.pin.selected !== null) {
+                const selectedPin = getPin(WORLD.pin.selected);
                 if (WORLD.pin.selected === pins[i]) {
                     // clicked the same pin again, cancel selection
                     getPin(WORLD.pin.selected).selected = false;
@@ -322,6 +324,20 @@ const handlePinSelection = (pins: number[]) => {
 
                 // create a connection between previously selected pin and current pin
                 CIRCUIT.connections.push(new Connection(WORLD.pin.selected, pin.id));
+                if (pin.netID == null && selectedPin.netID == null) {
+                    const newNet = new Net();
+                    addToNet(pin, newNet);
+                    addToNet(selectedPin, newNet);
+                    CIRCUIT.nets.set(newNet.id, newNet);
+                
+                } else if (pin.netID == null) {
+                    addToNet(pin, CIRCUIT.nets.get(selectedPin.netID!)!)
+                } else if (selectedPin.netID == null) {
+                    addToNet(selectedPin, CIRCUIT.nets.get(pin.netID!)!);
+                } else if (pin.netID !== selectedPin.netID) {
+                    combineNets(pin, selectedPin);
+                }
+
                 HISTORY.save(CIRCUIT); // save state right after adding connection
 
                 getPin(WORLD.pin.selected).selected = false;
@@ -330,7 +346,6 @@ const handlePinSelection = (pins: number[]) => {
                 break;
             }
 
-            // no pin selected yet, toggle this one
             pin.selected = !pin.selected;
             WORLD.pin.selected = pin.selected ? pin.id : null;
             HISTORY.save(CIRCUIT); // record selection change
