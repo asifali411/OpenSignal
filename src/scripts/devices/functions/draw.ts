@@ -4,6 +4,7 @@ import { getPin, isHovering } from "../../main/util";
 
 import { Source } from "../source";
 import Bulb from "../bulb";
+import { Switch } from "../switch";
 
 class Draw {
 
@@ -70,6 +71,20 @@ class Draw {
             ctx.arc(device.x + deviceSize / 2, device.y + deviceSize / 2, deviceSize / 3.1, 0, Math.PI * 2);
             ctx.fill();
         }
+
+        this.handleDeviceSelection(device);
+        this.handleDeviceHovering(device);
+    }
+
+    keySwitch(device: Switch) {
+        ctx.drawImage(SPRITES[DEVICE.SWITCH], device.x, device.y, deviceSize, deviceSize);
+
+        if (device.ON) ctx.fillStyle = "yellowgreen";
+        else ctx.fillStyle = "tomato";
+
+        ctx.beginPath();
+        ctx.arc(device.x + deviceSize / 2, device.y + deviceSize / 2, deviceSize / 3.1, 0, Math.PI * 2);
+        ctx.fill();
 
         this.handleDeviceSelection(device);
         this.handleDeviceHovering(device);

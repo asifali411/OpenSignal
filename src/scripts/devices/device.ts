@@ -8,6 +8,7 @@ class Device {
     public selected = false;
     public outputPins: number[] = [];
     public inputPins: number[] = [];
+    public in_outPins: number[] = [];
     public id = deviceID++;
 
     constructor(

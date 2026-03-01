@@ -1,4 +1,5 @@
 import { PIN_TYPE, VALUE } from "../../main/setup";
+import { getPin } from "../../main/util";
 
 let pinID = 0;
 class Pin {
@@ -14,6 +15,8 @@ class Pin {
 
     public value = VALUE.Z;
     public selected = false;
+
+    public connectedPins: Set<number> = new Set();
 
     constructor(
         deviceID: number,
@@ -32,6 +35,16 @@ class Pin {
         this.name = name;
 
         this.netID = null;
+    }
+
+    static connect(pinA: number, pinB: number) {
+        getPin(pinA).connectedPins.add(pinB);
+        getPin(pinB).connectedPins.add(pinA);
+    }
+
+    static disconnect(pinA: number, pinB: number) {
+        getPin(pinA).connectedPins.delete(pinB);
+        getPin(pinB).connectedPins.delete(pinA);
     }
 }
 

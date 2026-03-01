@@ -14,6 +14,7 @@ import {
 } from "./script";
 import { saveSettings, setSetting } from "../../settings";
 import { toggleSource } from "../devices/source";
+import { toggleSwitch } from "../devices/switch";
 
 canvas.addEventListener('contextmenu', (e) => { e.preventDefault() });
 
@@ -72,6 +73,12 @@ canvas.addEventListener('mousedown', (e) => {
                     break;
                 }
             }
+            for (const pinId of device.in_outPins) {
+                if (isHoveringPin(getPin(pinId))) {
+                    pinHovered = true;
+                    break;
+                }
+            }
             if (pinHovered) break;
         }
         
@@ -80,6 +87,7 @@ canvas.addEventListener('mousedown', (e) => {
             for (const [, device] of CIRCUIT.devices) {
                 handlePinSelection(device.inputPins);
                 handlePinSelection(device.outputPins);
+                handlePinSelection(device.in_outPins);
             }
         } else {
             // Handle device selection only if no pin is hovered
@@ -101,24 +109,16 @@ canvas.addEventListener('mousedown', (e) => {
                     case DEVICE.SOURCE:
                         toggleSource(device);
                         break;
+                    case DEVICE.SWITCH:
+                        toggleSwitch(device as any);
+                        break;
                 }
             }
         }
     }    
-
-    // if right click --> interact with devices
-    // this is meant to be a shortcut way to handle simulation mode without actually toggling to simulation mode
-    // however this logic needs to be discussed later  
+ 
     else if (e.button === 2) {
-        CIRCUIT.devices.forEach((device: any) => {
-            if (isHovering(device)) {
-                switch (device.name) {
-                    case DEVICE.SOURCE:
-                        // TODO: handle toggle source here
-                        break;
-                }
-            }
-        });
+        // TODO: right click features needed
     }
 });
 canvas.addEventListener('mouseup', () => {
@@ -265,11 +265,11 @@ window.addEventListener('resize', () => {
 window.addEventListener('keydown', (e) => {
     if (!(e.ctrlKey && e.key === "/")) return;
 
-    console.log(HISTORY);
+    console.log(CIRCUIT.nets);
 });
 
 window.addEventListener('keydown', (e) => {
     if (!(e.ctrlKey && e.key === "1")) return;
 
-    console.log(CIRCUIT);
+    console.log(HISTORY);
 });

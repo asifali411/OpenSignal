@@ -24,6 +24,9 @@ const drawDevices = () => {
                 case DEVICE.BULB:
                     DRAW.bulb(device);
                     break;
+                case DEVICE.SWITCH:
+                    DRAW.keySwitch(device as any);
+                    break;
             }
         }
     });
@@ -38,6 +41,9 @@ const handleDeviceElementClick = (deviceName: DEVICE): void => {
             break;
         case DEVICE.BULB:
             CREATE.bulb();
+            break;
+        case DEVICE.SWITCH:
+            CREATE.keySwitch();
             break;
         default:
             console.error(`Device name not recognized: ${deviceName}`);
@@ -324,6 +330,7 @@ const handlePinSelection = (pins: number[]) => {
 
                 // create a connection between previously selected pin and current pin
                 CIRCUIT.connections.push(new Connection(WORLD.pin.selected, pin.id));
+                Pin.connect(pin.id, WORLD.pin.selected);
                 if (pin.netID == null && selectedPin.netID == null) {
                     const newNet = new Net();
                     addToNet(pin, newNet);
@@ -338,7 +345,7 @@ const handlePinSelection = (pins: number[]) => {
                     combineNets(pin, selectedPin);
                 }
 
-                HISTORY.save(CIRCUIT); // save state right after adding connection
+                HISTORY.save(CIRCUIT);
 
                 getPin(WORLD.pin.selected).selected = false;
                 pin.selected = false;
@@ -348,7 +355,6 @@ const handlePinSelection = (pins: number[]) => {
 
             pin.selected = !pin.selected;
             WORLD.pin.selected = pin.selected ? pin.id : null;
-            HISTORY.save(CIRCUIT); // record selection change
         }
     }
 }

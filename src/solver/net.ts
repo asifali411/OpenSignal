@@ -1,5 +1,6 @@
 import Pin from "../scripts/devices/functions/pin";
 import { CIRCUIT, VALUE } from "../scripts/main/setup";
+import { getPin } from "../scripts/main/util";
 
 let netID = 0;
 
@@ -45,9 +46,57 @@ const combineNets = (pinA: Pin, pinB: Pin): void => {
     CIRCUIT.nets.delete(netB.id);
 }
 
+const splitNets = (pinA: Pin, pinB: Pin): void => {
+
+    if (pinA.netID === null || pinB.netID === null) return;
+    if (pinA.netID !== pinB.netID) return;
+
+    const oldNetID = pinA.netID;
+    const oldNet = CIRCUIT.nets.get(oldNetID);
+    if (!oldNet) return;
+
+    pinA.connectedPins.delete(pinB.id);
+    pinB.connectedPins.delete(pinA.id);
+
+    const pins = Array.from(oldNet.pins);
+
+    CIRCUIT.nets.delete(oldNetID);
+
+    const visited = new Set<number>();
+
+    for (const startPin of pins) {
+
+        if (visited.has(startPin.id)) continue;
+
+        const newNet = new Net();
+        CIRCUIT.nets.set(newNet.id, newNet);
+
+        const queue: Pin[] = [startPin];
+        visited.add(startPin.id);
+
+        while (queue.length > 0) {
+            const current = queue.shift()!;
+
+            addToNet(current, newNet);
+
+            for (const neighborID of current.connectedPins) {
+                const neighbor = getPin(neighborID);
+
+                if (
+                    neighbor.netID === oldNetID &&
+                    !visited.has(neighbor.id)
+                ) {
+                    visited.add(neighbor.id);
+                    queue.push(neighbor);
+                }
+            }
+        }
+    }
+};
 export {
     Net,
     addToNet,
     removeFromNet,
-    combineNets
+    combineNets,
+    splitNets
 };

@@ -36,7 +36,7 @@ class Solver {
         }
 
         for (const pin of net.pins) {
-            if (pin.type === PIN_TYPE.INPUT) {
+            if (pin.type === PIN_TYPE.INPUT || pin.type === PIN_TYPE.INOUT) {
                 pin.value = resolvedValue;
             }
         }
