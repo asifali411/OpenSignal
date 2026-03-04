@@ -4,7 +4,6 @@ import { DEVICES, WORLD, MODE, CIRCUIT, HISTORY, tileSize, SETTINGS, DEVICE } fr
 import Draw from "../devices/functions/draw";
 import Create from "../devices/functions/create";
 import Device from "../devices/device";
-import Connection from "../devices/functions/connection";
 import { getPin, getPinX, getPinY, isHoveringPin } from "./util";
 import Pin from "../devices/functions/pin";
 import { addToNet, combineNets, Net } from "../../solver/net";
@@ -243,6 +242,8 @@ const renderSnapToGridBtn = () => {
     }
 }
 
+//========================= DRAW ====================//
+
 const isOutOfCanvas = (device: Device) => {
     const startX = Math.floor((WORLD.camera.x - canvas.width * (1/WORLD.camera.zoom)));
     const endX = Math.floor((WORLD.camera.x + canvas.width * (1 / WORLD.camera.zoom)));
@@ -253,19 +254,33 @@ const isOutOfCanvas = (device: Device) => {
     return !(device.x >= startX && device.x <= endX && device.y >= startY && device.y <= endY);
 }
 const drawWire = (ctx: any) => {
-    ctx.beginPath();
-
     ctx.strokeStyle = "#000";
     ctx.lineWidth = 3;
 
-    CIRCUIT.connections.forEach((connection: Connection) => {
-        const FROM = getPin(connection.FROM);
-        const TO = getPin(connection.TO);
-        ctx.moveTo(getPinX(FROM), getPinY(FROM));
-        ctx.lineTo(getPinX(TO), getPinY(TO));
-        ctx.stroke();
-    });
-}
+    const drawnConnections = new Set<string>();
+
+    for (const [pinID, pin] of CIRCUIT.pins) {
+        for (const connectedPinID of pin.connectedPins) {
+
+            const connectionKey = [pinID, connectedPinID].sort().join("-");
+
+            if (drawnConnections.has(connectionKey)) continue;
+
+            const startPin = getPin(pinID);
+            const endPin = getPin(connectedPinID);
+
+            ctx.beginPath();
+            ctx.moveTo(getPinX(startPin), getPinY(startPin));
+            ctx.lineTo(getPinX(endPin), getPinY(endPin));
+            ctx.stroke();
+
+            drawnConnections.add(connectionKey);
+        }
+    }
+};
+
+//========================= PINS ====================//
+
 const drawPinHovering = (pin: Pin, ctx: any) => {
     if (!isHoveringPin(pin)) return;
     if (!(WORLD.mode === MODE.EDIT)) return;
@@ -329,7 +344,6 @@ const handlePinSelection = (pins: number[]) => {
                 }
 
                 // create a connection between previously selected pin and current pin
-                CIRCUIT.connections.push(new Connection(WORLD.pin.selected, pin.id));
                 Pin.connect(pin.id, WORLD.pin.selected);
                 if (pin.netID == null && selectedPin.netID == null) {
                     const newNet = new Net();

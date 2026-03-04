@@ -65,7 +65,6 @@ interface World {
 
 interface Circuit {
     devices: Map<number, Device>,
-    connections: any[],
     pins: Map<number, Pin>,
     nets: Map<number, Net>
 }
@@ -147,7 +146,6 @@ const MOUSE = {
 
 let CIRCUIT: Circuit = {
     devices: new Map(),
-    connections: [],
     pins: new Map(),
     nets: new Map()
 };

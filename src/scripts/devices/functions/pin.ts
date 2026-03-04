@@ -46,6 +46,10 @@ class Pin {
         getPin(pinA).connectedPins.delete(pinB);
         getPin(pinB).connectedPins.delete(pinA);
     }
+
+    static setValue(pin: Pin, value: VALUE) {
+        pin.value = value;
+    }
 }
 
 export default Pin;

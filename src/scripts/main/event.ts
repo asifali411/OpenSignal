@@ -265,7 +265,7 @@ window.addEventListener('resize', () => {
 window.addEventListener('keydown', (e) => {
     if (!(e.ctrlKey && e.key === "/")) return;
 
-    console.log(CIRCUIT.nets);
+    console.log(CIRCUIT.pins);
 });
 
 window.addEventListener('keydown', (e) => {
