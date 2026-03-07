@@ -64,10 +64,19 @@
     <!-- Right Toolbar -->
     <aside class="tools-right" aria-label="View Controls">
 
-      <!-- Snap to Grid -->
-      <button class="snap-to-grid icon-button selected" aria-pressed="true" aria-label="Toggle Snap to Grid">
-        <img src="./src/assets/snap.svg" alt="" aria-hidden="true">
-      </button>
+      <!-- General settings -->
+      <div class="general-settings" role="group" aria-label="General Settings">
+
+        <!-- Snap to Grid -->
+        <button class="snap-to-grid icon-button selected" aria-pressed="true" aria-label="Toggle Snap to Grid (Shift + G)">
+          <img src="./src/assets/snap.svg" alt="toggle snap to grid" aria-hidden="true">
+        </button>
+
+        <!-- Show label -->
+        <button class="show-label icon-button selected" aria-pressed="true" aria-label="Toggle label (Shift + L)">
+          <img src="../src/assets/label.svg" alt="toggle label" aria-hidden="true">
+        </button>
+      </div>
 
       <!-- Zoom Controls -->
       <div class="zoom-in-out" role="group" aria-label="Zoom Controls">

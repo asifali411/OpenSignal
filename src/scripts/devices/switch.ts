@@ -1,6 +1,7 @@
 import { CIRCUIT, DEVICE, SOLVER, WORLD } from "../main/setup";
 import Device from "./device";
-import { combineNets, splitNets } from "../../solver/net";
+import Pin from "./functions/pin";
+import { Net, addToNet, combineNets, splitNets } from "../../solver/net";
 
 class Switch extends Device {
 
@@ -18,22 +19,35 @@ const updateSwitch = (device: Switch) => {
 
     if (!lpin || !rpin) return;
 
-
     if (device.ON) {
-        if (lpin.netID !== null && rpin.netID !== null && lpin.netID !== rpin.netID) {
+        Pin.connect(lpin.id, rpin.id);
+
+        if (lpin.netID === null && rpin.netID === null) {
+            const newNet = new Net();
+            addToNet(lpin, newNet);
+            addToNet(rpin, newNet);
+            CIRCUIT.nets.set(newNet.id, newNet);
+        } else if (lpin.netID === null) {
+            addToNet(lpin, CIRCUIT.nets.get(rpin.netID!)!);
+        } else if (rpin.netID === null) {
+            addToNet(rpin, CIRCUIT.nets.get(lpin.netID!)!);
+        } else if (lpin.netID !== rpin.netID) {
             combineNets(lpin, rpin);
         }
-    
-        if (lpin.netID !== null)
-            SOLVER.Solve(CIRCUIT.nets.get(lpin.netID)!);
-    
+
+        const netID = lpin.netID ?? rpin.netID;
+        if (netID !== null) {
+            SOLVER.Solve(CIRCUIT.nets.get(netID)!);
+        }
     } else {
+        Pin.disconnect(lpin.id, rpin.id);
+
         if (lpin.netID !== null && rpin.netID !== null && lpin.netID === rpin.netID) {
             splitNets(lpin, rpin);
-    
+
             if (lpin.netID !== null)
                 SOLVER.Solve(CIRCUIT.nets.get(lpin.netID)!);
-    
+
             if (rpin.netID !== null && rpin.netID !== lpin.netID)
                 SOLVER.Solve(CIRCUIT.nets.get(rpin.netID)!);
         }

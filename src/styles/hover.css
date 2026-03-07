@@ -5,7 +5,18 @@
 .redo,
 .zoom-in,
 .zoom-out,
-.snap-to-grid {
+.snap-to-grid,
+.show-label,
+.device-bar-Source,
+.device-bar-Bulb,
+.device-bar-Switch,
+.device-bar-AndGate,
+.device-bar-OrGate,
+.device-bar-NotGate,
+.device-bar-XorGate,
+.device-bar-NandGate,
+.device-bar-NorGate,
+.device-bar-XnorGate {
     position: relative;
 }
 
@@ -16,7 +27,18 @@
 .redo img,
 .zoom-in img,
 .zoom-out img,
-.snap-to-grid img {
+.snap-to-grid img,
+.show-label img,
+.device-bar-Source img,
+.device-bar-Bulb img,
+.device-bar-Switch img,
+.device-bar-AndGate img,
+.device-bar-OrGate img,
+.device-bar-NotGate img,
+.device-bar-XorGate img,
+.device-bar-NandGate img,
+.device-bar-NorGate img,
+.device-bar-XnorGate img {
    transition: all 0.25s ease;
 }
 
@@ -26,7 +48,18 @@
 .undo:hover img,
 .zoom-in:hover img,
 .zoom-out:hover img,
-.snap-to-grid:hover img {
+.snap-to-grid:hover img,
+.show-label:hover img,
+.device-bar-Source:hover img,
+.device-bar-Bulb:hover img,
+.device-bar-Switch:hover img,
+.device-bar-AndGate:hover img,
+.device-bar-OrGate:hover img,
+.device-bar-NotGate:hover img,
+.device-bar-XorGate:hover img,
+.device-bar-NandGate:hover img,
+.device-bar-NorGate:hover img,
+.device-bar-XnorGate:hover img {
    transform: translateY(0.5rem);
 }
 
@@ -37,7 +70,18 @@
 .redo::after,
 .zoom-in::after,
 .zoom-out::after,
-.snap-to-grid::after {
+.snap-to-grid::after,
+.show-label::after,
+.device-bar-Source::after,
+.device-bar-Bulb::after,
+.device-bar-Switch::after,
+.device-bar-AndGate::after,
+.device-bar-OrGate::after,
+.device-bar-NotGate::after,
+.device-bar-XorGate::after,
+.device-bar-NandGate::after,
+.device-bar-NorGate::after,
+.device-bar-XnorGate::after {
     position: absolute;
     top: 0;
     height: 0;
@@ -80,6 +124,50 @@
     content: "Snap";
     
 }
+.show-label::after {
+    content: "Label";
+    
+}
+.device-bar-Source::after {
+    content: "source";
+    
+}
+.device-bar-Bulb::after {
+    content: "bulb";
+    
+}
+.device-bar-Switch::after {
+    content: "switch";
+    
+}
+.device-bar-AndGate::after {
+    content: "and gate";
+    
+}
+.device-bar-OrGate::after {
+    content: "or gate";
+    
+}
+.device-bar-NotGate::after {
+    content: "not gate";
+    
+}
+.device-bar-XorGate::after {
+    content: "xor gate";
+    
+}
+.device-bar-NandGate::after {
+    content: "nand gate";
+    
+}
+.device-bar-NorGate::after {
+    content: "nor gate";
+    
+}
+.device-bar-XnorGate::after {
+    content: "xnor gate";
+    
+}
 
 .pan:hover::after,
 .edit:hover::after,
@@ -88,7 +176,18 @@
 .redo:hover::after,
 .zoom-in:hover::after,
 .zoom-out:hover::after,
-.snap-to-grid:hover::after {
+.snap-to-grid:hover::after,
+.show-label:hover::after,
+.device-bar-Source:hover::after,
+.device-bar-Bulb:hover::after,
+.device-bar-Switch:hover::after,
+.device-bar-AndGate:hover::after,
+.device-bar-OrGate:hover::after,
+.device-bar-NotGate:hover::after,
+.device-bar-XorGate:hover::after,
+.device-bar-NandGate:hover::after,
+.device-bar-NorGate:hover::after,
+.device-bar-XnorGate:hover::after {
     height: 0.5rem;
     opacity: 1;
 }

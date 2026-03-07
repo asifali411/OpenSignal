@@ -1,5 +1,5 @@
 import { ctx } from "../../main/reference";
-import { CIRCUIT, DEVICE, MODE, SPRITES, VALUE, WORLD, deviceSize } from "../../main/setup";
+import { CIRCUIT, DEVICE, MODE, SETTINGS, SPRITES, VALUE, WORLD, deviceSize } from "../../main/setup";
 import { getPin, isHovering } from "../../main/util";
 
 import { Source } from "../source";
@@ -48,6 +48,15 @@ class Draw {
         ctx.stroke();
     }
 
+    private handleDeviceLabel(device: any) {
+        if (!SETTINGS.showLabel) return;
+
+        ctx.beginPath();
+        ctx.textAlign = "center";
+        ctx.fillStyle = "#333";
+        ctx.fillText(device.name, device.x + deviceSize / 2, device.y + deviceSize + 10);
+    }
+
     source(device: Source) {
        
         ctx.drawImage(SPRITES[DEVICE.SOURCE], device.x, device.y, deviceSize, deviceSize);
@@ -63,6 +72,7 @@ class Draw {
         
         this.handleDeviceSelection(device);
         this.handleDeviceHovering(device);
+        this.handleDeviceLabel(device);
     }
 
     bulb(device: Bulb) {
@@ -77,20 +87,24 @@ class Draw {
 
         this.handleDeviceSelection(device);
         this.handleDeviceHovering(device);
+        this.handleDeviceLabel(device);
     }
 
     keySwitch(device: Switch) {
+
         ctx.drawImage(SPRITES[DEVICE.SWITCH], device.x, device.y, deviceSize, deviceSize);
+        
 
         if (device.ON) ctx.fillStyle = "yellowgreen";
         else ctx.fillStyle = "tomato";
 
         ctx.beginPath();
-        ctx.arc(device.x + deviceSize / 2, device.y + deviceSize / 2, deviceSize / 3.1, 0, Math.PI * 2);
+        ctx.arc(device.x + deviceSize / 2, device.y + deviceSize / 2, deviceSize / 6.1, 0, Math.PI * 2);
         ctx.fill();
 
         this.handleDeviceSelection(device);
         this.handleDeviceHovering(device);
+        this.handleDeviceLabel(device);
     }
 
     and(device: And) {
@@ -98,6 +112,7 @@ class Draw {
 
         this.handleDeviceSelection(device);
         this.handleDeviceHovering(device);
+        this.handleDeviceLabel(device);
     }
 
     or(device: Or) {
@@ -105,6 +120,7 @@ class Draw {
 
         this.handleDeviceSelection(device);
         this.handleDeviceHovering(device);
+        this.handleDeviceLabel(device);
     }
 
     not(device: Not) {
@@ -112,6 +128,7 @@ class Draw {
 
         this.handleDeviceSelection(device);
         this.handleDeviceHovering(device);
+        this.handleDeviceLabel(device);
     }
 }
 

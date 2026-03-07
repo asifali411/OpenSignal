@@ -77,6 +77,7 @@ const createDeviceBar = (): void => {
     for (let i = 0; i < maxSize; i++) {
         const deviceBTN: HTMLButtonElement = document.createElement('button');
         deviceBTN.classList.add("device");
+        deviceBTN.classList.add(`device-bar-${(DEVICES[i].name).replace(" ", "")}`);
         deviceBTN.title = DEVICES[i].name;
 
         const deviceIMG: HTMLImageElement = document.createElement('img');
@@ -260,6 +261,16 @@ const renderSnapToGridBtn = () => {
     }
 }
 
+//========================= SHOW LABEL ====================//
+
+const renderShowLabelBtn = () => {
+    if (SETTINGS.showLabel) {
+        buttons.showLabel.classList.add('selected');
+    } else {
+        buttons.showLabel.classList.remove('selected');
+    }
+}
+
 //========================= DRAW ====================//
 
 const isOutOfCanvas = (device: Device) => {
@@ -414,6 +425,8 @@ export {
 
     snapToGrid,
     renderSnapToGridBtn,
+
+    renderShowLabelBtn,
 
     isOutOfCanvas,
     drawWire,

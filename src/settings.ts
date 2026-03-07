@@ -7,11 +7,13 @@ import { isApp } from './env';
 
 export interface AppSettings {
   snapToGrid: boolean;
+  showLabel: boolean;
   // Add future settings here !IMPORTANT
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
   snapToGrid: true,
+  showLabel: false
   // Add default settings here !IMPORTANT
 };
 

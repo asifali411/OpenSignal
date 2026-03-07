@@ -70,8 +70,8 @@ canvas:active {
 
 .device-bar,
 .zoom-in-out,
+.general-settings,
 .undo-redo,
-.snap-to-grid,
 .mode {
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-panel);
@@ -141,7 +141,8 @@ canvas:active {
 
 .tools-left button,
 .tools-right button,
-.zoom-in-out button {
+.zoom-in-out button,
+.general-settings button {
   padding: 0.6rem;
   display: flex;
   justify-content: center;
@@ -151,7 +152,8 @@ canvas:active {
 
 .tools-left button:hover,
 .tools-right button:hover,
-.zoom-in-out button:hover {
+.zoom-in-out button:hover,
+.general-settings button:hover {
   background-color: var(--color-hover);
 }
 
@@ -160,7 +162,8 @@ canvas:active {
 .zoom-in-out img,
 .tools-left svg,
 .tools-right svg,
-.zoom-in-out svg {
+.zoom-in-out svg,
+.general-settings svg {
   width: 18px;
   height: 18px;
 }
@@ -210,14 +213,14 @@ canvas:active {
   ZOOM
 ===============================================================*/
 
-.zoom-in-out, .snap-to-grid {
+.zoom-in-out, .general-settings {
   flex-direction: column;
   gap: 0.3rem;
   padding: 0.5rem 0.4rem;
   margin-bottom: 1rem;
 }
 
-.zoom-percentage, .snap-to-grid {
+.zoom-percentage, .general-settings {
   font-size: 0.8rem;
   text-align: center;
 }
@@ -231,6 +234,18 @@ canvas:active {
 }
 
 .snap-to-grid.selected img{
+  opacity: 1;
+}
+
+/*==============================================================
+  SHOW LABEL
+===============================================================*/
+
+.show-label img{
+  opacity: 0.5;
+}
+
+.show-label.selected img {
   opacity: 1;
 }
 

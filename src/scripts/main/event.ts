@@ -9,6 +9,7 @@ import {
     changeMode,
     snapToGrid,
     renderSnapToGridBtn,
+    renderShowLabelBtn,
     handleModeButtonSelection,
     handlePinSelection
 } from "./script";
@@ -195,7 +196,13 @@ buttons.snapToGrid.addEventListener('click', () => {
     if (SETTINGS.snapToGrid) snapToGrid();
     setSetting("snapToGrid", SETTINGS.snapToGrid);
     saveSettings(SETTINGS);
-})
+});
+buttons.showLabel.addEventListener('click', () => {
+    SETTINGS.showLabel = !SETTINGS.showLabel;
+    renderShowLabelBtn();
+    setSetting("showLabel", SETTINGS.snapToGrid);
+    saveSettings(SETTINGS);
+});
 
 //========================= WINDOW & DIALOG ========================//
 
@@ -265,7 +272,7 @@ window.addEventListener('resize', () => {
 window.addEventListener('keydown', (e) => {
     if (!(e.ctrlKey && e.key === "/")) return;
 
-    console.log(CIRCUIT.pins);
+    console.log(SETTINGS);
 });
 
 window.addEventListener('keydown', (e) => {
