@@ -1,0 +1,23 @@
+---------------------------- LOGIC ------------------------------
+
+1. device updates
+2. the output pin changes
+3. solve the net attached to it
+4. if the resolved value != previous value -> update all input pins
+5. collect each input devices
+6. update each device
+7. if output value of device changes -> return netid attached to the output pin
+8. collect each net
+9. solve net
+10. continue solving network until delta becomes maxDelta
+11. if it reaches limit then stop solving and mark value of the pin as X
+
+---------------------- IMPLEMENTATION --------------------------
+
+1. device update -> call SolveCircuit function of Solver
+	pass net attached to the output pin to it.
+2. Append startingNet to quene.nets array
+2. Solve starting net using Solve function of Solver
+3. Solve function append devices to update in the quene.devices array
+4. inside SolveCircuit function call updateDevice function for each device
+5. 

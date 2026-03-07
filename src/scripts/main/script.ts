@@ -26,6 +26,15 @@ const drawDevices = () => {
                 case DEVICE.SWITCH:
                     DRAW.keySwitch(device as any);
                     break;
+                case DEVICE.AND:
+                    DRAW.and(device);
+                    break;
+                case DEVICE.OR:
+                    DRAW.or(device);
+                    break;
+                case DEVICE.NOT:
+                    DRAW.not(device);
+                    break;
             }
         }
     });
@@ -43,6 +52,15 @@ const handleDeviceElementClick = (deviceName: DEVICE): void => {
             break;
         case DEVICE.SWITCH:
             CREATE.keySwitch();
+            break;
+        case DEVICE.AND:
+            CREATE.and();
+            break;
+        case DEVICE.OR:
+            CREATE.or();
+            break;
+        case DEVICE.NOT:
+            CREATE.not();
             break;
         default:
             console.error(`Device name not recognized: ${deviceName}`);

@@ -5,6 +5,9 @@ import { getPin, isHovering } from "../../main/util";
 import { Source } from "../source";
 import Bulb from "../bulb";
 import { Switch } from "../switch";
+import And from "../gates/and";
+import Or from "../gates/or";
+import Not from "../gates/not";
 
 class Draw {
 
@@ -85,6 +88,27 @@ class Draw {
         ctx.beginPath();
         ctx.arc(device.x + deviceSize / 2, device.y + deviceSize / 2, deviceSize / 3.1, 0, Math.PI * 2);
         ctx.fill();
+
+        this.handleDeviceSelection(device);
+        this.handleDeviceHovering(device);
+    }
+
+    and(device: And) {
+        ctx.drawImage(SPRITES[DEVICE.AND], device.x, device.y, deviceSize, deviceSize);
+
+        this.handleDeviceSelection(device);
+        this.handleDeviceHovering(device);
+    }
+
+    or(device: Or) {
+        ctx.drawImage(SPRITES[DEVICE.OR], device.x, device.y, deviceSize, deviceSize);
+
+        this.handleDeviceSelection(device);
+        this.handleDeviceHovering(device);
+    }
+
+    not(device: Not) {
+        ctx.drawImage(SPRITES[DEVICE.NOT], device.x, device.y, deviceSize, deviceSize);
 
         this.handleDeviceSelection(device);
         this.handleDeviceHovering(device);
