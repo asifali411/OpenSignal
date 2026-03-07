@@ -1,6 +1,6 @@
 import { canvas, buttons, overlay } from "./reference";
 import { MOUSE, WORLD, MODE, HISTORY, CIRCUIT, SETTINGS, DEVICE } from "./setup";
-import { toWorld, isHovering, isHoveringPin, getPin } from "./util";
+import { toWorld, isHovering, isHoveringPin, getPin, getDevice } from "./util";
 import {
     closeDialog,
     openExtraDevices,
@@ -11,7 +11,8 @@ import {
     renderSnapToGridBtn,
     renderShowLabelBtn,
     handleModeButtonSelection,
-    handlePinSelection
+    handlePinSelection,
+    deleteDevice
 } from "./script";
 import { saveSettings, setSetting } from "../../settings";
 import { toggleSource } from "../devices/source";
@@ -227,6 +228,18 @@ window.addEventListener('keydown', (e) => {
             case "S":
                 handleModeButtonSelection(MODE.SIMULATE);
                 break;
+            case "Delete":
+                const devicesTodelete = [];
+                for (const [deviceID, device] of CIRCUIT.devices) {
+                    if (device.selected) {
+                        devicesTodelete.push(deviceID);
+                    }
+                }
+
+                devicesTodelete.forEach(deviceID => {
+                    deleteDevice(getDevice(deviceID));
+                });
+                break;
         }
     }
 
@@ -272,7 +285,7 @@ window.addEventListener('resize', () => {
 window.addEventListener('keydown', (e) => {
     if (!(e.ctrlKey && e.key === "/")) return;
 
-    console.log(CIRCUIT.nets);
+    console.log(CIRCUIT);
 });
 
 window.addEventListener('keydown', (e) => {

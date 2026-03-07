@@ -1,14 +1,15 @@
 import { deviceBar, extraDevices, buttons, canvas, extraDeviceDialog, overlay } from "./reference";
-import { DEVICES, WORLD, MODE, CIRCUIT, HISTORY, tileSize, SETTINGS, DEVICE, SOLVER } from "./setup";
+import { DEVICES, WORLD, MODE, CIRCUIT, HISTORY, tileSize, SETTINGS, DEVICE, SOLVER, VALUE } from "./setup";
 
 import Draw from "../devices/functions/draw";
 import Create from "../devices/functions/create";
 import Device from "../devices/device";
 import { getPin, getPinX, getPinY, isHoveringPin } from "./util";
 import Pin from "../devices/functions/pin";
-import { addToNet, combineNets, Net } from "../../solver/net";
+import { addToNet, combineNets, Net, removeFromNet } from "../../solver/net";
 import Gate from "../devices/gate";
 import Update from "../devices/functions/update";
+import { Switch } from "../devices/switch";
 
 //========================= DEVICES ========================//
 
@@ -53,7 +54,6 @@ const drawDevices = () => {
         }
     });
 }
-
 const updateDevice = (device: Gate | Device): number => {
     switch (device.name) {
         case DEVICE.AND:
@@ -74,6 +74,68 @@ const updateDevice = (device: Gate | Device): number => {
 
     return -1;
 }
+const deleteDevice = (device: Device | Gate | Switch) => {
+    const pinIDsToDelete = [
+        ...device.inputPins,
+        ...device.outputPins,
+        ...device.in_outPins
+    ];
+
+    const netsToUpdate = new Set<number>();
+    for (const pinID of device.outputPins) {
+        const pin = getPin(pinID);
+        Pin.setValue(pin, VALUE.Z);
+        if (pin.netID) {
+            netsToUpdate.add(pin.netID);
+        }
+    }
+
+    for (const netID of netsToUpdate) {
+        SOLVER.SolveCircuit(CIRCUIT.nets.get(netID)!);
+    }
+
+    const processedNets = new Set<number>();
+
+    // disconnect all pin connections
+    for (const pinID of pinIDsToDelete) {
+        const pin = getPin(pinID);
+        if (!pin) continue;
+
+        const connectedPinsCopy = Array.from(pin.connectedPins);
+
+        for (const connectedPinID of connectedPinsCopy) {
+            Pin.disconnect(pinID, connectedPinID);
+        }
+    }
+
+    // remove pins from nets
+    for (const pinID of pinIDsToDelete) {
+        const pin = getPin(pinID);
+        if (!pin) continue;
+
+        if (pin.netID != null && !processedNets.has(pin.netID)) {
+            processedNets.add(pin.netID);
+
+            const net = CIRCUIT.nets.get(pin.netID);
+            if (!net) continue;
+
+            removeFromNet(pin, net);
+
+            if (net.pins.size <= 2) {
+                for (const remainingPin of net.pins) {
+                    remainingPin.netID = null;
+                }
+                CIRCUIT.nets.delete(net.id);
+            }
+        }
+
+        CIRCUIT.pins.delete(pinID);
+    }
+
+    CIRCUIT.devices.delete(device.id);
+
+    HISTORY.save(CIRCUIT);
+};
 
 //========================= DEVICE BAR ========================//
 
@@ -390,7 +452,6 @@ const drawPinSelection = (pin: Pin, ctx: any) => {
     ctx.lineWidth = 2;
     ctx.stroke();
 }
-
 const handlePinSelection = (pins: number[]) => {
     for (let i = 0; i < pins.length; i++){
         const pin = getPin(pins[i]);
@@ -426,11 +487,12 @@ const handlePinSelection = (pins: number[]) => {
                     SOLVER.SolveCircuit(CIRCUIT.nets.get(pin.netID!)! ?? CIRCUIT.nets.get(selectedPin.netID!)!);
                 }
 
-                HISTORY.save(CIRCUIT);
-
+                
                 getPin(WORLD.pin.selected).selected = false;
                 pin.selected = false;
                 WORLD.pin.selected = null;
+                
+                HISTORY.save(CIRCUIT);
                 break;
             }
 
@@ -459,6 +521,7 @@ export {
 
     drawDevices,
     updateDevice,
+    deleteDevice,
 
     renderUndoRedoBtn,
 

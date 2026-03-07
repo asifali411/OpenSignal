@@ -72,6 +72,9 @@ class Draw {
             ctx.fill();
             drawPinHovering(pin, ctx);
             drawPinSelection(pin, ctx);
+
+            ctx.fillText(String(pin.id), getPinX(pin), getPinY(pin) - 5); //DEBUG
+            
         }
 
         for (const pinID of device.outputPins) {
@@ -83,6 +86,9 @@ class Draw {
             ctx.fill();
             drawPinHovering(pin, ctx);
             drawPinSelection(pin, ctx);
+
+            ctx.fillText(String(pin.id), getPinX(pin), getPinY(pin) - 5); //DEBUG
+
         }
 
         for (const pinID of device.in_outPins) {
@@ -94,6 +100,9 @@ class Draw {
             ctx.fill();
             drawPinHovering(pin, ctx);
             drawPinSelection(pin, ctx);
+
+            ctx.fillText(String(pin.id), getPinX(pin), getPinY(pin) - 5); //DEBUG
+
         }
     }
 
