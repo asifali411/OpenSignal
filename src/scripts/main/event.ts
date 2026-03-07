@@ -272,7 +272,7 @@ window.addEventListener('resize', () => {
 window.addEventListener('keydown', (e) => {
     if (!(e.ctrlKey && e.key === "/")) return;
 
-    console.log(SETTINGS);
+    console.log(CIRCUIT.nets);
 });
 
 window.addEventListener('keydown', (e) => {

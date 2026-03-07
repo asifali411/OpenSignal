@@ -1,5 +1,5 @@
 import { deviceBar, extraDevices, buttons, canvas, extraDeviceDialog, overlay } from "./reference";
-import { DEVICES, WORLD, MODE, CIRCUIT, HISTORY, tileSize, SETTINGS, DEVICE } from "./setup";
+import { DEVICES, WORLD, MODE, CIRCUIT, HISTORY, tileSize, SETTINGS, DEVICE, SOLVER } from "./setup";
 
 import Draw from "../devices/functions/draw";
 import Create from "../devices/functions/create";
@@ -37,6 +37,18 @@ const drawDevices = () => {
                 case DEVICE.NOT:
                     DRAW.not(device);
                     break;
+                case DEVICE.XOR:
+                    DRAW.xor(device);
+                    break;
+                case DEVICE.NAND:
+                    DRAW.nand(device);
+                    break;
+                case DEVICE.NOR:
+                    DRAW.nor(device);
+                    break;
+                case DEVICE.XNOR:
+                    DRAW.xnor(device);
+                    break;
             }
         }
     });
@@ -48,6 +60,16 @@ const updateDevice = (device: Gate | Device): number => {
             return Update.and(device);
         case DEVICE.OR:
             return Update.or(device);
+        case DEVICE.NOT:
+            return Update.not(device);
+        case DEVICE.XOR:
+            return Update.xor(device);
+        case DEVICE.NAND:
+            return Update.nand(device);
+        case DEVICE.NOR:
+            return Update.nor(device);
+        case DEVICE.XNOR:
+            return Update.xnor(device);
     }
 
     return -1;
@@ -74,6 +96,18 @@ const handleDeviceElementClick = (deviceName: DEVICE): void => {
             break;
         case DEVICE.NOT:
             CREATE.not();
+            break;
+        case DEVICE.XOR:
+            CREATE.xor();
+            break;
+        case DEVICE.NAND:
+            CREATE.nand();
+            break;
+        case DEVICE.NOR:
+            CREATE.nor();
+            break;
+        case DEVICE.XNOR:
+            CREATE.xnor();
             break;
         default:
             console.error(`Device name not recognized: ${deviceName}`);
@@ -356,19 +390,7 @@ const drawPinSelection = (pin: Pin, ctx: any) => {
     ctx.lineWidth = 2;
     ctx.stroke();
 }
-const drawPins = (ctx: any) => {
 
-    for (const [, pin] of CIRCUIT.pins) {
-        ctx.fillStyle = "#000";
-        ctx.beginPath();
-        ctx.arc(getPinX(pin), getPinY(pin), 5, 0, Math.PI * 2);
-        ctx.fill();
-        drawPinHovering(pin, ctx);
-        drawPinSelection(pin, ctx);
-
-        ctx.fillText(String(pin.value), getPinX(pin), getPinY(pin) - 5); //DEBUG
-    }
-}
 const handlePinSelection = (pins: number[]) => {
     for (let i = 0; i < pins.length; i++){
         const pin = getPin(pins[i]);
@@ -392,13 +414,16 @@ const handlePinSelection = (pins: number[]) => {
                     addToNet(pin, newNet);
                     addToNet(selectedPin, newNet);
                     CIRCUIT.nets.set(newNet.id, newNet);
-                
                 } else if (pin.netID == null) {
                     addToNet(pin, CIRCUIT.nets.get(selectedPin.netID!)!)
                 } else if (selectedPin.netID == null) {
                     addToNet(selectedPin, CIRCUIT.nets.get(pin.netID!)!);
                 } else if (pin.netID !== selectedPin.netID) {
                     combineNets(pin, selectedPin);
+                }
+
+                if (pin.netID != null || selectedPin.netID != null) {
+                    SOLVER.SolveCircuit(CIRCUIT.nets.get(pin.netID!)! ?? CIRCUIT.nets.get(selectedPin.netID!)!);
                 }
 
                 HISTORY.save(CIRCUIT);
@@ -445,5 +470,6 @@ export {
     isOutOfCanvas,
     drawWire,
     handlePinSelection,
-    drawPins
+    drawPinHovering,
+    drawPinSelection
 };

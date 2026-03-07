@@ -1,6 +1,6 @@
 import { ctx } from "../../main/reference";
 import { CIRCUIT, DEVICE, MODE, SETTINGS, SPRITES, VALUE, WORLD, deviceSize } from "../../main/setup";
-import { getPin, isHovering } from "../../main/util";
+import { getPin, getPinX, getPinY, isHovering } from "../../main/util";
 
 import { Source } from "../source";
 import Bulb from "../bulb";
@@ -8,6 +8,11 @@ import { Switch } from "../switch";
 import And from "../gates/and";
 import Or from "../gates/or";
 import Not from "../gates/not";
+import Xor from "../gates/xor";
+import Nand from "../gates/nand";
+import Nor from "../gates/nor";
+import Xnor from "../gates/xnor";
+import { drawPinHovering, drawPinSelection } from "../../main/script";
 
 class Draw {
 
@@ -57,6 +62,41 @@ class Draw {
         ctx.fillText(device.name, device.x + deviceSize / 2, device.y + deviceSize + 10);
     }
 
+    private drawPin(device: any) {
+
+        for (const pinID of device.inputPins) {
+            const pin = getPin(pinID);
+            ctx.fillStyle = "#000";
+            ctx.beginPath();
+            ctx.arc(getPinX(pin), getPinY(pin), 5, 0, Math.PI * 2);
+            ctx.fill();
+            drawPinHovering(pin, ctx);
+            drawPinSelection(pin, ctx);
+        }
+
+        for (const pinID of device.outputPins) {
+            const pin = getPin(pinID);
+
+            ctx.fillStyle = "#000";
+            ctx.beginPath();
+            ctx.arc(getPinX(pin), getPinY(pin), 5, 0, Math.PI * 2);
+            ctx.fill();
+            drawPinHovering(pin, ctx);
+            drawPinSelection(pin, ctx);
+        }
+
+        for (const pinID of device.in_outPins) {
+            const pin = getPin(pinID);
+
+            ctx.fillStyle = "#000";
+            ctx.beginPath();
+            ctx.arc(getPinX(pin), getPinY(pin), 5, 0, Math.PI * 2);
+            ctx.fill();
+            drawPinHovering(pin, ctx);
+            drawPinSelection(pin, ctx);
+        }
+    }
+
     source(device: Source) {
        
         ctx.drawImage(SPRITES[DEVICE.SOURCE], device.x, device.y, deviceSize, deviceSize);
@@ -73,6 +113,7 @@ class Draw {
         this.handleDeviceSelection(device);
         this.handleDeviceHovering(device);
         this.handleDeviceLabel(device);
+        this.drawPin(device);
     }
 
     bulb(device: Bulb) {
@@ -88,6 +129,7 @@ class Draw {
         this.handleDeviceSelection(device);
         this.handleDeviceHovering(device);
         this.handleDeviceLabel(device);
+        this.drawPin(device);
     }
 
     keySwitch(device: Switch) {
@@ -105,6 +147,7 @@ class Draw {
         this.handleDeviceSelection(device);
         this.handleDeviceHovering(device);
         this.handleDeviceLabel(device);
+        this.drawPin(device);
     }
 
     and(device: And) {
@@ -113,6 +156,7 @@ class Draw {
         this.handleDeviceSelection(device);
         this.handleDeviceHovering(device);
         this.handleDeviceLabel(device);
+        this.drawPin(device);
     }
 
     or(device: Or) {
@@ -121,6 +165,7 @@ class Draw {
         this.handleDeviceSelection(device);
         this.handleDeviceHovering(device);
         this.handleDeviceLabel(device);
+        this.drawPin(device);
     }
 
     not(device: Not) {
@@ -129,6 +174,43 @@ class Draw {
         this.handleDeviceSelection(device);
         this.handleDeviceHovering(device);
         this.handleDeviceLabel(device);
+        this.drawPin(device);
+    }
+
+    xor(device: Xor) {
+        ctx.drawImage(SPRITES[DEVICE.XOR], device.x, device.y, deviceSize, deviceSize);
+
+        this.handleDeviceSelection(device);
+        this.handleDeviceHovering(device);
+        this.handleDeviceLabel(device);
+        this.drawPin(device);
+    }
+
+    nand(device: Nand) {
+        ctx.drawImage(SPRITES[DEVICE.NAND], device.x, device.y, deviceSize, deviceSize);
+
+        this.handleDeviceSelection(device);
+        this.handleDeviceHovering(device);
+        this.handleDeviceLabel(device);
+        this.drawPin(device);
+    }
+
+    nor(device: Nor) {
+        ctx.drawImage(SPRITES[DEVICE.NOR], device.x, device.y, deviceSize, deviceSize);
+
+        this.handleDeviceSelection(device);
+        this.handleDeviceHovering(device);
+        this.handleDeviceLabel(device);
+        this.drawPin(device);
+    }
+
+    xnor(device: Xnor) {
+        ctx.drawImage(SPRITES[DEVICE.XNOR], device.x, device.y, deviceSize, deviceSize);
+
+        this.handleDeviceSelection(device);
+        this.handleDeviceHovering(device);
+        this.handleDeviceLabel(device);
+        this.drawPin(device);
     }
 }
 
