@@ -37,7 +37,7 @@ const updateSwitch = (device: Switch) => {
 
         const netID = lpin.netID ?? rpin.netID;
         if (netID !== null) {
-            SOLVER.Solve(CIRCUIT.nets.get(netID)!);
+            SOLVER.SolveCircuit(CIRCUIT.nets.get(netID)!);
         }
     } else {
         Pin.disconnect(lpin.id, rpin.id);
@@ -46,10 +46,10 @@ const updateSwitch = (device: Switch) => {
             splitNets(lpin, rpin);
 
             if (lpin.netID !== null)
-                SOLVER.Solve(CIRCUIT.nets.get(lpin.netID)!);
+                SOLVER.SolveCircuit(CIRCUIT.nets.get(lpin.netID)!);
 
             if (rpin.netID !== null && rpin.netID !== lpin.netID)
-                SOLVER.Solve(CIRCUIT.nets.get(rpin.netID)!);
+                SOLVER.SolveCircuit(CIRCUIT.nets.get(rpin.netID)!);
         }
     }
 }

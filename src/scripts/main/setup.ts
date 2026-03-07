@@ -9,6 +9,7 @@ import HistoryManager from "./history";
 
 const tileSize: number = 30;
 const deviceSize: number = 50;
+const maxDelta: number = 100;
 
 //=================== TYPES ===================//
 
@@ -164,6 +165,7 @@ const SOLVER = new Solver();
 export {
     deviceSize,
     tileSize,
+    maxDelta,
     MODE,
     PIN_TYPE,
     DEVICES,

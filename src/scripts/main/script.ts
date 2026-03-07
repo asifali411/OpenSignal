@@ -7,6 +7,8 @@ import Device from "../devices/device";
 import { getPin, getPinX, getPinY, isHoveringPin } from "./util";
 import Pin from "../devices/functions/pin";
 import { addToNet, combineNets, Net } from "../../solver/net";
+import Gate from "../devices/gate";
+import Update from "../devices/functions/update";
 
 //========================= DEVICES ========================//
 
@@ -38,6 +40,17 @@ const drawDevices = () => {
             }
         }
     });
+}
+
+const updateDevice = (device: Gate | Device): number => {
+    switch (device.name) {
+        case DEVICE.AND:
+            return Update.and(device);
+        case DEVICE.OR:
+            return Update.or(device);
+    }
+
+    return -1;
 }
 
 //========================= DEVICE BAR ========================//
@@ -420,6 +433,7 @@ export {
     handleModeButtonSelection,
 
     drawDevices,
+    updateDevice,
 
     renderUndoRedoBtn,
 

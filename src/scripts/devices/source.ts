@@ -15,7 +15,7 @@ const toggleSource = (source: Source) => {
     const pinValue = pin.value === VALUE.HIGH ? VALUE.Z : VALUE.HIGH;
     Pin.setValue(pin, pinValue);
     if (pin.netID == null) return;
-    SOLVER.Solve(CIRCUIT.nets.get(pin.netID)!);
+    SOLVER.SolveCircuit(CIRCUIT.nets.get(pin.netID)!);
 }
 
 export { Source, toggleSource };
