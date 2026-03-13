@@ -6,6 +6,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Circuit Simulator</title>
 
+  <style>
+    noscript{
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #fff;
+      z-index: 999;
+      text-align: center;
+    }
+  </style>
+
   <link rel="stylesheet" href="./src/styles/styles.css" />
   <link rel="stylesheet" href="./src/styles/hover.css" />
 
@@ -14,13 +30,16 @@
 
 <body>
 
-  <noscript>This application requires javascript to run.</noscript>
+  <noscript>
+    This application requires javascript to run. <br>
+    Enable javascript to continue.
+  </noscript>
 
   <!-- Main Application -->
   <main aria-label="Circuit Simulator Workspace">
 
     <!-- Canvas Area -->
-    <canvas role="application" aria-label="Circuit drawing canvas" tabindex="0">
+    <canvas class="workspace" role="application" aria-label="Circuit drawing canvas" tabindex="0">
     </canvas>
 
     <!-- Left Toolbar -->

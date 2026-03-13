@@ -10,7 +10,7 @@ import {
     renderSnapToGridBtn,
     renderUndoRedoBtn
 } from "./scripts/main/script";
-import './scripts/main/event';
+import "./scripts/main/event";
 
 createDeviceBar();
 createExtraDeviceDialog();
@@ -22,25 +22,23 @@ let fps = 60;
 const fpsSmoothing = 0.9;
 
 const render = () => {
-
     // show fps
     const dt = performance.now() - lastTime;
-    if(dt !== 0){
-        const currentFps = Math.round(1000/dt);
+    if (dt !== 0) {
+        const currentFps = Math.round(1000 / dt);
         fps = fps * fpsSmoothing + currentFps * (1 - fpsSmoothing);
 
         fpsText.textContent = String(Math.round(fps));
     }
 
-    
     resizeCanvas();
     ctx.save();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
+
     ctx.fillStyle = "#FFFAFA";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    ctx.translate(canvas.width/2, canvas.height/2);
+
+    ctx.translate(canvas.width / 2, canvas.height / 2);
     ctx.scale(WORLD.camera.zoom, WORLD.camera.zoom);
     ctx.translate(-WORLD.camera.x, -WORLD.camera.y);
 
@@ -56,6 +54,6 @@ const render = () => {
     ctx.restore();
     lastTime = performance.now();
     requestAnimationFrame(render);
-}
+};
 
 render();
