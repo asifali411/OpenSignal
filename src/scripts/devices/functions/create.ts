@@ -13,19 +13,17 @@ import Nor from "../gates/nor";
 import Xnor from "../gates/xnor";
 
 class Create {
-    source() {
-        const s: Source = new Source();
-
-        const outputPin = new Pin(s.id,  deviceSize + 5, deviceSize / 2, PIN_TYPE.OUTPUT);
+    source(): void {
+        const s = new Source();
+        const outputPin = new Pin(s.id, deviceSize + 5, deviceSize / 2, PIN_TYPE.OUTPUT);
 
         s.outputPins.push(outputPin.id);
         CIRCUIT.pins.set(outputPin.id, outputPin);
         CIRCUIT.devices.set(s.id, s);
     }
 
-    bulb() {
-        const b: Bulb = new Bulb();
-
+    bulb(): void {
+        const b = new Bulb();
         const inputPin = new Pin(b.id, 0, deviceSize / 2, PIN_TYPE.INPUT);
 
         b.inputPins.push(inputPin.id);
@@ -33,152 +31,115 @@ class Create {
         CIRCUIT.devices.set(b.id, b);
     }
 
-    keySwitch() {
-        const sw: Switch = new Switch();
-
+    keySwitch(): void {
+        const sw   = new Switch();
         const lpin = new Pin(sw.id, 0, deviceSize / 2, PIN_TYPE.INOUT);
         const rpin = new Pin(sw.id, deviceSize, deviceSize / 2, PIN_TYPE.INOUT);
 
-        sw.in_outPins.push(lpin.id);
-        sw.in_outPins.push(rpin.id);
-
+        sw.in_outPins.push(lpin.id, rpin.id);
         CIRCUIT.pins.set(lpin.id, lpin);
         CIRCUIT.pins.set(rpin.id, rpin);
         CIRCUIT.devices.set(sw.id, sw);
     }
 
-    and() {
-        const andGate: And = new And();
+    and(): void {
+        const gate = new And();
+        const A    = new Pin(gate.id, -5, deviceSize / 3,     PIN_TYPE.INPUT);
+        const B    = new Pin(gate.id, -5, deviceSize * 2 / 3, PIN_TYPE.INPUT);
+        const out  = new Pin(gate.id, deviceSize + 5, deviceSize / 2, PIN_TYPE.OUTPUT);
 
-        const A = new Pin(andGate.id, -5, deviceSize / 3, PIN_TYPE.INPUT);
-        const B = new Pin(andGate.id, -5, deviceSize * 2 / 3, PIN_TYPE.INPUT);
-
-        const out = new Pin(andGate.id, deviceSize + 5, deviceSize / 2, PIN_TYPE.OUTPUT);
-
-        andGate.inputPins.push(A.id);
-        andGate.inputPins.push(B.id);
-
-        andGate.outputPins.push(out.id);
-
+        gate.inputPins.push(A.id, B.id);
+        gate.outputPins.push(out.id);
         CIRCUIT.pins.set(A.id, A);
         CIRCUIT.pins.set(B.id, B);
         CIRCUIT.pins.set(out.id, out);
-
-        CIRCUIT.devices.set(andGate.id, andGate);
+        CIRCUIT.devices.set(gate.id, gate);
     }
 
-    or() {
-        const orGate: Or = new Or();
+    or(): void {
+        const gate = new Or();
+        const A    = new Pin(gate.id, -5, deviceSize / 3,     PIN_TYPE.INPUT);
+        const B    = new Pin(gate.id, -5, deviceSize * 2 / 3, PIN_TYPE.INPUT);
+        const out  = new Pin(gate.id, deviceSize + 5, deviceSize / 2, PIN_TYPE.OUTPUT);
 
-        const A = new Pin(orGate.id, -5, deviceSize / 3, PIN_TYPE.INPUT);
-        const B = new Pin(orGate.id, -5, deviceSize * 2 / 3, PIN_TYPE.INPUT);
-
-        const out = new Pin(orGate.id, deviceSize + 5, deviceSize / 2, PIN_TYPE.OUTPUT);
-
-        orGate.inputPins.push(A.id);
-        orGate.inputPins.push(B.id);
-
-        orGate.outputPins.push(out.id);
-
+        gate.inputPins.push(A.id, B.id);
+        gate.outputPins.push(out.id);
         CIRCUIT.pins.set(A.id, A);
         CIRCUIT.pins.set(B.id, B);
         CIRCUIT.pins.set(out.id, out);
-
-        CIRCUIT.devices.set(orGate.id, orGate);
+        CIRCUIT.devices.set(gate.id, gate);
     }
 
-    not() {
-        const notGate: Not = new Not();
-
-        const input = new Pin(notGate.id, -5, deviceSize / 2, PIN_TYPE.INPUT);
-        const output = new Pin(notGate.id, deviceSize + 5, deviceSize / 2, PIN_TYPE.OUTPUT);
+    not(): void {
+        const gate   = new Not();
+        const input  = new Pin(gate.id, -5, deviceSize / 2, PIN_TYPE.INPUT);
+        const output = new Pin(gate.id, deviceSize + 5, deviceSize / 2, PIN_TYPE.OUTPUT);
 
         output.value = VALUE.HIGH;
-
-        notGate.inputPins.push(input.id);
-        notGate.outputPins.push(output.id);
-
+        gate.inputPins.push(input.id);
+        gate.outputPins.push(output.id);
         CIRCUIT.pins.set(input.id, input);
         CIRCUIT.pins.set(output.id, output);
-
-        CIRCUIT.devices.set(notGate.id, notGate);
+        CIRCUIT.devices.set(gate.id, gate);
     }
 
-    xor() {
-        const xorGate: Xor = new Xor();
+    xor(): void {
+        const gate = new Xor();
+        const A    = new Pin(gate.id, -5, deviceSize / 3,     PIN_TYPE.INPUT);
+        const B    = new Pin(gate.id, -5, deviceSize * 2 / 3, PIN_TYPE.INPUT);
+        const out  = new Pin(gate.id, deviceSize + 5, deviceSize / 2, PIN_TYPE.OUTPUT);
 
-        
-        const A = new Pin(xorGate.id, -5, deviceSize / 3, PIN_TYPE.INPUT);
-        const B = new Pin(xorGate.id, -5, deviceSize * 2 / 3, PIN_TYPE.INPUT);
-
-        const out = new Pin(xorGate.id, deviceSize + 5, deviceSize / 2, PIN_TYPE.OUTPUT);
-
-        xorGate.inputPins.push(A.id);
-        xorGate.inputPins.push(B.id);
-        xorGate.outputPins.push(out.id);
-
+        gate.inputPins.push(A.id, B.id);
+        gate.outputPins.push(out.id);
         CIRCUIT.pins.set(A.id, A);
         CIRCUIT.pins.set(B.id, B);
         CIRCUIT.pins.set(out.id, out);
-
-        CIRCUIT.devices.set(xorGate.id, xorGate);
+        CIRCUIT.devices.set(gate.id, gate);
     }
 
-    nand() {
-        const nandGate: Nand = new Nand();
-        const A = new Pin(nandGate.id, -5, deviceSize / 3, PIN_TYPE.INPUT);
-        const B = new Pin(nandGate.id, -5, deviceSize * 2 / 3, PIN_TYPE.INPUT);
+    nand(): void {
+        const gate = new Nand();
+        const A    = new Pin(gate.id, -5, deviceSize / 3,     PIN_TYPE.INPUT);
+        const B    = new Pin(gate.id, -5, deviceSize * 2 / 3, PIN_TYPE.INPUT);
+        const out  = new Pin(gate.id, deviceSize + 5, deviceSize / 2, PIN_TYPE.OUTPUT);
 
-        const out = new Pin(nandGate.id, deviceSize + 5, deviceSize / 2, PIN_TYPE.OUTPUT);
         out.value = VALUE.HIGH;
-
-        nandGate.inputPins.push(A.id);
-        nandGate.inputPins.push(B.id);
-        nandGate.outputPins.push(out.id);
-
+        gate.inputPins.push(A.id, B.id);
+        gate.outputPins.push(out.id);
         CIRCUIT.pins.set(A.id, A);
         CIRCUIT.pins.set(B.id, B);
         CIRCUIT.pins.set(out.id, out);
-
-        CIRCUIT.devices.set(nandGate.id, nandGate);
+        CIRCUIT.devices.set(gate.id, gate);
     }
 
-    nor() {
-        const norGate: Nor = new Nor();
-        const A = new Pin(norGate.id, -5, deviceSize / 3, PIN_TYPE.INPUT);
-        const B = new Pin(norGate.id, -5, deviceSize * 2 / 3, PIN_TYPE.INPUT);
+    nor(): void {
+        const gate = new Nor();
+        const A    = new Pin(gate.id, -5, deviceSize / 3,     PIN_TYPE.INPUT);
+        const B    = new Pin(gate.id, -5, deviceSize * 2 / 3, PIN_TYPE.INPUT);
+        const out  = new Pin(gate.id, deviceSize + 5, deviceSize / 2, PIN_TYPE.OUTPUT);
 
-        const out = new Pin(norGate.id, deviceSize + 5, deviceSize / 2, PIN_TYPE.OUTPUT);
         out.value = VALUE.HIGH;
-
-        norGate.inputPins.push(A.id);
-        norGate.inputPins.push(B.id);
-        norGate.outputPins.push(out.id);
-
+        gate.inputPins.push(A.id, B.id);
+        gate.outputPins.push(out.id);
         CIRCUIT.pins.set(A.id, A);
         CIRCUIT.pins.set(B.id, B);
         CIRCUIT.pins.set(out.id, out);
-
-        CIRCUIT.devices.set(norGate.id, norGate);
+        CIRCUIT.devices.set(gate.id, gate);
     }
 
-    xnor() {
-        const xnorGate: Xnor = new Xnor();
-        const A = new Pin(xnorGate.id, -5, deviceSize / 3, PIN_TYPE.INPUT);
-        const B = new Pin(xnorGate.id, -5, deviceSize * 2 / 3, PIN_TYPE.INPUT);
+    xnor(): void {
+        const gate = new Xnor();
+        const A    = new Pin(gate.id, -5, deviceSize / 3,     PIN_TYPE.INPUT);
+        const B    = new Pin(gate.id, -5, deviceSize * 2 / 3, PIN_TYPE.INPUT);
+        const out  = new Pin(gate.id, deviceSize + 5, deviceSize / 2, PIN_TYPE.OUTPUT);
 
-        const out = new Pin(xnorGate.id, deviceSize + 5, deviceSize / 2, PIN_TYPE.OUTPUT);
         out.value = VALUE.HIGH;
-
-        xnorGate.inputPins.push(A.id);
-        xnorGate.inputPins.push(B.id);
-        xnorGate.outputPins.push(out.id);
-
+        gate.inputPins.push(A.id, B.id);
+        gate.outputPins.push(out.id);
         CIRCUIT.pins.set(A.id, A);
         CIRCUIT.pins.set(B.id, B);
         CIRCUIT.pins.set(out.id, out);
-
-        CIRCUIT.devices.set(xnorGate.id, xnorGate);
+        CIRCUIT.devices.set(gate.id, gate);
     }
 }
 

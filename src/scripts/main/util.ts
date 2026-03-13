@@ -3,16 +3,17 @@ import Pin from "../devices/functions/pin";
 import { canvas, ctx } from "./reference";
 import { tileSize, deviceSize, WORLD, MOUSE, CIRCUIT } from "./setup";
 
-const resizeCanvas = () => {
+const resizeCanvas = (): void => {
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
-}
+};
 
-const createGrid = () => {
+const createGrid = (): void => {
     ctx.globalAlpha = 0.15;
     ctx.strokeStyle = '#444';
 
-    for(let x = -canvas.width * 10; x < canvas.width * 10; x+=tileSize){
+    ctx.beginPath();
+    for (let x = -canvas.width * 10; x < canvas.width * 10; x += tileSize) {
         ctx.moveTo(x, -canvas.height * 10);
         ctx.lineTo(x, canvas.height * 10);
     }
@@ -20,48 +21,54 @@ const createGrid = () => {
         ctx.moveTo(-canvas.width * 10, y);
         ctx.lineTo(canvas.width * 10, y);
     }
-
     ctx.stroke();
-    ctx.globalAlpha = 1;
-}
 
-type POINT = {
-    x: number,
-    y: number
-}
-const toWorld = (x: number, y: number): POINT => {
+    ctx.globalAlpha = 1;
+};
+
+type Point = {
+    x: number;
+    y: number;
+};
+
+const toWorld = (x: number, y: number): Point => {
     return {
         x: (x - canvas.width / 2) / WORLD.camera.zoom + WORLD.camera.x,
-        y: (y - canvas.height / 2) / WORLD.camera.zoom + WORLD.camera.y
+        y: (y - canvas.height / 2) / WORLD.camera.zoom + WORLD.camera.y,
     };
-}
+};
 
 const isHovering = (device: Device): boolean => {
-    return (MOUSE.x >= device.x && MOUSE.x <= device.x + deviceSize && MOUSE.y >= device.y && MOUSE.y <= device.y + deviceSize);
-}
+    return (
+        MOUSE.x >= device.x &&
+        MOUSE.x <= device.x + deviceSize &&
+        MOUSE.y >= device.y &&
+        MOUSE.y <= device.y + deviceSize
+    );
+};
 
 const isHoveringPin = (pin: Pin): boolean => {
     const device = getDevice(pin.deviceID);
     const dx = MOUSE.x - (pin.offsetX + device.x);
     const dy = MOUSE.y - (pin.offsetY + device.y);
-
     return Math.hypot(dx, dy) <= 5;
-}
+};
 
 const getPin = (pinID: number): Pin => {
     return CIRCUIT.pins.get(pinID)!;
-}
+};
 
 const getDevice = (deviceID: number): Device => {
     return CIRCUIT.devices.get(deviceID)!;
-}
+};
 
 const getPinX = (pin: Pin): number => {
-    return (getDevice(pin.deviceID).x + pin.offsetX);
-}
+    return getDevice(pin.deviceID).x + pin.offsetX;
+};
+
 const getPinY = (pin: Pin): number => {
-    return (getDevice(pin.deviceID).y + pin.offsetY);
-}
+    return getDevice(pin.deviceID).y + pin.offsetY;
+};
 
 export {
     resizeCanvas,
@@ -72,5 +79,7 @@ export {
     getPin,
     getDevice,
     getPinX,
-    getPinY
-}
+    getPinY,
+};
+
+export type { Point };

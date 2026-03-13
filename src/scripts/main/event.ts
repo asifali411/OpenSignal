@@ -25,15 +25,16 @@ import {
 } from "./script";
 import { saveSettings, setSetting } from "../../settings";
 import { toggleSource } from "../devices/source";
-import { toggleSwitch } from "../devices/switch";
+import { Switch, toggleSwitch } from "../devices/switch";
+import Device from "../devices/device";
 
-canvas.addEventListener("contextmenu", (e) => {
+canvas.addEventListener("contextmenu", (e: MouseEvent) => {
     e.preventDefault();
 });
 
 //========================= MOUSE ========================//
 
-canvas.addEventListener("mousedown", (e) => {
+canvas.addEventListener("mousedown", (e: MouseEvent) => {
     MOUSE.x = toWorld(e.offsetX, e.offsetY).x;
     MOUSE.y = toWorld(e.offsetX, e.offsetY).y;
 
@@ -44,8 +45,8 @@ canvas.addEventListener("mousedown", (e) => {
     if (e.button === 0 && WORLD.mode === MODE.PAN) {
         let isMovingCamera = true;
 
-        // if is hovering over device --> move device instead
-        CIRCUIT.devices.forEach((device: any) => {
+        // if hovering over a device --> move device instead
+        CIRCUIT.devices.forEach((device: Device) => {
             if (isHovering(device)) {
                 isMovingCamera = false;
                 WORLD.movingDevice = device;
@@ -58,12 +59,10 @@ canvas.addEventListener("mousedown", (e) => {
             WORLD.camera.lastX = e.offsetX;
             WORLD.camera.lastY = e.offsetY;
             WORLD.camera.isDragging = true;
-        } else {
-            if (WORLD.movingDevice != null) {
-                WORLD.movingDevice.isDragging = true;
-                WORLD.movingDevice.offsetX = MOUSE.x - WORLD.movingDevice.x;
-                WORLD.movingDevice.offsetY = MOUSE.y - WORLD.movingDevice.y;
-            }
+        } else if (WORLD.movingDevice != null) {
+            WORLD.movingDevice.isDragging = true;
+            WORLD.movingDevice.offsetX = MOUSE.x - WORLD.movingDevice.x;
+            WORLD.movingDevice.offsetY = MOUSE.y - WORLD.movingDevice.y;
         }
     }
 
@@ -72,37 +71,23 @@ canvas.addEventListener("mousedown", (e) => {
         let pinHovered = false;
 
         // check if hovering over any pin
-        for (const [, device] of CIRCUIT.devices) {
-            for (const pinId of device.inputPins) {
+        outer: for (const [, device] of CIRCUIT.devices) {
+            for (const pinId of [...device.inputPins, ...device.outputPins, ...device.in_outPins]) {
                 if (isHoveringPin(getPin(pinId))) {
                     pinHovered = true;
-                    break;
+                    break outer;
                 }
             }
-            for (const pinId of device.outputPins) {
-                if (isHoveringPin(getPin(pinId))) {
-                    pinHovered = true;
-                    break;
-                }
-            }
-            for (const pinId of device.in_outPins) {
-                if (isHoveringPin(getPin(pinId))) {
-                    pinHovered = true;
-                    break;
-                }
-            }
-            if (pinHovered) break;
         }
 
         if (pinHovered) {
-            // Handle pin selection for all devices
             for (const [, device] of CIRCUIT.devices) {
                 handlePinSelection(device.inputPins);
                 handlePinSelection(device.outputPins);
                 handlePinSelection(device.in_outPins);
             }
         } else {
-            // Handle device selection only if no pin is hovered
+            // select device only if no pin is hovered
             for (const [, device] of CIRCUIT.devices) {
                 if (isHovering(device)) {
                     device.selected = !device.selected;
@@ -121,46 +106,35 @@ canvas.addEventListener("mousedown", (e) => {
                         toggleSource(device);
                         break;
                     case DEVICE.SWITCH:
-                        toggleSwitch(device as any);
+                        toggleSwitch(device as Switch);
                         break;
                 }
             }
         }
-    } else if (e.button === 2) {
-        // TODO: right click features needed
     }
+
+    // right click --> reserved for future features
 });
-canvas.addEventListener("mouseup", () => {
+
+const handleDragEnd = (_: MouseEvent): void => {
     MOUSE.isClicking.left = false;
     MOUSE.isClicking.right = false;
     if (WORLD.mode === MODE.PAN) canvas.style.cursor = "grab";
 
-    // disable dragging and panning effect on mouse up
     WORLD.camera.isDragging = false;
-    if (WORLD.movingDevice) {
+    if (WORLD.movingDevice != null) {
         WORLD.movingDevice.isDragging = false;
         if (SETTINGS.snapToGrid) snapToGrid();
         HISTORY.save(CIRCUIT);
         // TODO: render undo-redo button here
     }
     WORLD.movingDevice = null;
-});
-canvas.addEventListener("mouseleave", () => {
-    MOUSE.isClicking.left = false;
-    MOUSE.isClicking.right = false;
-    if (WORLD.mode === MODE.PAN) canvas.style.cursor = "grab";
+};
 
-    // disable dragging and panning effect on mouse leave
-    WORLD.camera.isDragging = false;
-    if (WORLD.movingDevice) {
-        WORLD.movingDevice.isDragging = false;
-        if (SETTINGS.snapToGrid) snapToGrid();
-        HISTORY.save(CIRCUIT);
-        // TODO: render undo-redo button here
-    }
-    WORLD.movingDevice = null;
-});
-canvas.addEventListener("mousemove", (e) => {
+canvas.addEventListener("mouseup", handleDragEnd);
+canvas.addEventListener("mouseleave", handleDragEnd);
+
+canvas.addEventListener("mousemove", (e: MouseEvent) => {
     MOUSE.x = toWorld(e.offsetX, e.offsetY).x;
     MOUSE.y = toWorld(e.offsetX, e.offsetY).y;
 
@@ -208,7 +182,7 @@ buttons.snapToGrid.addEventListener("click", () => {
 buttons.showLabel.addEventListener("click", () => {
     SETTINGS.showLabel = !SETTINGS.showLabel;
     renderShowLabelBtn();
-    setSetting("showLabel", SETTINGS.snapToGrid);
+    setSetting("showLabel", SETTINGS.showLabel);
     saveSettings(SETTINGS);
 });
 
@@ -218,14 +192,17 @@ overlay.addEventListener("click", closeDialog);
 document
     .querySelector(".extra-device-toggle-button")
     ?.addEventListener("click", openExtraDevices);
-window.addEventListener("keydown", (e) => {
+
+window.addEventListener("keydown", (e: KeyboardEvent) => {
+    if (e.key === "Escape" && WORLD.dialog.show) {
+        closeDialog();
+        return;
+    }
+
     if (!e.ctrlKey && !e.shiftKey) {
         switch (e.key) {
-            case "Escape":
-                if (WORLD.dialog.show) closeDialog();
-                break;
-            case "P":
             case "p":
+            case "P":
                 handleModeButtonSelection(MODE.PAN);
                 break;
             case "e":
@@ -236,23 +213,17 @@ window.addEventListener("keydown", (e) => {
             case "S":
                 handleModeButtonSelection(MODE.SIMULATE);
                 break;
-            case "Delete":
-                const devicesTodelete = [];
+            case "Delete": {
+                const devicesToDelete: number[] = [];
                 for (const [deviceID, device] of CIRCUIT.devices) {
-                    if (device.selected) {
-                        devicesTodelete.push(deviceID);
-                    }
+                    if (device.selected) devicesToDelete.push(deviceID);
                 }
-
-                devicesTodelete.forEach((deviceID) => {
+                devicesToDelete.forEach((deviceID) => {
                     deleteDevice(getDevice(deviceID));
                 });
                 break;
+            }
         }
-    }
-
-    if (e.key === "Escape") {
-        if (WORLD.dialog.show) closeDialog();
     }
 
     if (e.ctrlKey) {
@@ -263,7 +234,6 @@ window.addEventListener("keydown", (e) => {
             case "=":
                 zoomIN();
                 break;
-
             case "z":
             case "Z":
                 Object.assign(CIRCUIT, HISTORY.undo());
@@ -272,7 +242,6 @@ window.addEventListener("keydown", (e) => {
             case "Y":
                 Object.assign(CIRCUIT, HISTORY.redo());
                 break;
-
             case ",":
             case "ArrowLeft":
                 changeMode(-1);
@@ -284,20 +253,17 @@ window.addEventListener("keydown", (e) => {
         }
     }
 });
+
 window.addEventListener("resize", () => {
     reRenderDeviceBar();
 });
 
 //========================= DEBUG ========================//
 
-window.addEventListener("keydown", (e) => {
-    if (!(e.ctrlKey && e.key === "/")) return;
-
-    console.log(CIRCUIT);
+window.addEventListener("keydown", (e: KeyboardEvent) => {
+    if (e.ctrlKey && e.key === "/") console.log(CIRCUIT);
 });
 
-window.addEventListener("keydown", (e) => {
-    if (!(e.ctrlKey && e.key === "1")) return;
-
-    console.log(HISTORY);
+window.addEventListener("keydown", (e: KeyboardEvent) => {
+    if (e.ctrlKey && e.key === "1") console.log(HISTORY);
 });

@@ -16,7 +16,7 @@ import { Switch } from "../devices/switch";
 const DRAW = new Draw();
 const CREATE = new Create();
 
-const drawDevices = () => {
+const drawDevices = (): void => {
     CIRCUIT.devices.forEach((device: Device) => {
         if (!isOutOfCanvas(device)) {
             switch (device.name) {
@@ -27,7 +27,7 @@ const drawDevices = () => {
                     DRAW.bulb(device);
                     break;
                 case DEVICE.SWITCH:
-                    DRAW.keySwitch(device as any);
+                    DRAW.keySwitch(device as Switch);
                     break;
                 case DEVICE.AND:
                     DRAW.and(device);
@@ -53,7 +53,8 @@ const drawDevices = () => {
             }
         }
     });
-}
+};
+
 const updateDevice = (device: Gate | Device): number => {
     switch (device.name) {
         case DEVICE.AND:
@@ -73,9 +74,10 @@ const updateDevice = (device: Gate | Device): number => {
     }
 
     return -1;
-}
-const deleteDevice = (device: Device | Gate | Switch) => {
-    const pinIDsToDelete = [
+};
+
+const deleteDevice = (device: Device | Gate | Switch): void => {
+    const pinIDsToDelete: number[] = [
         ...device.inputPins,
         ...device.outputPins,
         ...device.in_outPins
@@ -85,7 +87,7 @@ const deleteDevice = (device: Device | Gate | Switch) => {
     for (const pinID of device.outputPins) {
         const pin = getPin(pinID);
         Pin.setValue(pin, VALUE.Z);
-        if (pin.netID) {
+        if (pin.netID != null) {
             netsToUpdate.add(pin.netID);
         }
     }
@@ -178,7 +180,8 @@ const handleDeviceElementClick = (deviceName: DEVICE): void => {
 
     if (SETTINGS.snapToGrid) snapToGrid();
     HISTORY.save(CIRCUIT);
-}
+};
+
 const createDeviceBar = (): void => {
     const maxSize = Math.min(Math.floor(deviceBar.getBoundingClientRect().width / 60), DEVICES.length);
     
@@ -215,56 +218,60 @@ const createDeviceBar = (): void => {
     deviceBTN.addEventListener('click', () => {
         openExtraDevices();
     });
-}
+};
+
 const reRenderDeviceBar = (): void => {
-    const visibleDevices = Array(...document.querySelectorAll(".device-bar .device"));
-    
-    visibleDevices.forEach(device => {
+    document.querySelectorAll<HTMLElement>(".device-bar .device").forEach(device => {
         device.remove();
-    })
+    });
     
     createDeviceBar();
-}
+};
+
 const createExtraDeviceDialog = (): void => {
-    for(let i = 0; i < DEVICES.length; i++){
+    for (let i = 0; i < DEVICES.length; i++) {
         extraDevices.innerHTML += `
             <button class="device" title="${DEVICES[i].name}" idx="${i}">
                 <img src="${DEVICES[i].img}">
             </button>
         `;
     }
-}
+};
 
 //========================= ZOOM IN OUT ========================//
 
 const setZoomPercentage = (): void => {
     const percentage = Math.round(WORLD.camera.zoom * 100);
     document.querySelector('.zoom-percentage')!.textContent = `${percentage}%`;
-}
+};
+
 const zoomIN = (): void => {
-    if(WORLD.camera.zoom >= 4) return;
+    if (WORLD.camera.zoom >= 4) return;
     WORLD.camera.zoom += 0.1;
     setZoomPercentage();
-}
+};
+
 const zoomOUT = (): void => {
-    if(WORLD.camera.zoom <= 0.2) return;
+    if (WORLD.camera.zoom <= 0.2) return;
     WORLD.camera.zoom -= 0.1;
     setZoomPercentage();
-}
+};
 
 //========================= DIALOG BOX ========================//
 
-const closeExtraDevices = () => extraDeviceDialog.classList.add('hidden');
-const closeDialog = () => {
+const closeExtraDevices = (): void => extraDeviceDialog.classList.add('hidden');
+
+const closeDialog = (): void => {
     WORLD.dialog.show = false;
     overlay.classList.add('hidden');
     closeExtraDevices();
-}
-const openExtraDevices = () => {
+};
+
+const openExtraDevices = (): void => {
     extraDeviceDialog.classList.remove('hidden');
     WORLD.dialog.show = true;
     overlay.classList.remove('hidden');
-}
+};
 
 //========================= MODE ========================//
 
@@ -272,7 +279,6 @@ const renderModeBtn = (): void => {
     document.querySelectorAll('.mode button').forEach(tool => {
         tool.classList.remove('selected');
     });
-
 
     switch (WORLD.mode) {
         case MODE.PAN:
@@ -285,9 +291,10 @@ const renderModeBtn = (): void => {
             buttons.simulate.classList.add('selected');
             break;
     }
-}
+};
+
 const changeMode = (idx: number): void => {
-    const modes = [MODE.PAN, MODE.EDIT, MODE.SIMULATE];
+    const modes: MODE[] = [MODE.PAN, MODE.EDIT, MODE.SIMULATE];
 
     const currentIndex = modes.indexOf(WORLD.mode);
     const newIndex = (currentIndex + idx + modes.length) % modes.length;
@@ -305,9 +312,9 @@ const changeMode = (idx: number): void => {
     }
 
     renderModeBtn();
-}
-const handleModeButtonSelection = (mode: MODE): void => {
+};
 
+const handleModeButtonSelection = (mode: MODE): void => {
     buttons.pan.setAttribute("aria-pressed", "false");
     buttons.edit.setAttribute("aria-pressed", "false");
     buttons.simulate.setAttribute("aria-pressed", "false");
@@ -316,82 +323,72 @@ const handleModeButtonSelection = (mode: MODE): void => {
         case MODE.PAN:
             WORLD.mode = MODE.PAN;
             canvas.style.cursor = 'grab';
-
             buttons.pan.setAttribute("aria-pressed", "true");
             break;
         case MODE.EDIT:
             WORLD.mode = MODE.EDIT;
             canvas.style.cursor = 'default';
-
             buttons.edit.setAttribute("aria-pressed", "true");
             break;
         case MODE.SIMULATE:
             WORLD.mode = MODE.SIMULATE;
             canvas.style.cursor = 'pointer';
-
             buttons.simulate.setAttribute("aria-pressed", "true");
             break;
     }
     renderModeBtn();
-}
+};
 
 //========================= UNDO REDO ========================//
 
-const renderUndoRedoBtn = () => {
-    if (HISTORY.undoStack.length <= 1) {
-        buttons.undo.disabled = true;
-    } else {
-        buttons.undo.disabled = false;
-    }
-
-    if (HISTORY.redoStack.length === 0) {
-        buttons.redo.disabled = true;
-    } else {
-        buttons.redo.disabled = false;
-    }
-}
+const renderUndoRedoBtn = (): void => {
+    buttons.undo.disabled = HISTORY.undoStack.length <= 1;
+    buttons.redo.disabled = HISTORY.redoStack.length === 0;
+};
 
 //========================= SNAP TO GRID ====================//
 
-const snapToGrid = () => {
-    CIRCUIT.devices.forEach((device: any) => {
+const snapToGrid = (): void => {
+    CIRCUIT.devices.forEach((device: Device) => {
         const newX = Math.round(device.x / (tileSize / 2)) * (tileSize / 2);
         const newY = Math.round(device.y / (tileSize / 2)) * (tileSize / 2);
 
         device.x = Math.floor(newX);
         device.y = Math.floor(newY);
     });
-}
-const renderSnapToGridBtn = () => {
+};
+
+const renderSnapToGridBtn = (): void => {
     if (SETTINGS.snapToGrid) {
         buttons.snapToGrid.classList.add('selected');
     } else {
         buttons.snapToGrid.classList.remove('selected');
     }
-}
+};
 
 //========================= SHOW LABEL ====================//
 
-const renderShowLabelBtn = () => {
+const renderShowLabelBtn = (): void => {
     if (SETTINGS.showLabel) {
         buttons.showLabel.classList.add('selected');
     } else {
         buttons.showLabel.classList.remove('selected');
     }
-}
+};
 
 //========================= DRAW ====================//
 
-const isOutOfCanvas = (device: Device) => {
-    const startX = Math.floor((WORLD.camera.x - canvas.width * (1/WORLD.camera.zoom)));
+const isOutOfCanvas = (device: Device): boolean => {
+    const startX = Math.floor((WORLD.camera.x - canvas.width * (1 / WORLD.camera.zoom)));
     const endX = Math.floor((WORLD.camera.x + canvas.width * (1 / WORLD.camera.zoom)));
 
     const startY = Math.floor((WORLD.camera.y - canvas.height * (1 / WORLD.camera.zoom)));
     const endY = Math.floor((WORLD.camera.y + canvas.height * (1 / WORLD.camera.zoom)));
 
     return !(device.x >= startX && device.x <= endX && device.y >= startY && device.y <= endY);
-}
-const drawWire = (ctx: any) => {
+};
+
+const drawWire = (ctx: CanvasRenderingContext2D): void => {
     ctx.strokeStyle = "#000";
     ctx.lineWidth = 3;
 
@@ -399,7 +396,6 @@ const drawWire = (ctx: any) => {
 
     for (const [pinID, pin] of CIRCUIT.pins) {
         for (const connectedPinID of pin.connectedPins) {
-
             const connectionKey = [pinID, connectedPinID].sort().join("-");
 
             if (drawnConnections.has(connectionKey)) continue;
@@ -419,41 +415,39 @@ const drawWire = (ctx: any) => {
 
 //========================= PINS ====================//
 
-const drawPinHovering = (pin: Pin, ctx: any) => {
+const drawPinHovering = (pin: Pin, ctx: CanvasRenderingContext2D): void => {
     if (!isHoveringPin(pin)) return;
-    if (!(WORLD.mode === MODE.EDIT)) return;
+    if (WORLD.mode !== MODE.EDIT) return;
 
     ctx.beginPath();
-
     ctx.globalAlpha = 0.3;
     ctx.fillStyle = "#ddddfe";
     ctx.strokeStyle = "#ddddfe";
-
     ctx.roundRect(getPinX(pin) - 10, getPinY(pin) - 10, 20, 20, 5);
     ctx.fill();
-    
+
     ctx.globalAlpha = 1;
     ctx.lineWidth = 2;
     ctx.stroke();
-}
-const drawPinSelection = (pin: Pin, ctx: any) => {
+};
+
+const drawPinSelection = (pin: Pin, ctx: CanvasRenderingContext2D): void => {
     if (!pin.selected) return;
 
     ctx.beginPath();
-
     ctx.globalAlpha = 0.3;
     ctx.fillStyle = "#ddddfe";
     ctx.strokeStyle = "#ddddfe";
-
     ctx.roundRect(getPinX(pin) - 10, getPinY(pin) - 10, 20, 20, 5);
     ctx.fill();
-    
+
     ctx.globalAlpha = 1;
     ctx.lineWidth = 2;
     ctx.stroke();
-}
-const handlePinSelection = (pins: number[]) => {
-    for (let i = 0; i < pins.length; i++){
+};
+
+const handlePinSelection = (pins: number[]): void => {
+    for (let i = 0; i < pins.length; i++) {
         const pin = getPin(pins[i]);
 
         if (isHoveringPin(pin)) {
@@ -461,6 +455,7 @@ const handlePinSelection = (pins: number[]) => {
             // check explicitly against null since pin IDs start at 0
             if (WORLD.pin.selected !== null) {
                 const selectedPin = getPin(WORLD.pin.selected);
+
                 if (WORLD.pin.selected === pins[i]) {
                     // clicked the same pin again, cancel selection
                     getPin(WORLD.pin.selected).selected = false;
@@ -476,7 +471,7 @@ const handlePinSelection = (pins: number[]) => {
                     addToNet(selectedPin, newNet);
                     CIRCUIT.nets.set(newNet.id, newNet);
                 } else if (pin.netID == null) {
-                    addToNet(pin, CIRCUIT.nets.get(selectedPin.netID!)!)
+                    addToNet(pin, CIRCUIT.nets.get(selectedPin.netID!)!);
                 } else if (selectedPin.netID == null) {
                     addToNet(selectedPin, CIRCUIT.nets.get(pin.netID!)!);
                 } else if (pin.netID !== selectedPin.netID) {
@@ -487,11 +482,10 @@ const handlePinSelection = (pins: number[]) => {
                     SOLVER.SolveCircuit(CIRCUIT.nets.get(pin.netID!)! ?? CIRCUIT.nets.get(selectedPin.netID!)!);
                 }
 
-                
                 getPin(WORLD.pin.selected).selected = false;
                 pin.selected = false;
                 WORLD.pin.selected = null;
-                
+
                 HISTORY.save(CIRCUIT);
                 break;
             }
@@ -500,7 +494,7 @@ const handlePinSelection = (pins: number[]) => {
             WORLD.pin.selected = pin.selected ? pin.id : null;
         }
     }
-}
+};
 
 export {
     createDeviceBar,

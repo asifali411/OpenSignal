@@ -104,7 +104,7 @@ export async function initSettings() {
     await appAdapter.init();
     adapter = appAdapter;
   } else {
-    console.log("Running in browser mode\nDatabase: localStorage");
+    console.log("Running in browser mode");
     adapter = new BrowserSettingsAdapter();
   }
 }
