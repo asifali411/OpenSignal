@@ -141,6 +141,26 @@ const deleteDevice = (device: Device | Gate | Switch): void => {
 
 //========================= DEVICE BAR ========================//
 
+const createExtraDeviceDialog = (): void => {
+    for (let i = 0; i < DEVICES.length; i++) {
+
+        const deviceBTN: HTMLButtonElement = document.createElement("button");
+        deviceBTN.classList.add("device");
+        deviceBTN.title = DEVICES[i].name;
+
+        const deviceIMG: HTMLImageElement = document.createElement("img");
+        deviceIMG.src = DEVICES[i].img;
+
+        deviceBTN.append(deviceIMG);
+        extraDevices.append(deviceBTN);
+
+        deviceBTN.addEventListener('click', () => {
+            closeDialog();
+            handleDeviceElementClick(DEVICES[i].name);
+        });
+    }
+};
+
 const handleDeviceElementClick = (deviceName: DEVICE): void => {
     switch (deviceName) {
         case DEVICE.SOURCE:
@@ -207,7 +227,7 @@ const createDeviceBar = (): void => {
     const deviceBTN: HTMLButtonElement = document.createElement('button');
     deviceBTN.classList.add("device");
     deviceBTN.classList.add("extra-device-toggle-button");
-    deviceBTN.title = "All components";
+    deviceBTN.title = "All Devices";
 
     const deviceIMG: HTMLImageElement = document.createElement("img");
     deviceIMG.src = "../src/assets/ellipsis.svg";
@@ -226,16 +246,6 @@ const reRenderDeviceBar = (): void => {
     });
     
     createDeviceBar();
-};
-
-const createExtraDeviceDialog = (): void => {
-    for (let i = 0; i < DEVICES.length; i++) {
-        extraDevices.innerHTML += `
-            <button class="device" title="${DEVICES[i].name}" idx="${i}">
-                <img src="${DEVICES[i].img}">
-            </button>
-        `;
-    }
 };
 
 //========================= ZOOM IN OUT ========================//

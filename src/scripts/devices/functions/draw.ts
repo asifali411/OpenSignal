@@ -1,6 +1,6 @@
 import { ctx } from "../../main/reference";
-import { CIRCUIT, DEVICE, MODE, SETTINGS, SPRITES, VALUE, WORLD, deviceSize } from "../../main/setup";
-import { getPin, getPinX, getPinY, isHovering } from "../../main/util";
+import { CIRCUIT, DEVICE, SETTINGS, SPRITES, VALUE, deviceSize } from "../../main/setup";
+import { getPin, getPinX, getPinY } from "../../main/util";
 
 import { Source } from "../source";
 import Bulb from "../bulb";
@@ -23,25 +23,6 @@ class Draw {
         ctx.beginPath();
 
         ctx.globalAlpha = 0.7;
-        ctx.fillStyle = "#ddddfe";
-        ctx.strokeStyle = "#ddddfe";
-
-        ctx.roundRect(device.x, device.y, deviceSize, deviceSize, 5);
-        ctx.fill();
-        
-        ctx.globalAlpha = 1;
-        ctx.lineWidth = 2;
-        ctx.stroke();
-    }
-
-    private handleDeviceHovering(device: any) {
-
-        if (!isHovering(device)) return;
-        if (!(WORLD.mode === MODE.EDIT)) return;
-
-        ctx.beginPath();
-
-        ctx.globalAlpha = 0.3;
         ctx.fillStyle = "#ddddfe";
         ctx.strokeStyle = "#ddddfe";
 
@@ -120,7 +101,6 @@ class Draw {
         ctx.fill();
         
         this.handleDeviceSelection(device);
-        this.handleDeviceHovering(device);
         this.handleDeviceLabel(device);
         this.drawPin(device);
     }
@@ -136,7 +116,6 @@ class Draw {
         }
 
         this.handleDeviceSelection(device);
-        this.handleDeviceHovering(device);
         this.handleDeviceLabel(device);
         this.drawPin(device);
     }
@@ -154,7 +133,6 @@ class Draw {
         ctx.fill();
 
         this.handleDeviceSelection(device);
-        this.handleDeviceHovering(device);
         this.handleDeviceLabel(device);
         this.drawPin(device);
     }
@@ -163,7 +141,6 @@ class Draw {
         ctx.drawImage(SPRITES[DEVICE.AND], device.x, device.y, deviceSize, deviceSize);
 
         this.handleDeviceSelection(device);
-        this.handleDeviceHovering(device);
         this.handleDeviceLabel(device);
         this.drawPin(device);
     }
@@ -172,7 +149,6 @@ class Draw {
         ctx.drawImage(SPRITES[DEVICE.OR], device.x, device.y, deviceSize, deviceSize);
 
         this.handleDeviceSelection(device);
-        this.handleDeviceHovering(device);
         this.handleDeviceLabel(device);
         this.drawPin(device);
     }
@@ -181,7 +157,6 @@ class Draw {
         ctx.drawImage(SPRITES[DEVICE.NOT], device.x, device.y, deviceSize, deviceSize);
 
         this.handleDeviceSelection(device);
-        this.handleDeviceHovering(device);
         this.handleDeviceLabel(device);
         this.drawPin(device);
     }
@@ -190,7 +165,6 @@ class Draw {
         ctx.drawImage(SPRITES[DEVICE.XOR], device.x, device.y, deviceSize, deviceSize);
 
         this.handleDeviceSelection(device);
-        this.handleDeviceHovering(device);
         this.handleDeviceLabel(device);
         this.drawPin(device);
     }
@@ -199,7 +173,6 @@ class Draw {
         ctx.drawImage(SPRITES[DEVICE.NAND], device.x, device.y, deviceSize, deviceSize);
 
         this.handleDeviceSelection(device);
-        this.handleDeviceHovering(device);
         this.handleDeviceLabel(device);
         this.drawPin(device);
     }
@@ -208,7 +181,6 @@ class Draw {
         ctx.drawImage(SPRITES[DEVICE.NOR], device.x, device.y, deviceSize, deviceSize);
 
         this.handleDeviceSelection(device);
-        this.handleDeviceHovering(device);
         this.handleDeviceLabel(device);
         this.drawPin(device);
     }
@@ -217,7 +189,6 @@ class Draw {
         ctx.drawImage(SPRITES[DEVICE.XNOR], device.x, device.y, deviceSize, deviceSize);
 
         this.handleDeviceSelection(device);
-        this.handleDeviceHovering(device);
         this.handleDeviceLabel(device);
         this.drawPin(device);
     }
