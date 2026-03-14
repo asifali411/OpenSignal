@@ -15,6 +15,7 @@ class HistoryManager {
 
         this.undoStack.push(structuredClone(circuit));
         this.redoStack = [];
+        // TODO: render undo redo button here
     }
 
     undo() {

@@ -14,7 +14,6 @@ const maxDelta: number = 100;
 //=================== TYPES ===================//
 
 enum MODE {
-    PAN,
     EDIT,
     SIMULATE
 }
@@ -118,7 +117,7 @@ const DEVICES = [
 ];
 
 const WORLD:World = {
-    mode: MODE.PAN,
+    mode: MODE.EDIT,
     movingDevice: null,
     pin: {
         selected: null
@@ -139,6 +138,8 @@ const WORLD:World = {
 const MOUSE = {
     x: 0,
     y: 0,
+    lastX: 0,
+    lastY: 0,
     isClicking: {
         right: false,
         left: false

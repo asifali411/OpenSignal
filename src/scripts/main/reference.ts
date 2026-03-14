@@ -9,7 +9,6 @@ const fpsText = document.querySelector('.fps')!;
 const buttons = {
     undo: document.querySelector<HTMLButtonElement>('.undo')!,
     redo: document.querySelector<HTMLButtonElement>('.redo')!,
-    pan: document.querySelector<HTMLButtonElement>('.pan')!,
     simulate: document.querySelector<HTMLButtonElement>('.simulate')!,
     edit: document.querySelector<HTMLButtonElement>('.edit')!,
     zoomIn: document.querySelector<HTMLButtonElement>('.zoom-in')!,

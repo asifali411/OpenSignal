@@ -1,5 +1,5 @@
 import { canvas, ctx, fpsText } from "./scripts/main/reference";
-import { WORLD } from "./scripts/main/setup";
+import { MOUSE, WORLD } from "./scripts/main/setup";
 import { resizeCanvas, createGrid } from "./scripts/main/util";
 import {
     createDeviceBar,
@@ -11,11 +11,13 @@ import {
     renderUndoRedoBtn
 } from "./scripts/main/script";
 import "./scripts/main/event";
+import  registerEvents from "./scripts/main/event";
 
 createDeviceBar();
 createExtraDeviceDialog();
 renderSnapToGridBtn();
 renderShowLabelBtn();
+registerEvents();
 
 let lastTime = performance.now();
 let fps = 60;
@@ -43,6 +45,15 @@ const render = () => {
     ctx.translate(-WORLD.camera.x, -WORLD.camera.y);
 
     createGrid();
+
+    if(MOUSE.isClicking.left && WORLD.movingDevice == null){
+        const dx = MOUSE.x - MOUSE.lastX;
+        const dy = MOUSE.y - MOUSE.lastY;
+        ctx.beginPath();
+        ctx.roundRect(MOUSE.lastX, MOUSE.lastY, dx, dy, 5);
+        ctx.strokeStyle = "#333";
+        ctx.stroke();
+    }
 
     drawWire(ctx);
 

@@ -281,9 +281,6 @@ const renderModeBtn = (): void => {
     });
 
     switch (WORLD.mode) {
-        case MODE.PAN:
-            buttons.pan.classList.add('selected');
-            break;
         case MODE.EDIT:
             buttons.edit.classList.add('selected');
             break;
@@ -294,7 +291,7 @@ const renderModeBtn = (): void => {
 };
 
 const changeMode = (idx: number): void => {
-    const modes: MODE[] = [MODE.PAN, MODE.EDIT, MODE.SIMULATE];
+    const modes: MODE[] = [MODE.EDIT, MODE.SIMULATE];
 
     const currentIndex = modes.indexOf(WORLD.mode);
     const newIndex = (currentIndex + idx + modes.length) % modes.length;
@@ -302,10 +299,9 @@ const changeMode = (idx: number): void => {
     WORLD.mode = modes[newIndex];
 
     switch (WORLD.mode) {
-        case MODE.PAN:
-            canvas.style.cursor = 'grab';
-            break;
         case MODE.EDIT:
+            canvas.style.cursor = 'default';
+            break;
         case MODE.SIMULATE:
             canvas.style.cursor = 'pointer';
             break;
@@ -315,16 +311,10 @@ const changeMode = (idx: number): void => {
 };
 
 const handleModeButtonSelection = (mode: MODE): void => {
-    buttons.pan.setAttribute("aria-pressed", "false");
     buttons.edit.setAttribute("aria-pressed", "false");
     buttons.simulate.setAttribute("aria-pressed", "false");
 
     switch (mode) {
-        case MODE.PAN:
-            WORLD.mode = MODE.PAN;
-            canvas.style.cursor = 'grab';
-            buttons.pan.setAttribute("aria-pressed", "true");
-            break;
         case MODE.EDIT:
             WORLD.mode = MODE.EDIT;
             canvas.style.cursor = 'default';

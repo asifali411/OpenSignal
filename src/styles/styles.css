@@ -52,13 +52,13 @@ button:disabled {
   cursor: not-allowed;
 }
 
-canvas {
+/* canvas {
   cursor: grab;
 }
 
 canvas:active {
   cursor: grabbing;
-}
+} */
 
 .hidden {
   display: none !important;
