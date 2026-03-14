@@ -26,6 +26,7 @@
 
   <link rel="stylesheet" href="./src/styles/styles.css" />
   <link rel="stylesheet" href="./src/styles/hover.css" />
+  <link rel="stylesheet" href="./src/styles/details.css">
 
   <script type="module" src="./src/main.ts" defer></script>
 </head>
@@ -118,6 +119,9 @@
   <!-- Dialog Overlay -->
   <div class="overlay hidden" aria-hidden="true"></div>
 
+  <!-- Transparent Overlay -->
+  <div class="transparent-overlay hidden" aria-hidden="true"></div>
+
   <!-- Devices Dialog -->
   <div class="dialog extra-devices-dialog hidden" role="dialog" aria-modal="true"
     aria-labelledby="devices-dialog-title">
@@ -127,6 +131,12 @@
     <div class="extra-devices" role="list">
     </div>
 
+  </div>
+
+  <!-- Context Dialog -->
+  <div class="context hidden" inert="true" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="see-details context-element"> See details </div>
+    <div class="delete-device context-element"> Delete </div>
   </div>
 
   <!-- Debug Info -->

@@ -4,17 +4,18 @@ import { resizeCanvas, createGrid } from "./scripts/main/util";
 import {
     createDeviceBar,
     createExtraDeviceDialog,
+    setupContextMenuListeners,
     drawDevices,
     drawWire,
     renderShowLabelBtn,
-    renderSnapToGridBtn,
-    renderUndoRedoBtn
+    renderSnapToGridBtn
 } from "./scripts/main/script";
 import "./scripts/main/event";
 import  registerEvents from "./scripts/main/event";
 
 createDeviceBar();
 createExtraDeviceDialog();
+setupContextMenuListeners();
 renderSnapToGridBtn();
 renderShowLabelBtn();
 registerEvents();
@@ -59,8 +60,6 @@ const render = () => {
 
     // render components
     drawDevices();
-
-    renderUndoRedoBtn(); // TODO: do not render this at every frame. instead render the component on change.
 
     ctx.restore();
     lastTime = performance.now();

@@ -38,6 +38,13 @@ const toWorld = (x: number, y: number): Point => {
     };
 };
 
+const toScreen = (x: number, y: number): Point => {
+    return {
+        x: (x - WORLD.camera.x) * WORLD.camera.zoom + canvas.width / 2,
+        y: (y - WORLD.camera.y) * WORLD.camera.zoom + canvas.height / 2,
+    };
+};
+
 const isHovering = (device: Device): boolean => {
     return (
         MOUSE.x >= device.x &&
@@ -74,6 +81,7 @@ export {
     resizeCanvas,
     createGrid,
     toWorld,
+    toScreen,
     isHovering,
     isHoveringPin,
     getPin,

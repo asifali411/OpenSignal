@@ -1,0 +1,42 @@
+.context{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    padding: 0.4rem;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    z-index: 999;
+    background-color: #fff;
+}
+
+.transparent-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: transparent;
+    z-index: 998;
+}
+
+.hidden {
+    display: none;
+}
+
+.context-element{
+    padding: 0.3rem 1rem;
+    border-radius: 5px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    -moz-user-select: none;
+    cursor: pointer;
+    color: #333;
+}
+
+.context-element:hover{
+    background-color: #ddddfe;
+}
+
+.delete-device{
+    color: tomato;
+}

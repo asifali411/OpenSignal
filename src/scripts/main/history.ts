@@ -1,3 +1,5 @@
+import { renderUndoRedoBtn } from "./script";
+
 class HistoryManager {
     
     public undoStack: any;
@@ -15,13 +17,14 @@ class HistoryManager {
 
         this.undoStack.push(structuredClone(circuit));
         this.redoStack = [];
-        // TODO: render undo redo button here
+        renderUndoRedoBtn();
     }
 
     undo() {
         if (this.undoStack.length <= 1) return;
         
         this.redoStack.push(this.undoStack.pop());
+        renderUndoRedoBtn();
         return structuredClone(
             this.undoStack[this.undoStack.length - 1]
         );
@@ -32,7 +35,7 @@ class HistoryManager {
 
         const state = structuredClone(this.redoStack.pop());
         this.undoStack.push(state);
-
+        renderUndoRedoBtn();
         return state;
     }
 }

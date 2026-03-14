@@ -1,7 +1,7 @@
 import { canvas } from "../main/reference";
-import { MOUSE, WORLD, MODE, CIRCUIT, SETTINGS, DEVICE, HISTORY } from "../main/setup";
-import { toWorld, isHovering, isHoveringPin, getPin } from "../main/util";
-import { snapToGrid, handlePinSelection } from "../main/script";
+import { MOUSE, WORLD, MODE, CIRCUIT, SETTINGS, DEVICE, HISTORY, deviceSize } from "../main/setup";
+import { toWorld, isHovering, isHoveringPin, getPin, toScreen } from "../main/util";
+import { snapToGrid, handlePinSelection, openContextDialog } from "../main/script";
 import { toggleSource } from "../devices/source";
 import { Switch, toggleSwitch } from "../devices/switch";
 
@@ -103,8 +103,12 @@ const handleLeftClick = () => {
 
 const handleRightClick = () => {
     for(const [, device] of CIRCUIT.devices){
+        device.selected = false;
+    }
+    for(const [, device] of CIRCUIT.devices){
         if(isHovering(device)){
-            // TODO: handle right click dialogue
+            device.selected = true;
+            openContextDialog(toScreen(device.x + deviceSize, device.y + deviceSize));
             break;
         }
     }

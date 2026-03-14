@@ -1,4 +1,4 @@
-import { overlay } from "../main/reference";
+import { overlay, transparentOverlay } from "../main/reference";
 import { getDevice } from "../main/util";
 import { 
     closeDialog, 
@@ -72,6 +72,8 @@ const handleKeyDown = (e: KeyboardEvent) => {
 
 export const registerWindowEvents = () => {
     overlay.addEventListener("click", closeDialog);
+    transparentOverlay.addEventListener("click", closeDialog);
+    transparentOverlay.addEventListener("contextmenu", (e: MouseEvent) => { e.preventDefault(); });
     document.querySelector(".extra-device-toggle-button")?.addEventListener("click", openExtraDevices);
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("resize", reRenderDeviceBar);

@@ -1,10 +1,10 @@
-import { deviceBar, extraDevices, buttons, canvas, extraDeviceDialog, overlay } from "./reference";
+import { deviceBar, extraDevices, buttons, canvas, extraDeviceDialog, overlay, contextDialog, transparentOverlay, seeDetailsBtn, deleteDeviceBtn } from "./reference";
 import { DEVICES, WORLD, MODE, CIRCUIT, HISTORY, tileSize, SETTINGS, DEVICE, SOLVER, VALUE } from "./setup";
 
 import Draw from "../devices/functions/draw";
 import Create from "../devices/functions/create";
 import Device from "../devices/device";
-import { getPin, getPinX, getPinY, isHoveringPin } from "./util";
+import { getDevice, getPin, getPinX, getPinY, isHoveringPin, Point } from "./util";
 import Pin from "../devices/functions/pin";
 import { addToNet, combineNets, Net, removeFromNet } from "../../solver/net";
 import Gate from "../devices/gate";
@@ -161,6 +161,23 @@ const createExtraDeviceDialog = (): void => {
     }
 };
 
+const setupContextMenuListeners = (): void => {
+    seeDetailsBtn.addEventListener('click', () => {
+        console.log('See details clicked');
+        closeDialog();
+    });
+
+    deleteDeviceBtn.addEventListener('click', () => {
+        for (const [deviceID, device] of CIRCUIT.devices) {
+            if (device.selected) {
+                deleteDevice(getDevice(deviceID));
+                break;
+            }
+        }
+        closeDialog();
+    });
+};
+
 const handleDeviceElementClick = (deviceName: DEVICE): void => {
     switch (deviceName) {
         case DEVICE.SOURCE:
@@ -270,11 +287,22 @@ const zoomOUT = (): void => {
 //========================= DIALOG BOX ========================//
 
 const closeExtraDevices = (): void => extraDeviceDialog.classList.add('hidden');
+const closeContextDialog = (): void => {
+    contextDialog.classList.add('hidden');
+    contextDialog.inert = true;
+    contextDialog.setAttribute('aria-hidden', 'true');
+};
 
 const closeDialog = (): void => {
     WORLD.dialog.show = false;
     overlay.classList.add('hidden');
+    transparentOverlay.classList.add('hidden');
     closeExtraDevices();
+    closeContextDialog();
+
+    CIRCUIT.devices.forEach((device: Device) => {
+        device.selected = false;
+    });
 };
 
 const openExtraDevices = (): void => {
@@ -282,6 +310,17 @@ const openExtraDevices = (): void => {
     WORLD.dialog.show = true;
     overlay.classList.remove('hidden');
 };
+const openContextDialog = (point: Point): void => {
+    contextDialog.classList.remove('hidden');
+    WORLD.dialog.show = true;
+    transparentOverlay.classList.remove('hidden');
+
+    contextDialog.inert = false;
+    contextDialog.removeAttribute('aria-hidden');
+
+    contextDialog.style.left = `${point.x}px`;
+    contextDialog.style.top = `${point.y}px`;
+}
 
 //========================= MODE ========================//
 
@@ -500,14 +539,14 @@ export {
     createDeviceBar,
     reRenderDeviceBar,
     createExtraDeviceDialog,
-
-    handleDeviceElementClick, // debug
+    setupContextMenuListeners,
 
     zoomIN,
     zoomOUT,
 
     closeDialog,
     openExtraDevices,
+    openContextDialog,
 
     renderModeBtn,
     changeMode,
