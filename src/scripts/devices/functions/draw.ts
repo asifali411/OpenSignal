@@ -73,7 +73,7 @@ class Draw {
             drawPinHovering(pin, ctx);
             drawPinSelection(pin, ctx);
 
-            ctx.fillText(String(pin.id), getPinX(pin), getPinY(pin) - 5); //DEBUG
+            // ctx.fillText(String(pin.id), getPinX(pin), getPinY(pin) - 5); //DEBUG
             
         }
 
@@ -87,7 +87,7 @@ class Draw {
             drawPinHovering(pin, ctx);
             drawPinSelection(pin, ctx);
 
-            ctx.fillText(String(pin.id), getPinX(pin), getPinY(pin) - 5); //DEBUG
+            // ctx.fillText(String(pin.id), getPinX(pin), getPinY(pin) - 5); //DEBUG
 
         }
 
@@ -101,7 +101,7 @@ class Draw {
             drawPinHovering(pin, ctx);
             drawPinSelection(pin, ctx);
 
-            ctx.fillText(String(pin.id), getPinX(pin), getPinY(pin) - 5); //DEBUG
+            // ctx.fillText(String(pin.id), getPinX(pin), getPinY(pin) - 5); //DEBUG
 
         }
     }
