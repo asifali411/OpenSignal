@@ -86,6 +86,7 @@
     font-size: 0.6rem;
     white-space: nowrap;
     color: grey;
+    font-family: "Cascadia", sans-serif;
 }
 
 .edit::after {

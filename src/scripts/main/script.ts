@@ -1,4 +1,14 @@
-import { deviceBar, extraDevices, buttons, canvas, extraDeviceDialog, overlay, contextDialog, transparentOverlay, seeDetailsBtn, deleteDeviceBtn } from "./reference";
+import { 
+    deviceBar, 
+    extraDevices, 
+    buttons, 
+    canvas, 
+    extraDeviceDialog, 
+    overlay, 
+    contextDialog, 
+    transparentOverlay, 
+    // seeDetailsBtn,
+    deleteDeviceBtn } from "./reference";
 import { DEVICES, WORLD, MODE, CIRCUIT, HISTORY, tileSize, SETTINGS, DEVICE, SOLVER, VALUE } from "./setup";
 
 import Draw from "../devices/functions/draw";
@@ -162,10 +172,10 @@ const createExtraDeviceDialog = (): void => {
 };
 
 const setupContextMenuListeners = (): void => {
-    seeDetailsBtn.addEventListener('click', () => {
-        console.log('See details clicked');
-        closeDialog();
-    });
+    // seeDetailsBtn.addEventListener('click', () => {
+    //     console.log('See details clicked');
+    //     closeDialog();
+    // });
 
     deleteDeviceBtn.addEventListener('click', () => {
         for (const [deviceID, device] of CIRCUIT.devices) {
@@ -499,6 +509,14 @@ const handlePinSelection = (pins: number[]): void => {
                     // clicked the same pin again, cancel selection
                     getPin(WORLD.pin.selected).selected = false;
                     WORLD.pin.selected = null;
+                    break;
+                }
+
+                if(getPin(WORLD.pin.selected).connectedPins.has(pin.id)){
+                    Pin.disconnect(WORLD.pin.selected, pin.id);
+                    getPin(WORLD.pin.selected).selected = false;
+                    WORLD.pin.selected = null;
+                    HISTORY.save(CIRCUIT);
                     break;
                 }
 

@@ -40,6 +40,7 @@ class Draw {
         ctx.beginPath();
         ctx.textAlign = "center";
         ctx.fillStyle = "#333";
+        ctx.font = "10px Cascadia";
         ctx.fillText(device.name, device.x + deviceSize / 2, device.y + deviceSize + 10);
     }
 

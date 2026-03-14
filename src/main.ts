@@ -1,4 +1,4 @@
-import { canvas, ctx, fpsText } from "./scripts/main/reference";
+import { canvas, ctx, fpsText, loadingScreen, progressBar } from "./scripts/main/reference";
 import { MOUSE, WORLD } from "./scripts/main/setup";
 import { resizeCanvas, createGrid } from "./scripts/main/util";
 import {
@@ -19,6 +19,20 @@ setupContextMenuListeners();
 renderSnapToGridBtn();
 renderShowLabelBtn();
 registerEvents();
+
+progressBar.style.width = "20%";
+
+setTimeout(() => {
+    progressBar.style.width = "50%";
+}, 800);
+
+setTimeout(() => {
+    progressBar.style.width = "100%";
+}, 1300);
+
+setTimeout(() => {
+    loadingScreen.style.display = "none";
+}, 1600);
 
 let lastTime = performance.now();
 let fps = 60;

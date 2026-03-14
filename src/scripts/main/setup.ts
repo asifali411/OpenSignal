@@ -3,9 +3,9 @@ import { Net } from "../../solver/net";
 import Solver from "../../solver/solver";
 import Device from "../devices/device";
 import Pin from "../devices/functions/pin";
-await initSettings();
-
 import HistoryManager from "./history";
+
+await initSettings();
 
 const tileSize: number = 30;
 const deviceSize: number = 50;

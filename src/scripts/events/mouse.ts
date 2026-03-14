@@ -91,11 +91,19 @@ const handleLeftClick = () => {
             handlePinSelection(device.in_outPins);
         }
     } else {
+        let isDeviceSelected = false;
         // select device only if no pin is hovered
         for (const [, device] of CIRCUIT.devices) {
             if (isHovering(device)) {
                 device.selected = !device.selected;
+                isDeviceSelected = true;
                 break;
+            }
+        }
+
+        if(!isDeviceSelected){
+            for(const [, device] of CIRCUIT.devices){
+                device.selected = false;
             }
         }
     }
@@ -146,6 +154,25 @@ const handleMouseEnd = () => {
         }
         if(MOUSE.isClicking.right){
             handleRightClick();
+        }
+    }
+
+    if(MOUSE.isClicking.left && WORLD.mode === MODE.EDIT){
+        for(const [, device] of CIRCUIT.devices){
+
+            const minX = Math.min(MOUSE.lastX, MOUSE.x);
+            const maxX = Math.max(MOUSE.lastX, MOUSE.x);
+            const minY = Math.min(MOUSE.lastY, MOUSE.y);
+            const maxY = Math.max(MOUSE.lastY, MOUSE.y);
+
+            if(
+                device.x >= minX && 
+                device.x <= maxX && 
+                device.y >= minY && 
+                device.y <= maxY
+            ) {
+                device.selected = true;
+            }
         }
     }
 

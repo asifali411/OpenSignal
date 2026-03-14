@@ -7,8 +7,10 @@ const canvas = document.querySelector<HTMLCanvasElement>('canvas')!;
 const ctx = canvas.getContext('2d')!;
 const fpsText = document.querySelector('.fps')!;
 const contextDialog = document.querySelector<HTMLDivElement>('.context')!;
-const seeDetailsBtn = document.querySelector<HTMLDivElement>('.see-details')!;
+// const seeDetailsBtn = document.querySelector<HTMLDivElement>('.see-details')!;
 const deleteDeviceBtn = document.querySelector<HTMLDivElement>('.delete-device')!;
+const loadingScreen = document.querySelector<HTMLDivElement>('.loading-screen')!;
+const progressBar = document.querySelector<HTMLDivElement>('.progress')!;
 
 const buttons = {
     undo: document.querySelector<HTMLButtonElement>('.undo')!,
@@ -32,6 +34,8 @@ export {
     buttons,
     fpsText,
     contextDialog,
-    seeDetailsBtn,
-    deleteDeviceBtn
+    // seeDetailsBtn,
+    deleteDeviceBtn,
+    loadingScreen,
+    progressBar
  };

@@ -24,12 +24,18 @@
   --shadow-panel: 0 8px 25px var(--color-shadow);
 }
 
+@font-face {
+  font-family: "Cascadia";
+  src: url(../fonts/CascadiaCode-Regular.ttf);
+}
+
 body {
   margin: 0;
   overflow: hidden;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   background: var(--color-bg);
   color: var(--color-text);
+  font-family: "Cascadia", sans-serif;
 }
 
 /*==============================================================
@@ -78,6 +84,62 @@ canvas:active {
   border-radius: var(--radius-md);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
+}
+
+/*==============================================================
+  LOADING
+===============================================================*/
+
+.loading-screen{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100vh;
+  z-index: 999;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  -moz-user-select: none;
+}
+
+.logo-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #333;
+}
+
+.logo-container h1{
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.logo-container img{
+  width: 4rem;
+  height: 4rem;
+}
+
+.progress-bar{
+  margin-top: 1rem;
+  width: 250px;
+  height: 12px;
+  background-color: #ccc;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress{
+  height: 100%;
+  width: 10%;
+  border-radius: 999px;
+  background-color: #555;
+  transition: all 0.3s ease;
 }
 
 /*==============================================================
@@ -346,7 +408,7 @@ canvas:active {
 .info-bar {
   position: fixed;
   top: 2rem;
-  left: 2rem;
+  right: 2rem;
   z-index: 499;
   font-size: 0.85rem;
   opacity: 0.7;
