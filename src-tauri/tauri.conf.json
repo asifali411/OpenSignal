@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "circuit-simulator",
+  "productName": "OpenSignal",
   "version": "0.1.0",
-  "identifier": "com.circuit-simulator",
+  "identifier": "OpenSignal",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -13,7 +13,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "Circuit Simulator",
+        "title": "OpenSignal",
         "width": 1024,
         "height": 576
       }

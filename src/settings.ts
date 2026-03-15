@@ -13,7 +13,7 @@ export interface AppSettings {
 
 const DEFAULT_SETTINGS: AppSettings = {
   snapToGrid: true,
-  showLabel: false
+  showLabel: true
   // Add default settings here !IMPORTANT
 };
 
@@ -31,7 +31,7 @@ interface SettingsAdapter {
    Browser Adapter
 ========================= */
 
-const BROWSER_STORAGE_KEY = "circuit_simulator_settings";
+const BROWSER_STORAGE_KEY = "OpenLogic_Settings";
 
 class BrowserSettingsAdapter implements SettingsAdapter {
   private read(): Partial<AppSettings> {
@@ -104,7 +104,7 @@ export async function initSettings() {
     await appAdapter.init();
     adapter = appAdapter;
   } else {
-    console.log("Running in browser mode");
+    console.debug("Running in browser mode");
     adapter = new BrowserSettingsAdapter();
   }
 }

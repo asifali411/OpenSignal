@@ -12,10 +12,10 @@ export default function registerEvents () {
     //=================================== DEBUG ===================================//
     
     window.addEventListener("keydown", (e: KeyboardEvent) => {
-        if (e.ctrlKey && e.key === "/") console.log(CIRCUIT);
+        if (e.ctrlKey && e.key === "/") console.debug(CIRCUIT);
     });
     
     window.addEventListener("keydown", (e: KeyboardEvent) => {
-        if (e.ctrlKey && e.key === "1") console.log(HISTORY);
+        if (e.ctrlKey && e.key === "1") console.debug(HISTORY);
     });
 }
