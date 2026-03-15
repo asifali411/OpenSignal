@@ -16,12 +16,28 @@
   --color-shadow: rgba(0, 0, 0, 0.15);
   --color-hover: #ddddfe;
 
+  /* Accent (purple ramp) */
+  --color-accent: #7f77dd;
+  --color-accent-light: #eeedfe;
+  --color-accent-dark: #3c3489;
+  --color-accent-hover: #dddcfe;
+
+  /* Semantic */
+  --color-danger: #c0392b;
+  --color-danger-bg: #fdecea;
+  --color-muted: #555555;
+  --color-muted-light: #888888;
+  --color-surface: #f5f5f5;
+
   /* Radius */
   --radius-sm: 5px;
   --radius-md: 7px;
 
   /* Shadow */
   --shadow-panel: 0 8px 25px var(--color-shadow);
+
+  /* Focus ring */
+  --focus-ring: 0 0 0 2px var(--color-accent);
 }
 
 @font-face {
@@ -32,7 +48,6 @@
 body {
   margin: 0;
   overflow: hidden;
-  /* font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; */
   background: var(--color-bg);
   color: var(--color-text);
   font-family: "Cascadia", sans-serif;
@@ -59,13 +74,13 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* canvas {
-  cursor: grab;
+/* Visible focus ring for keyboard navigation */
+button:focus-visible,
+input:focus-visible,
+canvas:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
-
-canvas:active {
-  cursor: grabbing;
-} */
 
 .hidden {
   display: none !important;
@@ -79,7 +94,7 @@ canvas:active {
 .zoom-in-out,
 .general-settings,
 .undo-redo,
-.mode, 
+.mode,
 .context,
 .menu-bar {
   border: 1px solid var(--color-border);
@@ -93,7 +108,7 @@ canvas:active {
   LOADING
 ===============================================================*/
 
-.loading-screen{
+.loading-screen {
   position: fixed;
   top: 0;
   left: 0;
@@ -109,7 +124,7 @@ canvas:active {
   -moz-user-select: none;
 }
 
-.logo-container{
+.logo-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -118,17 +133,17 @@ canvas:active {
   color: #333;
 }
 
-.logo-container h1{
+.logo-container h1 {
   margin: 0;
   font-size: 1.5rem;
 }
 
-.logo-container img{
+.logo-container img {
   width: 4rem;
   height: 4rem;
 }
 
-.progress-bar{
+.progress-bar {
   margin-top: 1rem;
   width: 250px;
   height: 12px;
@@ -137,7 +152,7 @@ canvas:active {
   overflow: hidden;
 }
 
-.progress{
+.progress {
   height: 100%;
   width: 10%;
   border-radius: 999px;
@@ -248,7 +263,7 @@ canvas:active {
   opacity: 0.5;
 }
 
-.mode button.selected{
+.mode button.selected {
   opacity: 1;
 }
 
@@ -278,14 +293,16 @@ canvas:active {
   ZOOM
 ===============================================================*/
 
-.zoom-in-out, .general-settings {
+.zoom-in-out,
+.general-settings {
   flex-direction: column;
   gap: 0.3rem;
   padding: 0.5rem 0.4rem;
   margin-bottom: 1rem;
 }
 
-.zoom-percentage, .general-settings {
+.zoom-percentage,
+.general-settings {
   font-size: 0.8rem;
   text-align: center;
   display: flex;
@@ -297,11 +314,11 @@ canvas:active {
   SNAP TO GRID
 ===============================================================*/
 
-.snap-to-grid img{
+.snap-to-grid img {
   opacity: 0.5;
 }
 
-.snap-to-grid.selected img{
+.snap-to-grid.selected img {
   opacity: 1;
 }
 
@@ -309,7 +326,7 @@ canvas:active {
   SHOW LABEL
 ===============================================================*/
 
-.show-label img{
+.show-label img {
   opacity: 0.5;
 }
 
@@ -318,7 +335,7 @@ canvas:active {
 }
 
 /*==============================================================
-  DIALOG
+  DIALOG (shared base)
 ===============================================================*/
 
 .overlay {
@@ -340,7 +357,7 @@ canvas:active {
   z-index: 999;
 }
 
-#devices-dialog-title{
+#devices-dialog-title {
   text-align: center;
   margin: 0.2rem;
 }
@@ -389,10 +406,200 @@ canvas:active {
 }
 
 /*==============================================================
+  SAVE FILENAME DIALOG
+===============================================================*/
+
+.save-dialog {
+  width: 90%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: 1.25rem 1.5rem;
+}
+
+.save-dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.save-dialog-header h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.save-dialog-close {
+  padding: 0.3rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-muted);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.save-dialog-close:hover {
+  background-color: var(--color-hover);
+}
+
+.save-dialog-close img {
+  width: 14px;
+  height: 14px;
+  opacity: 0.6;
+}
+
+.save-dialog p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--color-muted);
+  line-height: 1.55;
+}
+
+.save-dialog p code {
+  font-family: "Cascadia", monospace;
+  font-size: 0.8rem;
+  background-color: var(--color-surface);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  border: 1px solid var(--color-border);
+}
+
+.save-dialog-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.save-dialog-field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #444;
+}
+
+.save-filename-input-wrapper {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.save-filename-input-wrapper:focus-within {
+  border-color: var(--color-accent);
+  box-shadow: var(--focus-ring);
+}
+
+.save-filename-input-wrapper:has(input[aria-invalid="true"]) {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 2px var(--color-danger);
+}
+
+.save-filename-input {
+  flex: 1;
+  border: none;
+  padding: 0.5rem 0.65rem;
+  font-size: 0.9rem;
+  font-family: "Cascadia", monospace;
+  background: transparent;
+  color: var(--color-text);
+  outline: none;
+  min-width: 0;
+}
+
+.save-filename-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.save-filename-ext {
+  padding: 0.5rem 0.65rem;
+  font-size: 0.85rem;
+  font-family: "Cascadia", monospace;
+  color: var(--color-muted-light);
+  background-color: var(--color-surface);
+  border-left: 1px solid var(--color-border);
+  user-select: none;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+
+.save-filename-error {
+  font-size: 0.75rem;
+  color: var(--color-danger);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.save-filename-error::before {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background-color: var(--color-danger);
+  border-radius: 50%;
+  flex-shrink: 0;
+  /* "!" icon via mask */
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 3.5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4.5zm0 6.5a.875.875 0 1 1 0 1.75A.875.875 0 0 1 8 11z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 3.5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4.5zm0 6.5a.875.875 0 1 1 0 1.75A.875.875 0 0 1 8 11z'/%3E%3C/svg%3E");
+  mask-size: contain;
+  -webkit-mask-size: contain;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+}
+
+.save-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 0.1rem;
+}
+
+.save-dialog-cancel {
+  padding: 0.45rem 1.1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border) !important;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  font-family: "Cascadia", sans-serif;
+}
+
+.save-dialog-cancel:hover {
+  background-color: var(--color-hover);
+}
+
+.save-dialog-confirm {
+  padding: 0.45rem 1.1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-accent) !important;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-accent-dark);
+  background-color: var(--color-accent-light);
+  font-family: "Cascadia", sans-serif;
+}
+
+.save-dialog-confirm:hover {
+  background-color: var(--color-accent-hover);
+}
+
+.save-dialog-confirm:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/*==============================================================
   MENU BAR
 ===============================================================*/
 
-.menu-bar{
+.menu-bar {
   width: fit-content;
   padding: 0.3rem;
   position: fixed;
@@ -406,12 +613,44 @@ canvas:active {
 }
 
 .menu-bar button:hover {
-  background-color: #ddddfe;
+  background-color: var(--color-hover);
 }
 
 .dropdown {
   position: absolute;
   top: 100%;
+}
+
+/*==============================================================
+  CONTEXT MENU
+===============================================================*/
+
+.context {
+  padding: 0.3rem;
+  min-width: 120px;
+}
+
+.context-element {
+  width: 100%;
+  text-align: left;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-family: "Cascadia", sans-serif;
+  color: var(--color-text);
+}
+
+.context-element:hover {
+  background-color: var(--color-hover);
+}
+
+/* Destructive action */
+.delete-device {
+  color: var(--color-danger);
+}
+
+.delete-device:hover {
+  background-color: var(--color-danger-bg);
 }
 
 /*==============================================================
@@ -431,6 +670,39 @@ canvas:active {
 }
 
 /*==============================================================
+  MISCELLANEOUS
+===============================================================*/
+
+.copyright {
+  position: fixed;
+  left: 50%;
+  bottom: 0.5rem;
+  transform: translate(-50%);
+  font-size: 0.55rem;
+  color: #555;
+}
+
+.toast {
+  position: fixed;
+  bottom: 20%;
+  left: 50%;
+  transform: translate(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: var(--color-bg);
+  border-radius: 5px;
+  padding: 0.3rem 2rem;
+  font-size: 0.7rem;
+  opacity: 1;
+  transition: all 0.25s ease;
+  pointer-events: none;
+}
+
+.toast.hidden {
+  height: 0;
+  opacity: 0;
+}
+
+/*==============================================================
   DEBUG INFO BAR
 ===============================================================*/
 
@@ -442,4 +714,42 @@ canvas:active {
   font-size: 0.85rem;
   opacity: 0.7;
   pointer-events: none;
+}
+
+/*==============================================================
+  HIGH CONTRAST / FORCED COLORS SUPPORT
+===============================================================*/
+
+@media (forced-colors: active) {
+  .save-filename-input-wrapper:focus-within {
+    outline: 2px solid ButtonText;
+  }
+
+  .save-dialog-confirm {
+    forced-color-adjust: none;
+    background-color: Highlight;
+    color: HighlightText;
+    border-color: Highlight !important;
+  }
+
+  .mode button.selected,
+  .snap-to-grid.selected img,
+  .show-label.selected img {
+    forced-color-adjust: none;
+    outline: 2px solid Highlight;
+  }
+}
+
+/*==============================================================
+  REDUCED MOTION SUPPORT
+===============================================================*/
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }

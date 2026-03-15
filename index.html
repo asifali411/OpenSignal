@@ -4,12 +4,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OpenCircuit</title>
+  <title>OpenSignal</title>
 
   <link rel="shortcut icon" href="./src/icons/128x128.png" type="image/x-icon">
 
   <style>
-    noscript{
+    noscript {
       width: 100%;
       min-height: 100vh;
       display: flex;
@@ -34,60 +34,62 @@
 <body>
 
   <noscript>
-    This application requires javascript to run. <br>
-    Enable javascript to continue.
+    This application requires JavaScript to run. <br>
+    Enable JavaScript to continue.
   </noscript>
 
   <!-- Loading Screen -->
-  <div class="loading-screen" >
+  <div class="loading-screen" role="status" aria-label="Loading OpenSignal, please wait">
     <div class="logo-container">
-      <img src="./src/icons/256x256.png" alt="logo">
-      <h1>OpenCircuit</h1>
+      <img src="./src/icons/256x256.png" alt="OpenSignal logo">
+      <h1>OpenSignal</h1>
     </div>
-    <div class="progress-bar">
+    <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="10"
+      aria-label="Loading progress">
       <div class="progress"></div>
     </div>
   </div>
 
-  
+
   <!-- Main Application -->
   <main aria-label="Circuit Simulator Workspace">
-    
+
     <!-- Menu Bar -->
-    <div class="menu-bar">
-      <button title="Open (Ctrl + O)" class="open">Open</button>
-      <button title="Save (Ctrl + S)" class="save">Save</button>
-      <button title="Help (Ctrl + H)" class="help">Help</button>
+    <div class="menu-bar" role="toolbar" aria-label="File actions">
+      <button title="Open (Ctrl+O)" class="open" aria-keyshortcuts="Control+O">Open</button>
+      <button title="Save (Ctrl+S)" class="save" aria-keyshortcuts="Control+S">Save</button>
+      <!-- <button title="Help (Ctrl+H)" class="help" aria-keyshortcuts="Control+H">Help</button> -->
     </div>
 
     <!-- Canvas Area -->
-    <canvas class="workspace" role="application" aria-label="Circuit drawing canvas" tabindex="0">
-    </canvas>
+    <canvas class="workspace" role="application"
+      aria-label="Circuit drawing canvas. Use arrow keys to navigate, Delete to remove a selected component."
+      tabindex="0"></canvas>
 
     <!-- Left Toolbar -->
-    <aside class="tools-left" aria-label="Main Tools">
+    <aside class="tools-left" aria-label="Editor tools">
 
       <!-- Mode Selection -->
-      <div class="mode" role="group" aria-label="Mode Selection">
+      <div class="mode" role="group" aria-label="Editor mode">
 
-        <button class="edit icon-button selected" aria-pressed="false" title="Edit Mode (E)">
+        <button class="edit icon-button selected" aria-pressed="true" title="Edit Mode (E)" aria-keyshortcuts="E">
           <img src="./src/assets/wire.svg" alt="" aria-hidden="true">
-          <span class="sr-only">Edit Mode</span>
+          <span class="sr-only">Edit mode</span>
         </button>
 
-        <button class="simulate icon-button" aria-pressed="false" title="Simulate (S)">
+        <button class="simulate icon-button" aria-pressed="false" title="Simulate (S)" aria-keyshortcuts="S">
           <img src="./src/assets/simulate.svg" alt="" aria-hidden="true">
-          <span class="sr-only">Simulate</span>
+          <span class="sr-only">Simulate mode</span>
         </button>
       </div>
 
       <!-- Undo / Redo -->
-      <div class="undo-redo" role="group" aria-label="History Controls">
-        <button class="undo icon-button" disabled aria-label="Undo (Ctrl + Z)">
+      <div class="undo-redo" role="group" aria-label="History controls">
+        <button class="undo icon-button" disabled aria-label="Undo (Ctrl+Z)" aria-keyshortcuts="Control+Z">
           <img src="./src/assets/undo.svg" alt="" aria-hidden="true">
         </button>
 
-        <button class="redo icon-button" disabled aria-label="Redo (Ctrl + Y)">
+        <button class="redo icon-button" disabled aria-label="Redo (Ctrl+Y)" aria-keyshortcuts="Control+Y">
           <img src="./src/assets/undo.svg" alt="" aria-hidden="true">
         </button>
       </div>
@@ -95,38 +97,38 @@
     </aside>
 
     <!-- Device Bar -->
-    <nav class="device-bar" aria-label="Available Devices">
-    </nav>
+    <nav class="device-bar" aria-label="Circuit components"></nav>
 
     <!-- Right Toolbar -->
-    <aside class="tools-right" aria-label="View Controls">
+    <aside class="tools-right" aria-label="View controls">
 
       <!-- General settings -->
-      <div class="general-settings" role="group" aria-label="General Settings">
+      <div class="general-settings" role="group" aria-label="Canvas settings">
 
         <!-- Snap to Grid -->
-        <button class="snap-to-grid icon-button selected" aria-pressed="true" aria-label="Toggle Snap to Grid (Shift + G)">
-          <img src="./src/assets/snap.svg" alt="toggle snap to grid" aria-hidden="true">
+        <button class="snap-to-grid icon-button selected" aria-pressed="true" aria-label="Snap to grid on (Shift+G)"
+          aria-keyshortcuts="Shift+G">
+          <img src="./src/assets/snap.svg" alt="" aria-hidden="true">
         </button>
 
         <!-- Show label -->
-        <button class="show-label icon-button selected" aria-pressed="true" aria-label="Toggle label (Shift + L)">
-          <img src="../src/assets/label.svg" alt="toggle label" aria-hidden="true">
+        <button class="show-label icon-button selected" aria-pressed="true" aria-label="Show labels on (Shift+L)"
+          aria-keyshortcuts="Shift+L">
+          <img src="../src/assets/label.svg" alt="" aria-hidden="true">
         </button>
       </div>
 
       <!-- Zoom Controls -->
-      <div class="zoom-in-out" role="group" aria-label="Zoom Controls">
+      <div class="zoom-in-out" role="group" aria-label="Zoom controls">
 
-        <output class="zoom-percentage" aria-live="polite">
-          100%
-        </output>
+        <output class="zoom-percentage" id="zoom-percentage" aria-label="Current zoom level"
+          aria-live="polite">100%</output>
 
-        <button class="zoom-in icon-button" aria-label="Zoom In (Shift + Plus)">
+        <button class="zoom-in icon-button" aria-label="Zoom in (Shift++)" aria-keyshortcuts="Shift+Equal">
           <img src="./src/assets/zoom-in.svg" alt="" aria-hidden="true">
         </button>
 
-        <button class="zoom-out icon-button" aria-label="Zoom Out (Shift + Minus)">
+        <button class="zoom-out icon-button" aria-label="Zoom out (Shift+-)" aria-keyshortcuts="Shift+Minus">
           <img src="./src/assets/zoom-out.svg" alt="" aria-hidden="true">
         </button>
       </div>
@@ -136,32 +138,71 @@
   </main>
 
   <!-- Dialog Overlay -->
-  <div class="overlay hidden" aria-hidden="true"></div>
+  <div class="overlay hidden" id="dialog-overlay" aria-hidden="true"></div>
 
   <!-- Transparent Overlay -->
   <div class="transparent-overlay hidden" aria-hidden="true"></div>
 
   <!-- Devices Dialog -->
-  <div class="dialog extra-devices-dialog hidden" role="dialog" aria-modal="true"
-    aria-labelledby="devices-dialog-title">
-
+  <div class="dialog extra-devices-dialog hidden" id="devices-dialog" role="dialog" aria-modal="true"
+    aria-labelledby="devices-dialog-title" inert>
     <h2 id="devices-dialog-title">Devices</h2>
+    <div class="extra-devices" role="list"></div>
+  </div>
 
-    <div class="extra-devices" role="list">
+  <!-- Save Filename Dialog -->
+  <div class="dialog save-dialog hidden" id="save-dialog" role="dialog" aria-modal="true"
+    aria-labelledby="save-dialog-title" aria-describedby="save-dialog-desc" inert>
+    <div class="save-dialog-header">
+      <h2 id="save-dialog-title">Save circuit</h2>
+      <button class="save-dialog-close icon-button" aria-label="Close save dialog">
+        <img src="./src/assets/close.svg" alt="" aria-hidden="true">
+      </button>
     </div>
 
+    <p id="save-dialog-desc">
+      Enter a name for your circuit file. It will be saved as a <code>.json</code> file.
+    </p>
+
+    <div class="save-dialog-field">
+      <!-- <label for="save-filename-input">File name</label> -->
+      <div class="save-filename-input-wrapper">
+        <input id="save-filename-input" type="text" class="save-filename-input" value="my-circuit" aria-required="true"
+          autocomplete="off" spellcheck="false" aria-describedby="save-filename-error">
+        <span class="save-filename-ext" aria-hidden="true">.json</span>
+      </div>
+      <p id="save-filename-error" class="save-filename-error hidden" role="alert" aria-live="assertive">
+        File name cannot be empty.
+      </p>
+    </div>
+
+    <div class="save-dialog-actions">
+      <button class="save-dialog-cancel">Cancel</button>
+      <button class="save-dialog-confirm">Save</button>
+    </div>
   </div>
 
-  <!-- Context Dialog -->
-  <div class="context hidden" inert="true" role="dialog" aria-modal="true" aria-hidden="true">
-    <!-- <div class="see-details context-element"> See details </div> -->
-    <div class="delete-device context-element"> Delete </div>
+  <!-- Context Menu -->
+  <div class="context hidden" id="context-menu" role="menu" aria-label="Component options" aria-hidden="true" inert>
+    <button class="delete-device context-element" role="menuitem">Delete</button>
   </div>
 
-  <!-- Debug Info -->
-  <div class="info-bar" aria-live="polite">
+  <div class="copyright" aria-hidden="true">
+    &copy; 2026 asifali411. All rights reserved.
+  </div>
+
+  <!-- Toast notification -->
+  <div class="toast hidden" id="toast" role="status" aria-live="polite" aria-atomic="true" inert>
+    <p class="toast-message">Saved successfully!</p>
+  </div>
+
+  <!-- Debug Info (hidden from assistive tech, visual only) -->
+  <div class="info-bar" aria-hidden="true">
     FPS: <span class="fps">12</span>
   </div>
+
+  <!-- Screen reader live announcer for dynamic status messages -->
+  <div id="sr-announcer" role="status" aria-live="polite" aria-atomic="true" class="sr-only"></div>
 
 </body>
 

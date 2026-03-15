@@ -7,8 +7,8 @@ import {
     renderShowLabelBtn, 
     zoomIN, 
     zoomOUT,
-    saveCircuit,
-    openCircuit
+    openCircuit,
+    openSaveDialog
 } from "../main/script";
 import { saveSettings, setSetting } from "../../settings";
 
@@ -42,6 +42,6 @@ export const registerButtonEvents = () => {
     buttons.showLabel.addEventListener( "click", () => handleShowLabel());
 
     buttons.open.addEventListener(      "click", () => openCircuit());
-    buttons.save.addEventListener(      "click", () => saveCircuit());
+    buttons.save.addEventListener(      "click", () => openSaveDialog());
 }
 

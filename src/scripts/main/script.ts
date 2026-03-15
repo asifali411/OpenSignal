@@ -7,7 +7,16 @@ import {
     overlay, 
     contextDialog, 
     transparentOverlay, 
-    deleteDeviceBtn 
+    deleteDeviceBtn, 
+    toast,
+    toastMessage,
+    srAnnouncer,
+    saveDialog,
+    saveDialogClose,
+    saveDialogCancel,
+    saveDialogConfirm,
+    saveFilenameInput,
+    saveFilenameError,
 } from "./reference";
 import { DEVICES, WORLD, MODE, CIRCUIT, HISTORY, tileSize, SETTINGS, DEVICE, SOLVER, VALUE, PIN_TYPE } from "./setup";
 
@@ -314,6 +323,84 @@ const openContextDialog = (point: Point): void => {
     contextDialog.style.top  = `${point.y}px`;
 };
 
+//========================= SAVE DIALOG ========================//
+
+const openSaveDialog = (): void => {
+    saveDialog.classList.remove('hidden');
+    overlay.classList.remove('hidden');
+    saveDialog.removeAttribute('inert');
+    saveDialog.setAttribute('aria-hidden', 'false');
+    WORLD.dialog.show = true;
+    saveFilenameInput.select();
+    saveFilenameInput.focus();
+};
+
+const closeSaveDialog = (): void => {
+    saveDialog.classList.add('hidden');
+    overlay.classList.add('hidden');
+    saveDialog.setAttribute('inert', '');
+    saveDialog.setAttribute('aria-hidden', 'true');
+    saveFilenameError.classList.add('hidden');
+    saveFilenameInput.removeAttribute('aria-invalid');
+    WORLD.dialog.show = false;
+    buttons.save.focus();
+};
+
+const announceSaveResult = (filename: string): void => {
+    srAnnouncer.textContent = '';
+    requestAnimationFrame(() => {
+        srAnnouncer.textContent = `Circuit saved as ${filename}.json`;
+    });
+    setTimeout(() => { srAnnouncer.textContent = ''; }, 3000);
+};
+
+const trapFocusInSaveDialog = (e: KeyboardEvent): void => {
+    if (e.key === 'Escape') { closeSaveDialog(); return; }
+    if (e.key !== 'Tab') return;
+
+    const focusable = Array.from(
+        saveDialog.querySelectorAll<HTMLElement>('button, input, [tabindex]:not([tabindex="-1"])')
+    ).filter(el => !(el as HTMLButtonElement).disabled);
+
+    const first = focusable[0];
+    const last  = focusable[focusable.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+    }
+};
+
+const setupSaveDialogListeners = (): void => {
+    saveDialogClose.addEventListener('click', closeSaveDialog);
+    saveDialogCancel.addEventListener('click', closeSaveDialog);
+    saveDialogConfirm.addEventListener('click', confirmSave);
+    saveDialog.addEventListener('keydown', trapFocusInSaveDialog);
+    saveFilenameInput.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.key === 'Enter') confirmSave();
+    });
+};
+
+// Called when the user clicks Save in the dialog
+const confirmSave = (): void => {
+    const name = saveFilenameInput.value.trim();
+
+    if (!name) {
+        saveFilenameError.classList.remove('hidden');
+        saveFilenameInput.setAttribute('aria-invalid', 'true');
+        saveFilenameInput.focus();
+        return;
+    }
+
+    saveFilenameError.classList.add('hidden');
+    saveFilenameInput.removeAttribute('aria-invalid');
+    closeSaveDialog();
+    saveCircuit(name);
+};
+
 //========================= MODE ========================//
 
 const renderModeBtn = (): void => {
@@ -397,12 +484,12 @@ const isOutOfCanvas = (device: Device): boolean => {
 };
 
 const drawWire = (ctx: CanvasRenderingContext2D): void => {
-    ctx.strokeStyle = "#000";
     ctx.lineWidth = 3;
 
     const drawnConnections = new Set<string>();
 
     for (const [pinID, pin] of CIRCUIT.pins) {
+        ctx.strokeStyle = pin.value === VALUE.HIGH ? "yellowgreen" : "#333";
         for (const connectedPinID of pin.connectedPins) {
             const connectionKey = [pinID, connectedPinID].sort().join("-");
             if (drawnConnections.has(connectionKey)) continue;
@@ -508,6 +595,19 @@ const handlePinSelection = (pins: number[]): void => {
         pin.selected = !pin.selected;
         WORLD.pin.selected = pin.selected ? pin.id : null;
     }
+};
+
+//========================= TOAST ====================//
+
+const showToast = (message: string): void => {
+    toastMessage.textContent = message;
+    toast.classList.remove('hidden');
+    toast.removeAttribute('inert');
+
+    setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.setAttribute('inert', '');
+    }, 1300);
 };
 
 //========================= FILE ====================//
@@ -635,18 +735,26 @@ fileInput.addEventListener('change', (e: Event) => {
     fileInput.value = '';
 });
 
-const saveCircuit = (): void => {
+// Accepts the filename from the save dialog — called by confirmSave()
+const saveCircuit = (filename: string): void => {
+    if (CIRCUIT.devices.size === 0) {
+        showToast("Nothing to save — add some components first.");
+        return;
+    }
+
     const data = JSON.stringify(deconstructCircuit(), null, 2);
     const blob = new Blob([data], { type: 'application/json' });
     const url  = URL.createObjectURL(blob);
-
     const a    = document.createElement('a');
     a.href     = url;
-    a.download = 'circuit.json';
+    a.download = `${filename}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+
+    showToast(`Saved as "${filename}.json"`);
+    announceSaveResult(filename);
 };
 
 const openCircuit = (): void => {
@@ -665,6 +773,10 @@ export {
     closeDialog,
     openExtraDevices,
     openContextDialog,
+
+    openSaveDialog,
+    closeSaveDialog,
+    setupSaveDialogListeners,
 
     renderModeBtn,
     changeMode,
@@ -689,5 +801,5 @@ export {
 
     deconstructCircuit,
     saveCircuit,
-    openCircuit
+    openCircuit,
 };

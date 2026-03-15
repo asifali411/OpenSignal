@@ -5,6 +5,7 @@ import Device from "../devices/device";
 import Pin from "../devices/functions/pin";
 import { Switch } from "../devices/switch";
 import HistoryManager from "./history";
+import { setupSaveDialogListeners } from "./script";
 
 await initSettings();
 
@@ -163,6 +164,8 @@ const HISTORY = new HistoryManager();
 HISTORY.save(CIRCUIT);
 
 const SOLVER = new Solver();
+
+setupSaveDialogListeners();
 
 export {
     deviceSize,
