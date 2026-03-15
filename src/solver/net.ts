@@ -4,8 +4,12 @@ import { getPin } from "../scripts/main/util";
 
 let netID = 0;
 
+export function setNetID (newID: number) {
+    netID = newID;
+}
+
 class Net {
-    public pins: Set<Pin> = new Set();
+    public pins: Set<Pin> = new Set(); // TODO: pins should only store the id not the entire pin
     public value = VALUE.LOW;
     public id: number;
 

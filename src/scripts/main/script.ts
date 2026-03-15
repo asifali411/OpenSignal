@@ -13,10 +13,10 @@ import { DEVICES, WORLD, MODE, CIRCUIT, HISTORY, tileSize, SETTINGS, DEVICE, SOL
 
 import Draw from "../devices/functions/draw";
 import Create from "../devices/functions/create";
-import Device from "../devices/device";
+import Device, { setDeviceID } from "../devices/device";
 import { getDevice, getPin, getPinX, getPinY, isHoveringPin, Point } from "./util";
-import Pin from "../devices/functions/pin";
-import { addToNet, combineNets, Net, removeFromNet } from "../../solver/net";
+import Pin, { setPinID } from "../devices/functions/pin";
+import { addToNet, combineNets, Net, removeFromNet, setNetID } from "../../solver/net";
 import Gate from "../devices/gate";
 import Update from "../devices/functions/update";
 import { Switch } from "../devices/switch";
@@ -553,6 +553,166 @@ const handlePinSelection = (pins: number[]): void => {
     }
 };
 
+//========================= FILE ====================//
+
+const deconstructCircuit = () => {
+    const data: any = {
+        devices: [],
+        pins: [],
+        nets: []
+    };
+
+    for(const [,device] of CIRCUIT.devices){
+        let deviceData = {
+            id: device.id,
+            x: device.x,
+            y: device.y,
+            name: device.name,
+            outputPins: device.outputPins,
+            inputPins: device.inputPins,
+            in_outPins: device.in_outPins,
+            offsetX: device.offsetX,
+            offsetY: device.offsetY,
+            isDragging: device.isDragging,
+            selected: device.selected
+        }
+
+        data.devices.push(deviceData);
+    }
+
+    for(const [,pin] of CIRCUIT.pins){
+        let pinData = {
+            id: pin.id,
+            deviceID: pin.deviceID,
+            netID: pin.netID,
+            offsetX: pin.offsetX,
+            offsetY: pin.offsetY,
+            type: pin.type,
+            name: pin.name,
+            value: pin.value,
+            connectedPins: Array.from(pin.connectedPins)
+        }
+
+        data.pins.push(pinData);
+    }
+
+    for(const [,net] of CIRCUIT.nets){
+
+        let netData = {
+            id: net.id,
+            value: net.value,
+            pins: Array.from(net.pins).map(pin => pin.id)
+        }
+
+        data.nets.push(netData);
+    }
+
+    return data;
+}
+
+const loadCircuit = (data: any) => {
+    CIRCUIT.devices.clear();
+    CIRCUIT.pins.clear();
+    CIRCUIT.nets.clear();
+
+    console.log(data.pins);
+
+    data.devices.forEach((deviceData: any) => {
+        const device = new Device(deviceData.x, deviceData.y, deviceData.name);
+        device.id = deviceData.id;
+        device.inputPins = deviceData.inputPins;
+        device.outputPins = deviceData.outputPins;
+        device.in_outPins = deviceData.in_outPins;
+        device.offsetX = deviceData.offsetX;
+        device.offsetY = deviceData.offsetY;
+        device.isDragging = deviceData.isDragging;
+        device.selected = deviceData.selected;
+        CIRCUIT.devices.set(device.id, device);
+    });
+
+    data.pins.forEach((pinData: any) => {
+        const pin = new Pin(pinData.deviceID, pinData.offsetX, pinData.offsetY, pinData.type, pinData.name);
+        pin.id = pinData.id;
+        pin.netID = pinData.netID;
+        pin.value = pinData.value;
+        pin.connectedPins = new Set(pin.connectedPins);
+        CIRCUIT.pins.set(pin.id, pin);
+    });
+
+    data.nets.forEach((netData: any) => {
+        const net = new Net();
+        net.id = netData.id;
+        net.value = netData.value;
+        net.pins = new Set(netData.pins.map((id: number) => CIRCUIT.pins.get(id)!));
+        CIRCUIT.nets.set(net.id, net);
+    })
+
+    // Update global IDs
+    if (CIRCUIT.devices.size > 0) {
+        setDeviceID(Math.max(...Array.from(CIRCUIT.devices.keys())) + 1);
+    }
+    if (CIRCUIT.pins.size > 0) {
+        setPinID(Math.max(...Array.from(CIRCUIT.pins.keys())) + 1);
+    }
+    if (CIRCUIT.nets.size > 0) {
+        setNetID(Math.max(...Array.from(CIRCUIT.nets.keys())) + 1);
+    }
+
+    // HISTORY.save(CIRCUIT);
+}
+
+const fileInput = document.createElement('input');
+fileInput.type = 'file';
+fileInput.accept = '.json';
+fileInput.style.display = 'none';
+document.body.appendChild(fileInput);
+
+fileInput.addEventListener('change', (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if(file){
+        const reader = new FileReader();
+        reader.onload = (readerEvent) => {
+            try{
+                const data = JSON.parse(readerEvent.target?.result as string);
+                loadCircuit(data);
+
+            } catch (err) {
+                console.error("Error loading circuit", err);
+                alert("Invalid circuit file");
+            }
+        };
+
+        reader.readAsText(file);
+    }
+
+    fileInput.value = '';
+})
+
+const saveCircuit = () => {
+    const data = JSON.stringify(deconstructCircuit(), null, 2);
+
+    const blob = new Blob([data], {
+        type: 'application/json'
+    });
+
+
+    const url = URL.createObjectURL(blob)
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'circuit.json';
+
+    document.body.appendChild(a);
+    a.click();
+
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+const openCircuit = () => {
+    fileInput.click();
+}
+
 export {
     createDeviceBar,
     reRenderDeviceBar,
@@ -585,5 +745,9 @@ export {
     drawWire,
     handlePinSelection,
     drawPinHovering,
-    drawPinSelection
+    drawPinSelection,
+
+    deconstructCircuit,
+    saveCircuit,
+    openCircuit
 };

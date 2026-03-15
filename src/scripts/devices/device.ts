@@ -1,6 +1,11 @@
 import { DEVICE } from "../main/setup";
 
 let deviceID = 0;
+
+export function setDeviceID (newID: number) {
+    deviceID = newID;
+}
+
 class Device {
     public offsetX = 0;
     public offsetY = 0;

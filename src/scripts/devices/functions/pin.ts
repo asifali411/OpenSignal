@@ -2,15 +2,20 @@ import { PIN_TYPE, VALUE } from "../../main/setup";
 import { getPin } from "../../main/util";
 
 let pinID = 0;
+
+export function setPinID (newID: number) {
+    pinID = newID;
+}
+
 class Pin {
-    public readonly id: number;
-    public readonly deviceID: number;
+    public id: number;
+    public deviceID: number;
     public netID: number | null;
 
-    public readonly offsetX: number;
-    public readonly offsetY: number;
+    public offsetX: number;
+    public offsetY: number;
 
-    public readonly type: PIN_TYPE;
+    public type: PIN_TYPE;
     public name: string;
 
     public value = VALUE.Z;

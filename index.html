@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Circuit Simulator</title>
+  <title>OpenCircuit</title>
 
   <link rel="shortcut icon" href="./src/icons/128x128.png" type="image/x-icon">
 
@@ -38,6 +38,7 @@
     Enable javascript to continue.
   </noscript>
 
+  <!-- Loading Screen -->
   <div class="loading-screen" >
     <div class="logo-container">
       <img src="./src/icons/256x256.png" alt="logo">
@@ -48,8 +49,16 @@
     </div>
   </div>
 
+  
   <!-- Main Application -->
   <main aria-label="Circuit Simulator Workspace">
+    
+    <!-- Menu Bar -->
+    <div class="menu-bar">
+      <button title="Open (Ctrl + O)" class="open">Open</button>
+      <button title="Save (Ctrl + S)" class="save">Save</button>
+      <button title="Help (Ctrl + H)" class="help">Help</button>
+    </div>
 
     <!-- Canvas Area -->
     <canvas class="workspace" role="application" aria-label="Circuit drawing canvas" tabindex="0">

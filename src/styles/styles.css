@@ -32,7 +32,7 @@
 body {
   margin: 0;
   overflow: hidden;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  /* font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; */
   background: var(--color-bg);
   color: var(--color-text);
   font-family: "Cascadia", sans-serif;
@@ -47,6 +47,7 @@ button {
   border: none;
   background: transparent;
   transition: background-color 0.15s ease, transform 0.1s ease, opacity 0.15s ease;
+  font-family: "Cascadia", sans-serif;
 }
 
 button:active {
@@ -78,7 +79,9 @@ canvas:active {
 .zoom-in-out,
 .general-settings,
 .undo-redo,
-.mode, .context {
+.mode, 
+.context,
+.menu-bar {
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-panel);
   border-radius: var(--radius-md);
@@ -383,6 +386,32 @@ canvas:active {
 .extra-devices button img {
   width: 40px;
   height: 40px;
+}
+
+/*==============================================================
+  MENU BAR
+===============================================================*/
+
+.menu-bar{
+  width: fit-content;
+  padding: 0.3rem;
+  position: fixed;
+  left: 2rem;
+  top: 1rem;
+}
+
+.menu-bar button {
+  border-radius: 5px;
+  padding: 0.3rem 1rem;
+}
+
+.menu-bar button:hover {
+  background-color: #ddddfe;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
 }
 
 /*==============================================================

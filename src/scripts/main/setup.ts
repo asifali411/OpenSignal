@@ -3,6 +3,7 @@ import { Net } from "../../solver/net";
 import Solver from "../../solver/solver";
 import Device from "../devices/device";
 import Pin from "../devices/functions/pin";
+import { Switch } from "../devices/switch";
 import HistoryManager from "./history";
 
 await initSettings();
@@ -64,7 +65,7 @@ interface World {
 }
 
 interface Circuit {
-    devices: Map<number, Device>,
+    devices: Map<number, Device | Switch>,
     pins: Map<number, Pin>,
     nets: Map<number, Net>
 }
@@ -178,5 +179,5 @@ export {
     SETTINGS,
     DEVICE,
     SOLVER,
-    VALUE
+    VALUE,
 };

@@ -6,7 +6,9 @@ import {
     snapToGrid, 
     renderShowLabelBtn, 
     zoomIN, 
-    zoomOUT
+    zoomOUT,
+    saveCircuit,
+    openCircuit
 } from "../main/script";
 import { saveSettings, setSetting } from "../../settings";
 
@@ -37,6 +39,9 @@ export const registerButtonEvents = () => {
     buttons.zoomOut.addEventListener(   "click", () => zoomOUT());
 
     buttons.snapToGrid.addEventListener("click", () => handleSnapToGrid());
-    buttons.showLabel.addEventListener( "click",  () => handleShowLabel());
+    buttons.showLabel.addEventListener( "click", () => handleShowLabel());
+
+    buttons.open.addEventListener(      "click", () => openCircuit());
+    buttons.save.addEventListener(      "click", () => saveCircuit());
 }
 

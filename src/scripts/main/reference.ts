@@ -20,7 +20,10 @@ const buttons = {
     zoomIn: document.querySelector<HTMLButtonElement>('.zoom-in')!,
     zoomOut: document.querySelector<HTMLButtonElement>('.zoom-out')!,
     snapToGrid: document.querySelector<HTMLButtonElement>('.snap-to-grid')!,
-    showLabel: document.querySelector<HTMLButtonElement>('.show-label')!
+    showLabel: document.querySelector<HTMLButtonElement>('.show-label')!,
+    open: document.querySelector<HTMLButtonElement>('.open')!,
+    save: document.querySelector<HTMLButtonElement>('.save')!,
+    help: document.querySelector<HTMLButtonElement>('.help')!
 };
 
 export {
