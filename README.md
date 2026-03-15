@@ -6,7 +6,7 @@ A desktop circuit simulator application built with Tauri, allowing users to desi
 
 ## Features
 
-- Interactive circuit design with drag-and-drop components
+- Interactive circuit design with click-and-drag components
 - Support for various logic gates (AND, OR, NOT, NAND, NOR, XOR, XNOR)
 - Electrical devices including bulbs, switches, and sources
 - Real-time circuit simulation and state visualization
@@ -25,8 +25,7 @@ Before running this application, ensure you have the following installed:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/asifali411/OpenCircuit.git
-   cd circuit-simulator
+   git clone https://github.com/asifali411/OpenSignal.git
    ```
 
 2. Install dependencies:
@@ -52,7 +51,7 @@ This will create distributable binaries in the `src-tauri/target/release/bundle/
 ## Usage
 
 - Launch the application using `npm run tauri dev`
-- Drag and drop components from the toolbar onto the canvas
+- Click components on the toolbar
 - Connect components by clicking on their pins
 - Use the switch components to toggle inputs
 - Observe the bulb states to see circuit outputs
@@ -77,4 +76,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - **Frontend**: TypeScript, HTML, CSS
 - **Backend**: Rust (Tauri)
 - **Build Tool**: Vite
-- **Interaction Library**: Interact.js
