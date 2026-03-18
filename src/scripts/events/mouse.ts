@@ -1,7 +1,7 @@
 import { canvas } from "../main/reference";
 import { MOUSE, WORLD, MODE, CIRCUIT, SETTINGS, DEVICE, HISTORY, deviceSize } from "../main/setup";
 import { toWorld, isHovering, isHoveringPin, getPin, toScreen } from "../main/util";
-import { snapToGrid, handlePinSelection, openContextDialog } from "../main/script";
+import { snapToGrid, handlePinSelection, openContextDialog, removeDeviceFromGrid, addDeviceToGrid } from "../main/script";
 import { toggleSource } from "../devices/source";
 import { Switch, toggleSwitch } from "../devices/switch";
 
@@ -49,6 +49,7 @@ const handleMouseDown = (e: MouseEvent) => {
                 WORLD.movingDevice.isDragging = true;
                 WORLD.movingDevice.offsetX = MOUSE.x - WORLD.movingDevice.x;
                 WORLD.movingDevice.offsetY = MOUSE.y - WORLD.movingDevice.y;
+                removeDeviceFromGrid(WORLD.movingDevice);
                 break;
             }
         }
@@ -186,6 +187,7 @@ const handleMouseEnd = () => {
     if(WORLD.movingDevice != null){
         WORLD.movingDevice.isDragging = false;
         if (SETTINGS.snapToGrid) snapToGrid();
+        addDeviceToGrid(WORLD.movingDevice);
         HISTORY.save(CIRCUIT);
     }
     WORLD.movingDevice = null;

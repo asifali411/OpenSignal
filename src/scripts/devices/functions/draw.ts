@@ -48,7 +48,7 @@ class Draw {
 
         for (const pinID of device.inputPins) {
             const pin = getPin(pinID);
-            ctx.fillStyle = pin.value === VALUE.HIGH ? "yellowgreen" : "#333";
+            ctx.fillStyle = pin.value === VALUE.HIGH ? "yellowgreen" : (pin.value === VALUE.X ? "tomato" : "#000");
             ctx.beginPath();
             ctx.arc(getPinX(pin), getPinY(pin), 5, 0, Math.PI * 2);
             ctx.fill();
@@ -62,7 +62,7 @@ class Draw {
         for (const pinID of device.outputPins) {
             const pin = getPin(pinID);
 
-            ctx.fillStyle = pin.value === VALUE.HIGH ? "yellowgreen" : "#333";
+            ctx.fillStyle = pin.value === VALUE.HIGH ? "yellowgreen" : (pin.value === VALUE.X ? "tomato" : "#000");
             ctx.beginPath();
             ctx.arc(getPinX(pin), getPinY(pin), 5, 0, Math.PI * 2);
             ctx.fill();
@@ -76,7 +76,7 @@ class Draw {
         for (const pinID of device.in_outPins) {
             const pin = getPin(pinID);
 
-            ctx.fillStyle = pin.value === VALUE.HIGH ? "yellowgreen" : "#333";
+            ctx.fillStyle = pin.value === VALUE.HIGH ? "yellowgreen" : (pin.value === VALUE.X ? "tomato" : "#000");
             ctx.beginPath();
             ctx.arc(getPinX(pin), getPinY(pin), 5, 0, Math.PI * 2);
             ctx.fill();

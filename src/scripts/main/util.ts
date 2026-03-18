@@ -1,7 +1,7 @@
 import Device from "../devices/device";
 import Pin from "../devices/functions/pin";
 import { canvas, ctx } from "./reference";
-import { tileSize, deviceSize, WORLD, MOUSE, CIRCUIT } from "./setup";
+import { tileSize, deviceSize, WORLD, MOUSE, CIRCUIT, gridSize } from "./setup";
 
 const resizeCanvas = (): void => {
     canvas.height = window.innerHeight;
@@ -77,6 +77,14 @@ const getPinY = (pin: Pin): number => {
     return getDevice(pin.deviceID).y + pin.offsetY;
 };
 
+const getDeviceGridKey = (device: Device, offsetX = 0, offsetY = 0): string => {
+   return `${Math.floor(device.x / gridSize) + offsetX}-${Math.floor(device.y / gridSize) + offsetY}`;
+}
+
+const getPinGridKey = (pin: Pin, offsetX = 0, offsetY = 0): string => {
+    return `${Math.floor(getPinX(pin) / gridSize) + offsetX}-${Math.floor(getPinY(pin) / gridSize) + offsetY}`;
+}
+
 export {
     resizeCanvas,
     createGrid,
@@ -88,6 +96,8 @@ export {
     getDevice,
     getPinX,
     getPinY,
+    getDeviceGridKey,
+    getPinGridKey,
 };
 
 export type { Point };

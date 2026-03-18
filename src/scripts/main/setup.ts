@@ -10,6 +10,7 @@ import { setupSaveDialogListeners } from "./script";
 await initSettings();
 
 const tileSize: number = 30;
+const gridSize: number = 200;
 const deviceSize: number = 50;
 const maxDelta: number = 100;
 
@@ -69,6 +70,11 @@ interface Circuit {
     devices: Map<number, Device | Switch>,
     pins: Map<number, Pin>,
     nets: Map<number, Net>
+}
+
+interface Grid {
+    devices: Map<string, Set<number> >,
+    pins: Map<string, Set<number>>
 }
 
 //=================== DECLARATIONS ===================//
@@ -154,6 +160,11 @@ let CIRCUIT: Circuit = {
     nets: new Map()
 };
 
+let GRID: Grid = {
+    devices: new Map(),
+    pins: new Map()
+}
+
 const SPRITES: any = {};
 DEVICES.forEach(device => {
     SPRITES[device.name] = new Image();
@@ -171,6 +182,7 @@ export {
     deviceSize,
     tileSize,
     maxDelta,
+    gridSize,
     MODE,
     PIN_TYPE,
     DEVICES,
@@ -183,4 +195,5 @@ export {
     DEVICE,
     SOLVER,
     VALUE,
+    GRID
 };

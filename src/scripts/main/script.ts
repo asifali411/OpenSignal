@@ -18,12 +18,27 @@ import {
     saveFilenameInput,
     saveFilenameError,
 } from "./reference";
-import { DEVICES, WORLD, MODE, CIRCUIT, HISTORY, tileSize, SETTINGS, DEVICE, SOLVER, VALUE, PIN_TYPE } from "./setup";
+
+import { 
+    DEVICES,
+    WORLD,
+    MODE,
+    CIRCUIT,
+    HISTORY,
+    tileSize,
+    SETTINGS,
+    DEVICE,
+    SOLVER,
+    VALUE,
+    PIN_TYPE,
+    gridSize,
+    GRID
+} from "./setup";
 
 import Draw from "../devices/functions/draw";
 import Create from "../devices/functions/create";
 import Device, { setDeviceID } from "../devices/device";
-import { getDevice, getPin, getPinX, getPinY, isHoveringPin, Point } from "./util";
+import { getDevice, getDeviceGridKey, getPin, getPinGridKey, getPinX, getPinY, isHoveringPin, Point } from "./util";
 import Pin, { setPinID } from "../devices/functions/pin";
 import { addToNet, combineNets, Net, removeFromNet, setNetID } from "../../solver/net";
 import Gate from "../devices/gate";
@@ -455,10 +470,12 @@ const renderUndoRedoBtn = (): void => {
 
 //========================= SNAP TO GRID ====================//
 
+
 const snapToGrid = (): void => {
+    const snapAmount = tileSize / 3;
     CIRCUIT.devices.forEach((device: Device) => {
-        device.x = Math.floor(Math.round(device.x / (tileSize / 2)) * (tileSize / 2));
-        device.y = Math.floor(Math.round(device.y / (tileSize / 2)) * (tileSize / 2));
+        device.x = Math.floor(Math.round(device.x / snapAmount) * snapAmount);
+        device.y = Math.floor(Math.round(device.y / snapAmount) * snapAmount);
     });
 };
 
@@ -597,7 +614,115 @@ const handlePinSelection = (pins: number[]): void => {
     }
 };
 
-//========================= TOAST ====================//
+//========================= GRID ==========================//
+
+const addDeviceToGrid = (device: Device) => {
+    const gx = Math.floor(device.x / gridSize);
+    const gy = Math.floor(device.y / gridSize);
+    const key = `${gx}-${gy}`;
+
+    if(GRID.devices.has(key)){
+        GRID.devices.get(key)?.add(device.id);
+    } else {
+        const deviceSet = new Set<number>();
+        deviceSet.add(device.id);
+        GRID.devices.set(key, deviceSet);
+    }
+}
+
+const addPinToGrid = (pin: Pin) => {
+    const gx = Math.floor(getPinX(pin) / gridSize);
+    const gy = Math.floor(getPinY(pin) / gridSize);
+    const key = `${gx}-${gy}`;
+
+    if(GRID.pins.has(key)){
+        GRID.pins.get(key)?.add(pin.id);
+    } else {
+        const pinSet = new Set<number>();
+        pinSet.add(pin.id);
+        GRID.devices.set(key, pinSet);
+    }
+}
+
+const removeDeviceFromGrid = (device: Device) => {
+    const gx = Math.floor(device.x / gridSize);
+    const gy = Math.floor(device.y / gridSize);
+    const key = `${gx}-${gy}`;
+        
+    GRID.devices.get(key)?.delete(device.id);
+    if (GRID.devices.get(key)?.size === 0) {
+        GRID.devices.delete(key);
+    }
+}
+
+const removePinFromGrid = (pin: Pin) => {
+    const gx = Math.floor(getPinX(pin) / gridSize);
+    const gy = Math.floor(getPinY(pin) / gridSize);
+    const key = `${gx}-${gy}`;
+        
+    GRID.pins.get(key)?.delete(pin.id);
+    if (GRID.pins.get(key)?.size === 0) {
+        GRID.pins.delete(key);
+    }
+}
+
+const getDevicesFromGrid = (key: string): Set<number> => {
+    return GRID.devices.get(key) ?? new Set<number>();
+}
+
+const getPinsFromGrid = (key: string): Set<number> => {
+    return GRID.pins.get(key) ?? new Set<number>();
+}
+
+const getNeighbouringDevices = (deviceID: number): number[] => {
+    const device = getDevice(deviceID);
+
+    const delta = [
+        [-1, -1], [0, -1], [1, -1],
+        [-1,  0], [0,  0], [1,  0],
+        [-1,  1], [0,  1], [1,  1]
+    ];
+
+    const neighbours = new Set<number>();
+
+    for (const [dx, dy] of delta) {
+        const key = getDeviceGridKey(device, dx, dy);
+
+        for (const id of getDevicesFromGrid(key)) {
+            if (id !== deviceID) {
+                neighbours.add(id);
+            }
+        }
+    }
+
+    return [...neighbours];
+};
+
+const getNeighbouringPins = (pinID: number): number[] => {
+    const pin = getPin(pinID);
+
+    const delta = [
+        [-1, -1], [0, -1], [1, -1],
+        [-1,  0], [0,  0], [1,  0],
+        [-1,  1], [0,  1], [1,  1]
+    ];
+
+    const neighbours = new Set<number>();
+
+    for (const [dx, dy] of delta) {
+        const key = getPinGridKey(pin, dx, dy);
+
+        for (const id of getPinsFromGrid(key)) {
+            if (id !== pinID) {
+                neighbours.add(id);
+            }
+        }
+    }
+
+    return [...neighbours];
+}
+
+//========================= TOAST ==========================//
 
 const showToast = (message: string): void => {
     toastMessage.textContent = message;
@@ -785,6 +910,15 @@ export {
     drawDevices,
     updateDevice,
     deleteDevice,
+
+    addDeviceToGrid,
+    addPinToGrid,
+    removeDeviceFromGrid,
+    removePinFromGrid,
+    getDevicesFromGrid,
+    getPinsFromGrid,
+    getNeighbouringDevices,
+    getNeighbouringPins,
 
     renderUndoRedoBtn,
 

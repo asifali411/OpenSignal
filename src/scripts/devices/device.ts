@@ -1,3 +1,4 @@
+import { addDeviceToGrid } from "../main/script";
 import { DEVICE } from "../main/setup";
 
 let deviceID = 0;
@@ -20,7 +21,9 @@ class Device {
         public x: number,
         public y: number,
         public name: DEVICE
-    ) {}
+    ) {
+        addDeviceToGrid(this);
+    }
 }
 
 export default Device;
