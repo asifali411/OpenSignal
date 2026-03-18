@@ -1,6 +1,6 @@
 import { canvas, ctx, fpsText, loadingScreen, progressBar } from "./scripts/main/reference";
-import { GRID, gridSize, MOUSE, WORLD } from "./scripts/main/setup";
-import { resizeCanvas, createGrid, getDevice } from "./scripts/main/util";
+import { MOUSE, WORLD } from "./scripts/main/setup";
+import { resizeCanvas, createGrid } from "./scripts/main/util";
 import {
     createDeviceBar,
     createExtraDeviceDialog,
@@ -75,14 +75,6 @@ const render = () => {
     // render components
     drawDevices();
 
-    //DEBUG
-    ctx.fillStyle = "#000";
-    for(const [id, devices] of GRID.devices){
-        for(const device of devices){
-            ctx.fillText(id, getDevice(device).x, getDevice(device).y);
-        }
-    }
-    ctx.fillText(`${Math.floor(MOUSE.x / gridSize)}-${Math.floor(MOUSE.y / gridSize)}`, MOUSE.x, MOUSE.y);
 
     ctx.restore();
     lastTime = performance.now();

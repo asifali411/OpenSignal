@@ -1,37 +1,72 @@
 import { canvas } from "../main/reference";
-import { MOUSE, WORLD, MODE, CIRCUIT, SETTINGS, DEVICE, HISTORY, deviceSize } from "../main/setup";
-import { toWorld, isHovering, isHoveringPin, getPin, toScreen } from "../main/util";
-import { snapToGrid, handlePinSelection, openContextDialog, removeDeviceFromGrid, addDeviceToGrid } from "../main/script";
+import { MOUSE, WORLD, MODE, CIRCUIT, SETTINGS, DEVICE, HISTORY, deviceSize, gridSize } from "../main/setup";
+import { toWorld, isHovering, isHoveringPin, getPin, toScreen, getDevice } from "../main/util";
+import { snapToGrid, handlePinSelection, openContextDialog, removeDeviceFromGrid, addDeviceToGrid, getDevicesFromGrid } from "../main/script";
 import { toggleSource } from "../devices/source";
 import { Switch, toggleSwitch } from "../devices/switch";
 
 export const registerMouseEvents = () => {
-    canvas.addEventListener("contextmenu", (e: MouseEvent) => {e.preventDefault()});
+    canvas.addEventListener("contextmenu", (e: MouseEvent) => { e.preventDefault() });
     canvas.addEventListener("mousedown", handleMouseDown);
     canvas.addEventListener("mouseup", handleMouseEnd);
     canvas.addEventListener("mouseleave", handleMouseEnd);
     canvas.addEventListener("mousemove", handleMouseMove);
 }
 
-const threshold = 5;
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+const getAllDevicesAdjacentTo = (x: number, y: number): number[] => {
+    const delta = [
+        [-1, -1], [0, -1], [1, -1],
+        [-1,  0], [0,  0], [1,  0],
+        [-1,  1], [0,  1], [1,  1]
+    ];
+
+    const neighbours = new Set<number>();
+
+    for (const [dx, dy] of delta) {
+        const key = `${Math.floor(x / gridSize) + dx}-${Math.floor(y / gridSize) + dy}`;
+        for (const id of getDevicesFromGrid(key)) {
+            neighbours.add(id);
+        }
+    }
+
+    return [...neighbours];
+}
+
+const getHoveredPin = (x: number, y: number) => {
+    for (const deviceID of getAllDevicesAdjacentTo(x, y)) {
+        const device = getDevice(deviceID);
+        for (const pinId of [...device.inputPins, ...device.outputPins, ...device.in_outPins]) {
+            const pin = getPin(pinId);
+            if (isHoveringPin(pin)) return pin;
+        }
+    }
+    return null;
+}
+
+const DRAG_THRESHOLD = 5;
+
+// ─── Mouse Down ───────────────────────────────────────────────────────────────
 
 const handleMouseDown = (e: MouseEvent) => {
+    
+    const { x, y } = toWorld(e.offsetX, e.offsetY);
+    MOUSE.x = x;
+    MOUSE.y = y;
+    MOUSE.lastX = x;
+    MOUSE.lastY = y;
 
-    MOUSE.x = toWorld(e.offsetX, e.offsetY).x;
-    MOUSE.y = toWorld(e.offsetX, e.offsetY).y;
-
-    MOUSE.lastX = MOUSE.x;
-    MOUSE.lastY = MOUSE.y;
-
-    //left click
-    if(e.button === 0){
+    // Left click
+    if (e.button === 0) {
         MOUSE.isClicking.left = true;
 
-        for(const [, device] of CIRCUIT.devices){
-            if(isHovering(device)){
+        for (const deviceID of getAllDevicesAdjacentTo(MOUSE.x, MOUSE.y)) {
+            const device = getDevice(deviceID);
 
-                if(WORLD.mode === MODE.SIMULATE){
+            if (isHovering(device)) {
 
+                if (WORLD.mode === MODE.SIMULATE) {
                     switch(device.name){
                         case DEVICE.SOURCE:
                             toggleSource(device);
@@ -55,10 +90,8 @@ const handleMouseDown = (e: MouseEvent) => {
         }
     }
 
-    //right click
-    if(e.button === 2){
-        MOUSE.isClicking.right = true;
-
+    // Right click
+    if (e.button === 2) {
         MOUSE.isClicking.right = true;
         canvas.style.cursor = "move";
         WORLD.camera.lastX = e.offsetX;
@@ -67,25 +100,14 @@ const handleMouseDown = (e: MouseEvent) => {
     }
 }
 
-//=========================================================================//
+// ─── Click Handlers ───────────────────────────────────────────────────────────
 
-const handleLeftClick = () => {
+const handleLeftClick = (x: number, y: number) => {
+    if (WORLD.mode !== MODE.EDIT) return;
 
-    if(WORLD.mode !== MODE.EDIT) return;
+    const hoveredPin = getHoveredPin(x, y);
 
-    let pinHovered = false;
-
-    // check if hovering over any pin
-    outer: for (const [, device] of CIRCUIT.devices) {
-        for (const pinId of [...device.inputPins, ...device.outputPins, ...device.in_outPins]) {
-            if (isHoveringPin(getPin(pinId))) {
-                pinHovered = true;
-                break outer;
-            }
-        }
-    }
-
-    if (pinHovered) {
+    if (hoveredPin) {
         for (const [, device] of CIRCUIT.devices) {
             handlePinSelection(device.inputPins);
             handlePinSelection(device.outputPins);
@@ -93,8 +115,9 @@ const handleLeftClick = () => {
         }
     } else {
         let isDeviceSelected = false;
-        // select device only if no pin is hovered
-        for (const [, device] of CIRCUIT.devices) {
+
+        for (const deviceID of getAllDevicesAdjacentTo(x, y)) {
+            const device = getDevice(deviceID);
             if (isHovering(device)) {
                 device.selected = !device.selected;
                 isDeviceSelected = true;
@@ -102,20 +125,22 @@ const handleLeftClick = () => {
             }
         }
 
-        if(!isDeviceSelected){
-            for(const [, device] of CIRCUIT.devices){
+        if (!isDeviceSelected) {
+            for (const [, device] of CIRCUIT.devices) {
                 device.selected = false;
             }
         }
     }
 }
 
-const handleRightClick = () => {
-    for(const [, device] of CIRCUIT.devices){
+const handleRightClick = (x: number, y: number) => {
+    for (const [, device] of CIRCUIT.devices) {
         device.selected = false;
     }
-    for(const [, device] of CIRCUIT.devices){
-        if(isHovering(device)){
+
+    for (const deviceID of getAllDevicesAdjacentTo(x, y)) {
+        const device = getDevice(deviceID);
+        if (isHovering(device)) {
             device.selected = true;
             openContextDialog(toScreen(device.x + deviceSize, device.y + deviceSize));
             break;
@@ -123,18 +148,19 @@ const handleRightClick = () => {
     }
 }
 
-//=========================================================================//
+// ─── Mouse Move ───────────────────────────────────────────────────────────────
 
 const handleMouseMove = (e: MouseEvent) => {
-    MOUSE.x = toWorld(e.offsetX, e.offsetY).x;
-    MOUSE.y = toWorld(e.offsetX, e.offsetY).y;
+    const { x, y } = toWorld(e.offsetX, e.offsetY);
+    MOUSE.x = x;
+    MOUSE.y = y;
 
-    if(WORLD.movingDevice != null){
+    if (WORLD.movingDevice != null) {
         WORLD.movingDevice.x = MOUSE.x - WORLD.movingDevice.offsetX;
         WORLD.movingDevice.y = MOUSE.y - WORLD.movingDevice.offsetY;
     }
 
-    if(MOUSE.isClicking.right){
+    if (MOUSE.isClicking.right) {
         const dx = (e.offsetX - WORLD.camera.lastX) / WORLD.camera.zoom;
         const dy = (e.offsetY - WORLD.camera.lastY) / WORLD.camera.zoom;
         WORLD.camera.x -= dx;
@@ -144,51 +170,51 @@ const handleMouseMove = (e: MouseEvent) => {
     }
 }
 
-const handleMouseEnd = () => {
+// ─── Mouse End (mouseup + mouseleave) ─────────────────────────────────────────
 
+const handleMouseEnd = () => {
     const dx = MOUSE.x - MOUSE.lastX;
     const dy = MOUSE.y - MOUSE.lastY;
+    const isClick = Math.hypot(dx, dy) <= DRAG_THRESHOLD;
 
-    if(Math.hypot(dx, dy) <= threshold){
-        if(MOUSE.isClicking.left){
-            handleLeftClick();
-        }
-        if(MOUSE.isClicking.right){
-            handleRightClick();
-        }
+    if (isClick) {
+        if (MOUSE.isClicking.left)  handleLeftClick(MOUSE.x, MOUSE.y);
+        if (MOUSE.isClicking.right) handleRightClick(MOUSE.x, MOUSE.y);
     }
 
-    if(MOUSE.isClicking.left && WORLD.mode === MODE.EDIT){
-        for(const [, device] of CIRCUIT.devices){
+    if (MOUSE.isClicking.left && WORLD.mode === MODE.EDIT && !isClick) {
+        const minX = Math.min(MOUSE.lastX, MOUSE.x);
+        const maxX = Math.max(MOUSE.lastX, MOUSE.x);
+        const minY = Math.min(MOUSE.lastY, MOUSE.y);
+        const maxY = Math.max(MOUSE.lastY, MOUSE.y);
 
-            const minX = Math.min(MOUSE.lastX, MOUSE.x);
-            const maxX = Math.max(MOUSE.lastX, MOUSE.x);
-            const minY = Math.min(MOUSE.lastY, MOUSE.y);
-            const maxY = Math.max(MOUSE.lastY, MOUSE.y);
-
-            if(
-                device.x >= minX && 
-                device.x <= maxX && 
-                device.y >= minY && 
+        for (const [, device] of CIRCUIT.devices) {
+            device.selected = (
+                device.x >= minX &&
+                device.x <= maxX &&
+                device.y >= minY &&
                 device.y <= maxY
-            ) {
-                device.selected = true;
-            }
+            );
         }
     }
 
-    if(WORLD.mode === MODE.EDIT) canvas.style.cursor = "default";
+    // Reset cursor
+    if (WORLD.mode === MODE.EDIT) canvas.style.cursor = "default";
     else canvas.style.cursor = "pointer";
 
     MOUSE.isClicking.left = false;
     MOUSE.isClicking.right = false;
     WORLD.camera.isDragging = false;
 
-    if(WORLD.movingDevice != null){
+    if (WORLD.movingDevice != null && WORLD.mode === MODE.EDIT) {
         WORLD.movingDevice.isDragging = false;
         if (SETTINGS.snapToGrid) snapToGrid();
         addDeviceToGrid(WORLD.movingDevice);
         HISTORY.save(CIRCUIT);
+    } else if (WORLD.movingDevice != null) {
+        WORLD.movingDevice.isDragging = false;
+        addDeviceToGrid(WORLD.movingDevice);
     }
+
     WORLD.movingDevice = null;
 }
