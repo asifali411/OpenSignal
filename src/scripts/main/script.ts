@@ -263,7 +263,7 @@ const createDeviceBar = (): void => {
     deviceBTN.title = "All Devices";
 
     const deviceIMG = document.createElement("img");
-    deviceIMG.src = "../src/assets/ellipsis.svg";
+    deviceIMG.src =  new URL("../../assets/ellipsis.svg", import.meta.url).href;
 
     deviceBTN.append(deviceIMG);
     deviceBar.append(deviceBTN);
@@ -323,6 +323,7 @@ const closeDialog = (): void => {
 
 const openExtraDevices = (): void => {
     extraDeviceDialog.classList.remove('hidden');
+    extraDeviceDialog.inert = false;
     WORLD.dialog.show = true;
     overlay.classList.remove('hidden');
 };

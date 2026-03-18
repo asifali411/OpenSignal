@@ -46,6 +46,7 @@
     align-items: center;
     border-radius: var(--radius-sm);
     transition: background-color 0.15s ease;
+    cursor: pointer;
 }
 
 .device:hover {
