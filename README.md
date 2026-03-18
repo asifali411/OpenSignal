@@ -2,7 +2,7 @@
 
 A desktop circuit simulator application built with Tauri, allowing users to design and simulate digital circuits interactively.
 
-<img src="./src/assets/circuit.png">
+<img src="./src/assets/full-bit-adder-screenshot.png">
 
 ## Features
 

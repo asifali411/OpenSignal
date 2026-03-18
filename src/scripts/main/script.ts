@@ -179,6 +179,7 @@ const deleteDevice = (device: Device | Gate | Switch): void => {
         CIRCUIT.pins.delete(pinID);
     }
 
+    removeDeviceFromGrid(device);
     CIRCUIT.devices.delete(device.id);
     HISTORY.save(CIRCUIT);
 };
@@ -640,7 +641,7 @@ const addPinToGrid = (pin: Pin) => {
     } else {
         const pinSet = new Set<number>();
         pinSet.add(pin.id);
-        GRID.devices.set(key, pinSet);
+        GRID.pins.set(key, pinSet);
     }
 }
 
@@ -789,9 +790,12 @@ const loadCircuit = (data: CircuitData): void => {
     CIRCUIT.devices.clear();
     CIRCUIT.pins.clear();
     CIRCUIT.nets.clear();
+    GRID.devices.clear();
+    GRID.pins.clear();
 
     for (const deviceData of data.devices) {
         const device = new Device(deviceData.x, deviceData.y, deviceData.name);
+        removeDeviceFromGrid(device);
         device.id          = deviceData.id;
         device.inputPins   = deviceData.inputPins;
         device.outputPins  = deviceData.outputPins;
@@ -801,15 +805,18 @@ const loadCircuit = (data: CircuitData): void => {
         device.isDragging  = deviceData.isDragging;
         device.selected    = deviceData.selected;
         CIRCUIT.devices.set(device.id, device);
+        addDeviceToGrid(device);
     }
 
     for (const pinData of data.pins) {
         const pin = new Pin(pinData.deviceID, pinData.offsetX, pinData.offsetY, pinData.type, pinData.name);
+        removePinFromGrid(pin);
         pin.id            = pinData.id;
         pin.netID         = pinData.netID;
         pin.value         = pinData.value;
         pin.connectedPins = new Set(pinData.connectedPins);
         CIRCUIT.pins.set(pin.id, pin);
+        addPinToGrid(pin);
     }
 
     for (const netData of data.nets) {
