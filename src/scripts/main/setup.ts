@@ -1,4 +1,4 @@
-import { initSettings, getAllSettings } from "../../settings";
+import { initSettings, getAllSettings, AppSettings } from "../../settings";
 import { Net } from "../../solver/net";
 import Solver from "../../solver/solver";
 import Device from "../devices/device";
@@ -6,8 +6,6 @@ import Pin from "../devices/functions/pin";
 import { Switch } from "../devices/switch";
 import HistoryManager from "./history";
 import { setupSaveDialogListeners } from "./script";
-
-await initSettings();
 
 const tileSize: number = 30;
 const gridSize: number = 200;
@@ -79,7 +77,17 @@ interface Grid {
 
 //=================== DECLARATIONS ===================//
 
-let SETTINGS = await getAllSettings();
+let SETTINGS: AppSettings;
+
+// export const settingsReady: Promise<void> = (async () => {
+//     await initSettings();
+//     SETTINGS = await getAllSettings();
+// })();
+
+export async function settingsReady (): Promise<void> {
+    await initSettings();
+    SETTINGS = await getAllSettings();
+}
 
 const DEVICES = [
     {
