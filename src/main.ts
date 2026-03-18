@@ -1,5 +1,5 @@
 import { canvas, ctx, fpsText, loadingScreen, progressBar } from "./scripts/main/reference";
-import { MOUSE, settingsReady, WORLD } from "./scripts/main/setup";
+import { MOUSE, settingsReady, WORLD, loadSprites } from "./scripts/main/setup";
 
 import { resizeCanvas, createGrid } from "./scripts/main/util";
 import {
@@ -14,7 +14,7 @@ import {
 import "./scripts/main/event";
 import  registerEvents from "./scripts/main/event";
 
-settingsReady().then( () => {
+settingsReady().then(() => { loadSprites().then( () => {
     
     createDeviceBar();
     createExtraDeviceDialog();
@@ -85,4 +85,4 @@ settingsReady().then( () => {
     };
     
     render();
-});
+})})

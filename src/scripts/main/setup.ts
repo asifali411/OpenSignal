@@ -79,11 +79,6 @@ interface Grid {
 
 let SETTINGS: AppSettings;
 
-// export const settingsReady: Promise<void> = (async () => {
-//     await initSettings();
-//     SETTINGS = await getAllSettings();
-// })();
-
 export async function settingsReady (): Promise<void> {
     await initSettings();
     SETTINGS = await getAllSettings();
@@ -92,43 +87,43 @@ export async function settingsReady (): Promise<void> {
 const DEVICES = [
     {
         name: DEVICE.SOURCE,
-        img: "./src/assets/source.png",
+        img: new URL("../../assets/source.png", import.meta.url).href,
     },
     {
         name: DEVICE.SWITCH,
-        img: "../src/assets/switch.png",
+        img: new URL("../../assets/switch.png", import.meta.url).href,
     },
     {
         name: DEVICE.BULB,
-        img: "../src/assets/bulb.png",
+        img: new URL("../../assets/bulb.png", import.meta.url).href,
     },
     {
         name: DEVICE.AND,
-        img: "../src/assets/andGate.png",
+        img: new URL("../../assets/andGate.png", import.meta.url).href,
     },
     {
         name: DEVICE.OR,
-        img: "../src/assets/orGate.png",
+        img: new URL("../../assets/orGate.png", import.meta.url).href,
     },
     {
         name: DEVICE.NOT,
-        img: "../src/assets/notGate.png",
+        img: new URL("../../assets/notGate.png", import.meta.url).href,
     },
     {
         name: DEVICE.XOR,
-        img: "../src/assets/xorGate.png",
+        img: new URL("../../assets/xorGate.png", import.meta.url).href,
     },
     {
         name: DEVICE.NAND,
-        img: "../src/assets/nandGate.png",
+        img: new URL("../../assets/nandGate.png", import.meta.url).href,
     },
     {
         name: DEVICE.NOR,
-        img: "../src/assets/norGate.png",
+        img: new URL("../../assets/norGate.png", import.meta.url).href,
     },
     {
         name: DEVICE.XNOR,
-        img: "../src/assets/xnorGate.png",
+        img: new URL("../../assets/xnorGate.png", import.meta.url).href,
     }
 ];
 
@@ -174,10 +169,16 @@ let GRID: Grid = {
 }
 
 const SPRITES: any = {};
-DEVICES.forEach(device => {
-    SPRITES[device.name] = new Image();
-    SPRITES[device.name].src = device.img;
-});
+export async function loadSprites(): Promise<void[]> {
+    return Promise.all(
+        DEVICES.map(device => new Promise<void>((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => { SPRITES[device.name] = img; resolve(); };
+            img.onerror = reject;
+            img.src = device.img;
+        }))
+    );
+}
 
 const HISTORY = new HistoryManager();
 HISTORY.save(CIRCUIT);
